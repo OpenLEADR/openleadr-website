@@ -1,0 +1,143 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OpenADR Basics &#8212; pyOpenADR 0.4.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/css/custom.css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Client" href="client.html" />
+    <link rel="prev" title="Feature Tour" href="features.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="openadr-basics">
+<h1>OpenADR Basics<a class="headerlink" href="#openadr-basics" title="Permalink to this headline">¶</a></h1>
+<p>If you are coming to this module and are not (yet) familiar with the OpenADR protocol, read this. Of course, you should also consult the documentation from <a class="reference external" href="https://www.openadr.org">the OpenADR website</a>.</p>
+<div class="section" id="high-level-overview">
+<h2>High-level overview<a class="headerlink" href="#high-level-overview" title="Permalink to this headline">¶</a></h2>
+<p>OpenADR is a protocol that allows a server (called a Virtual Top Node or VTNs) to communicate ‘Events’ to connected clients (Called Virtual End Nodes or VENs). These Events are usually energy-related instructions, for instance to temporarily increase or reduce the power consumption by one or more devices represented by the VEN, or te inform the VEN that prices are about to change. The VEN periodically (typically every 10 seconds or so) sends a Poll request to the VTN to check if there are new events for them.</p>
+<p>The VEN decides whether or not to comply with the request in the Event, and sends an Opt In or Opt Out response to the VTN.</p>
+<p>In order to track what happens after, there is a Reports mechanism in place that allows the VEN and the VTN to agree on what data should be reported, and to report this data at a requested interval.</p>
+<p>Although multiple transport formats are supported (HTTP and XMPP), OpenADR is designed for only the VTN to be public-accessible, with the VENs possibly being behind NAT or firewalls. All communications are therefore initiated by the client (VEN), and the server can request additional messages from the client in its response to the original request.</p>
+</div>
+<div class="section" id="registration">
+<span id="id1"></span><h2>Registration<a class="headerlink" href="#registration" title="Permalink to this headline">¶</a></h2>
+<p>(Information on the Registration procedures)</p>
+</div>
+<div class="section" id="events">
+<span id="openadr-events"></span><h2>Events<a class="headerlink" href="#events" title="Permalink to this headline">¶</a></h2>
+<p>(Information on the Events procedures)</p>
+</div>
+<div class="section" id="reports">
+<span id="openadr-reports"></span><h2>Reports<a class="headerlink" href="#reports" title="Permalink to this headline">¶</a></h2>
+<p>(Information on the Reports procedures)</p>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">pyOpenADR</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="features.html">Feature Tour</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">OpenADR Basics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#high-level-overview">High-level overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#registration">Registration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#events">Events</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#reports">Reports</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="client.html">Client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server.html">Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Ready-to-Run Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="roadmap.html">Project Status and Roadmap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="representations.html">Payload Representations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="message_signing.html">Message Signing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/modules.html">API Reference</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="features.html" title="previous chapter">Feature Tour</a></li>
+      <li>Next: <a href="client.html" title="next chapter">Client</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Stan Janssen.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.2.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/openadr.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,199 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Client &#8212; pyOpenADR 0.4.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/css/custom.css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Server" href="server.html" />
+    <link rel="prev" title="OpenADR Basics" href="openadr.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="client">
+<h1>Client<a class="headerlink" href="#client" title="Permalink to this headline">¶</a></h1>
+<p>An OpenADR Client (Virtual End Node or VEN) usually represents an entity that owns controllable devices. This can be electric vehicles, generators, wind turbines, refrigerated warehouses, et cetera. The client connects to a server, usualy representing a utility company, to discuss possible cooperation on energy usage throughout the day.</p>
+<p>In your application, you mostly only have to deal with two things: Events and Reports.</p>
+<div class="section" id="dealing-with-events">
+<span id="client-events"></span><h2>Dealing with Events<a class="headerlink" href="#dealing-with-events" title="Permalink to this headline">¶</a></h2>
+<p>Events are informational or instructional messages from the server (VTN) which inform you of price changes, request load reduction, et cetera. Whenever there is an Event for your VEN, your <code class="docutils literal notranslate"><span class="pre">on_event</span></code> handler will be called with the event as its <code class="docutils literal notranslate"><span class="pre">payload</span></code> parameter.</p>
+<p>The Event consists of three main sections:</p>
+<ol class="arabic simple">
+<li><p>A time period for when this event is supposed to be active (<code class="docutils literal notranslate"><span class="pre">active_period</span></code>)</p></li>
+<li><p>A list of Targets to which the Event applies (<code class="docutils literal notranslate"><span class="pre">target</span></code>). This can be the VEN as a whole, or specific groups, assets, geographic areas, et cetera that this VEN represents.</p></li>
+<li><p>A list of Signals (<code class="docutils literal notranslate"><span class="pre">signals</span></code>), which form the content of the Event. This can be price signals, load reduction signals, et cetera. Each signal has a name, a type, multiple Intervals that contain the relative start times, and some payload value for the client to interpret.</p></li>
+</ol>
+<p>After you evaluate all these properties, you have only one decision to make: Opt In or Opt Out. Your handler must return either the string <code class="docutils literal notranslate"><span class="pre">optIn</span></code> or <code class="docutils literal notranslate"><span class="pre">optOut</span></code>, and pyOpenADR will see to it that your response is correctly formatted for the server.</p>
+<p>Example implementation:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">openadr</span> <span class="kn">import</span> <span class="n">OpenADRClient</span>
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">on_event</span><span class="p">(</span><span class="n">payload</span><span class="p">):</span>
+    <span class="c1"># Check if we can opt in to this event</span>
+    <span class="n">start_time</span> <span class="o">=</span> <span class="n">payload</span><span class="p">[</span><span class="s1">&#39;events&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;active_period&#39;</span><span class="p">][</span><span class="s1">&#39;dtstart&#39;</span><span class="p">]</span>
+    <span class="n">duration</span> <span class="o">=</span> <span class="n">payload</span><span class="p">[</span><span class="s1">&#39;events&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;active_period&#39;</span><span class="p">][</span><span class="s1">&#39;duration&#39;</span><span class="p">]</span>
+
+    <span class="k">await</span> <span class="n">can_we_do_this</span><span class="p">(</span><span class="n">from_time</span><span class="o">=</span><span class="n">payload</span><span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">])</span>
+    <span class="k">return</span> <span class="s1">&#39;optIn&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="dealing-with-reports">
+<span id="client-reports"></span><h2>Dealing with Reports<a class="headerlink" href="#dealing-with-reports" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="receiving-reports">
+<h3>Receiving reports<a class="headerlink" href="#receiving-reports" title="Permalink to this headline">¶</a></h3>
+<p>Upon registration, the server will tell you which reports it has available.</p>
+</div>
+<div class="section" id="providing-reports">
+<h3>Providing reports<a class="headerlink" href="#providing-reports" title="Permalink to this headline">¶</a></h3>
+<p>If you tell pyOpenADR what reports you are able to provide, and give it a handler that will retrieve those reports from your own systems, pyOpenADR will make sure that the server receives the reports it asks for and at the requested interval.</p>
+<p>For example: you can provide 15-minute meter readings for an energy meter at your site. You have a coroutine set up like this:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span> <span class="nf">get_metervalue</span><span class="p">():</span>
+    <span class="n">current_value</span> <span class="o">=</span> <span class="k">await</span> <span class="n">meter</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">current_value</span>
+</pre></div>
+</div>
+<p>And you configure this report in pyOpenADR using an <span class="xref std std-ref">oadrReportDescription</span> dict:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">OpenADRClient</span><span class="p">(</span><span class="n">ven_name</span><span class="o">=</span><span class="s1">&#39;MyVEN&#39;</span><span class="p">,</span> <span class="n">vtn_url</span><span class="o">=</span><span class="s1">&#39;https://localhost:8080/&#39;</span><span class="p">)</span>
+    <span class="n">report_description</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;&#39;</span><span class="p">}</span>
+    <span class="n">client</span><span class="o">.</span><span class="n">add_report</span><span class="p">({</span><span class="s1">&#39;report&#39;</span><span class="p">})</span>
+</pre></div>
+</div>
+<p>The only thing you need to provide is the current value for the item you are reporting. PyOpenADR will format the complete <span class="xref std std-ref">oadrReport</span> message for you.</p>
+</div>
+</div>
+<div class="section" id="signing-outgoing-messages">
+<span id="client-signing-messages"></span><h2>Signing outgoing messages<a class="headerlink" href="#signing-outgoing-messages" title="Permalink to this headline">¶</a></h2>
+<p>You can sign your outgoing messages using a public-private key pair in PEM format. This allows the receiving party to verify that the messages are actually coming from you.</p>
+<p>If you want you client to automatically sign your outgoing messages, use the following configuration:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">OpenADRClient</span><span class="p">(</span><span class="n">ven_name</span><span class="o">=</span><span class="s1">&#39;MyVEN&#39;</span><span class="p">,</span>
+                           <span class="n">vtn_url</span><span class="o">=</span><span class="s1">&#39;https://localhost:8080/&#39;</span><span class="p">,</span>
+                           <span class="n">cert</span><span class="o">=</span><span class="s1">&#39;/path/to/cert.pem&#39;</span><span class="p">,</span>
+                           <span class="n">key</span><span class="o">=</span><span class="s1">&#39;/path/to/key.pem&#39;</span><span class="p">,</span>
+                           <span class="n">passphrase</span><span class="o">=</span><span class="s1">&#39;my-key-password&#39;</span><span class="p">)</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="validating-incoming-messages">
+<span id="client-validating-messages"></span><h2>Validating incoming messages<a class="headerlink" href="#validating-incoming-messages" title="Permalink to this headline">¶</a></h2>
+<p>You can validate incoming messages against a public key.</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">OpenADRClient</span><span class="p">(</span><span class="n">ven_name</span><span class="o">=</span><span class="s1">&#39;MyVEN&#39;</span><span class="p">,</span>
+                           <span class="n">vtn_url</span><span class="o">=</span><span class="s1">&#39;https://localhost:8080/&#39;</span><span class="p">,</span>
+                           <span class="n">vtn_fingerprint</span><span class="o">=</span><span class="s1">&#39;AA:BB:CC:DD:EE:FF:11:22:33:44&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This will automatically validate check that incoming messages are signed by the private key that belongs to the provided (public) certificate. If validation fails, you will see a Warning emitted, but the message will not be delivered to your handlers, protecting you from malicious messages being processed by your system. The sending party will see an error message returned.</p>
+<p>You should use both of the previous examples combined to secure both the incoming and the outgoing messages.</p>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">pyOpenADR</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="features.html">Feature Tour</a></li>
+<li class="toctree-l1"><a class="reference internal" href="openadr.html">OpenADR Basics</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Client</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#dealing-with-events">Dealing with Events</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dealing-with-reports">Dealing with Reports</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#signing-outgoing-messages">Signing outgoing messages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#validating-incoming-messages">Validating incoming messages</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="server.html">Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Ready-to-Run Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="roadmap.html">Project Status and Roadmap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="representations.html">Payload Representations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="message_signing.html">Message Signing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/modules.html">API Reference</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="openadr.html" title="previous chapter">OpenADR Basics</a></li>
+      <li>Next: <a href="server.html" title="next chapter">Server</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Stan Janssen.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.2.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/client.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,299 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Welcome to pyOpenADR &#8212; pyOpenADR 0.4.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/css/custom.css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Feature Tour" href="features.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="welcome-to-pyopenadr">
+<h1>Welcome to pyOpenADR<a class="headerlink" href="#welcome-to-pyopenadr" title="Permalink to this headline">¶</a></h1>
+<p>Super-convenient Python implementation of an OpenADR client and server.</p>
+<div class="section" id="key-features">
+<h2>Key Features<a class="headerlink" href="#key-features" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Fully compliant OpenADR 2.0b implementation for both servers (Virtual Top Node) and clients (Virtual End Node)</p></li>
+<li><p>Fully asyncio: you set up the coroutines that can handle certain events, and they get called when needed.</p></li>
+<li><p>All messages are represented as simple Python dictionaries. All XML parsing and generation is done for you.</p></li>
+<li><p>You only have to deal with your own logic.</p></li>
+</ul>
+<p>Take a <a class="reference internal" href="features.html#feature-tour"><span class="std std-ref">Feature Tour</span></a>!</p>
+</div>
+<div class="section" id="project-status">
+<h2>Project Status<a class="headerlink" href="#project-status" title="Permalink to this headline">¶</a></h2>
+<p>The current version is 0.4.0.</p>
+<p>This project is still a work in progress. Please see our <a class="reference internal" href="roadmap.html#roadmap"><span class="std std-ref">Project Status and Roadmap</span></a> for information.</p>
+</div>
+<div class="section" id="license">
+<h2>License<a class="headerlink" href="#license" title="Permalink to this headline">¶</a></h2>
+<p>This project is licensed under the Apache 2.0 license.</p>
+</div>
+<div class="section" id="library-installation">
+<h2>Library Installation<a class="headerlink" href="#library-installation" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ pip install pyopenadr
+</pre></div>
+</div>
+<p>pyOpenADR is compatible with Python 3.6+</p>
+</div>
+<div class="section" id="getting-started">
+<h2>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h2>
+<p>Client example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyopenadr</span> <span class="kn">import</span> <span class="n">OpenADRClient</span>
+<span class="kn">import</span> <span class="nn">asyncio</span>
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">OpenADRClient</span><span class="p">(</span><span class="n">ven_name</span><span class="o">=</span><span class="s2">&quot;Device001&quot;</span><span class="p">,</span>
+                           <span class="n">vtn_url</span><span class="o">=</span><span class="s2">&quot;http://localhost:8080/OpenADR2/Simple/2.0b&quot;</span><span class="p">)</span>
+    <span class="n">client</span><span class="o">.</span><span class="n">on_event</span> <span class="o">=</span> <span class="n">handle_event</span>
+    <span class="n">client</span><span class="o">.</span><span class="n">on_report</span> <span class="o">=</span> <span class="n">handle_report</span>
+    <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">handle_event</span><span class="p">(</span><span class="n">event</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This coroutine will be called</span>
+<span class="sd">    when there is an event to be handled.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;There is an event!&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+    <span class="c1"># Do something to determine whether to Opt In or Opt Out</span>
+    <span class="k">return</span> <span class="s1">&#39;optIn&#39;</span>
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">handle_report</span><span class="p">(</span><span class="n">report</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This coroutine will be called</span>
+<span class="sd">    when there is a report from the VTN.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;There is a report!&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">report</span><span class="p">)</span>
+
+<span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span>
+<span class="n">loop</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+<span class="n">loop</span><span class="o">.</span><span class="n">run_forever</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>This will connect to an OpenADR server (indicated by the vtn_url parameter), handle registration, start polling for events and reports, and will call your coroutines whenever an event or report is created for you.</p>
+<p>We have more examples available over at the <a class="reference internal" href="examples.html#examples"><span class="std std-ref">Ready-to-Run Examples</span></a> page.</p>
+</div>
+<div class="section" id="table-of-contents">
+<h2>Table of Contents<a class="headerlink" href="#table-of-contents" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound" id="mastertoc">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="features.html">Feature Tour</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="features.html#automatic-registration">Automatic registration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="features.html#automatic-reporting">Automatic reporting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="features.html#event-driven">Event-driven</a></li>
+<li class="toctree-l2"><a class="reference internal" href="features.html#dict-style-representations">Dict-style representations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="features.html#message-signing-for-secure-communications">Message Signing for secure communications</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="openadr.html">OpenADR Basics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="openadr.html#high-level-overview">High-level overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="openadr.html#registration">Registration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="openadr.html#events">Events</a></li>
+<li class="toctree-l2"><a class="reference internal" href="openadr.html#reports">Reports</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="client.html">Client</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="client.html#dealing-with-events">Dealing with Events</a></li>
+<li class="toctree-l2"><a class="reference internal" href="client.html#dealing-with-reports">Dealing with Reports</a></li>
+<li class="toctree-l2"><a class="reference internal" href="client.html#signing-outgoing-messages">Signing outgoing messages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="client.html#validating-incoming-messages">Validating incoming messages</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="server.html">Server</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="server.html#registration">Registration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="server.html#events">Events</a></li>
+<li class="toctree-l2"><a class="reference internal" href="server.html#reports">Reports</a></li>
+<li class="toctree-l2"><a class="reference internal" href="server.html#things-you-should-implement">Things you should implement</a></li>
+<li class="toctree-l2"><a class="reference internal" href="server.html#non-openadr-signals-from-the-server">Non-OpenADR signals from the server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="server.html#signing-messages">Signing Messages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="server.html#message-handlers">Message Handlers</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Ready-to-Run Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#client-example">Client Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#server-example">Server Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#server-with-gui-example">Server with GUI Example</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="roadmap.html">Project Status and Roadmap</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="roadmap.html#upcoming-releases">Upcoming releases</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="representations.html">Payload Representations</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="representations.html#oadrcanceledopt">oadrCanceledOpt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="representations.html#oadrcanceledpartyregistration">oadrCanceledPartyRegistration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="representations.html#oadrcanceledreport">oadrCanceledReport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="representations.html#oadrcancelopt">oadrCancelOpt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="representations.html#oadrcancelpartyregistration">oadrCancelPartyRegistration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="representations.html#oadrcancelreport">oadrCancelReport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="representations.html#oadrcreatedevent">oadrCreatedEvent</a></li>
+<li class="toctree-l2"><a class="reference internal" href="representations.html#oadrcreatedreport">oadrCreatedReport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="representations.html#oadrcreatedpartyregistration">oadrCreatedPartyRegistration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="representations.html#oadrcreateopt">oadrCreateOpt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="representations.html#oadrcreatepartyregistration">oadrCreatePartyRegistration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="representations.html#oadrcreatereport">oadrCreateReport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="representations.html#oadrdistributeevent">oadrDistributeEvent</a></li>
+<li class="toctree-l2"><a class="reference internal" href="representations.html#oadrpoll">oadrPoll</a></li>
+<li class="toctree-l2"><a class="reference internal" href="representations.html#oadrqueryregistration">oadrQueryRegistration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="representations.html#oadrregisteredreport">oadrRegisteredReport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="representations.html#oadrrequestevent">oadrRequestEvent</a></li>
+<li class="toctree-l2"><a class="reference internal" href="representations.html#oadrrequestreregistration">oadrRequestReregistration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="representations.html#oadrresponse">oadrResponse</a></li>
+<li class="toctree-l2"><a class="reference internal" href="representations.html#oadrupdatedreport">oadrUpdatedReport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="representations.html#oadrupdatereport">oadrUpdateReport</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="message_signing.html">Message Signing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="message_signing.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="message_signing.html#generating-certificates">Generating certificates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="message_signing.html#replay-protection">Replay Protection</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/modules.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/pyopenadr.html">pyopenadr package</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="representations-of-openadr-payloads">
+<h2>Representations of OpenADR payloads<a class="headerlink" href="#representations-of-openadr-payloads" title="Permalink to this headline">¶</a></h2>
+<p>PyOpenADR uses Python dictionaries and vanilla Python types (like datetime and timedelta) to represent the OpenADR payloads. These pages serve as a reference to these representations.</p>
+<p>For example, this XML payload:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span>
+<span class="nt">&lt;oadrPayload</span> <span class="na">xmlns:xsi=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span> <span class="na">xmlns:xsd=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema&quot;</span> <span class="na">xmlns=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07&quot;</span> <span class="na">xsi:schemaLocation=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07 oadr_20b.xsd&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;oadrSignedObject&gt;</span>
+    <span class="nt">&lt;oadrResponse</span> <span class="na">ei:schemaVersion=</span><span class="s">&quot;2.0b&quot;</span> <span class="na">xmlns:ei=</span><span class="s">&quot;http://docs.oasis-open.org/ns/energyinterop/201110&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;ei:eiResponse&gt;</span>
+        <span class="nt">&lt;ei:responseCode&gt;</span>200<span class="nt">&lt;/ei:responseCode&gt;</span>
+        <span class="nt">&lt;ei:responseDescription&gt;</span>OK<span class="nt">&lt;/ei:responseDescription&gt;</span>
+        <span class="nt">&lt;requestID</span> <span class="na">xmlns=</span><span class="s">&quot;http://docs.oasis-open.org/ns/energyinterop/201110/payloads&quot;</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;/ei:eiResponse&gt;</span>
+      <span class="nt">&lt;ei:venID&gt;</span>o57b65be83<span class="nt">&lt;/ei:venID&gt;</span>
+    <span class="nt">&lt;/oadrResponse&gt;</span>
+  <span class="nt">&lt;/oadrSignedObject&gt;</span>
+<span class="nt">&lt;/oadrPayload&gt;</span>
+</pre></div>
+</div>
+<p>is represented in pyOpenADR as:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;response&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;response_code&#39;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
+              <span class="s1">&#39;response_description&#39;</span><span class="p">:</span> <span class="s1">&#39;OK&#39;</span><span class="p">},</span>
+ <span class="s1">&#39;ven_id&#39;</span><span class="p">:</span> <span class="s1">&#39;o57b65be83&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>Read more about the representations at <a class="reference internal" href="representations.html#representations"><span class="std std-ref">Payload Representations</span></a></p>
+</div>
+<div class="section" id="indices-and-tables">
+<h2>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="#">pyOpenADR</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="features.html">Feature Tour</a></li>
+<li class="toctree-l1"><a class="reference internal" href="openadr.html">OpenADR Basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="client.html">Client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server.html">Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Ready-to-Run Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="roadmap.html">Project Status and Roadmap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="representations.html">Payload Representations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="message_signing.html">Message Signing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/modules.html">API Reference</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="#">Documentation overview</a><ul>
+      <li>Next: <a href="features.html" title="next chapter">Feature Tour</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Stan Janssen.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.2.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

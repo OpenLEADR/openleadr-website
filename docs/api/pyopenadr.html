@@ -1,0 +1,1432 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>pyopenadr package &#8212; pyOpenADR 0.4.0 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="pyopenadr" href="modules.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="pyopenadr-package">
+<h1>pyopenadr package<a class="headerlink" href="#pyopenadr-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-pyopenadr.client">
+<span id="pyopenadr-client-module"></span><h2>pyopenadr.client module<a class="headerlink" href="#module-pyopenadr.client" title="Permalink to this headline">¶</a></h2>
+<p>OpenADR Client for Python</p>
+<dl class="py class">
+<dt id="pyopenadr.client.OpenADRClient">
+<em class="property">class </em><code class="sig-prename descclassname">pyopenadr.client.</code><code class="sig-name descname">OpenADRClient</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ven_name</span></em>, <em class="sig-param"><span class="n">vtn_url</span></em>, <em class="sig-param"><span class="n">debug</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">cert</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">key</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">passphrase</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">vtn_fingerprint</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyopenadr.client.OpenADRClient" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Main client class. Most of these methods will be called automatically, but
+you can always choose to call them manually.</p>
+<p>Initializes a new OpenADR Client (Virtual End Node)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ven_name</strong> (<em>str</em>) – The name for this VEN</p></li>
+<li><p><strong>vtn_url</strong> (<em>str</em>) – The URL of the VTN (Server) to connect to</p></li>
+<li><p><strong>debug</strong> (<em>bool</em>) – Whether or not to print debugging messages</p></li>
+<li><p><strong>cert</strong> (<em>str</em>) – The path to a PEM-formatted Certificate file to use for signing messages</p></li>
+<li><p><strong>key</strong> (<em>str</em>) – The path to a PEM-formatted Private Key file to use for signing messages</p></li>
+<li><p><strong>fingerprint</strong> (<em>str</em>) – The fingerprint for the VTN’s certificate to verify incomnig messages</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="pyopenadr.client.OpenADRClient.add_report">
+<code class="sig-name descname">add_report</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">callable</span></em>, <em class="sig-param"><span class="n">report_id</span></em>, <em class="sig-param"><span class="n">report_name</span></em>, <em class="sig-param"><span class="n">reading_type</span></em>, <em class="sig-param"><span class="n">report_type</span></em>, <em class="sig-param"><span class="n">sampling_rate</span></em>, <em class="sig-param"><span class="n">resource_id</span></em>, <em class="sig-param"><span class="n">measurand</span></em>, <em class="sig-param"><span class="n">unit</span></em>, <em class="sig-param"><span class="n">scale</span><span class="o">=</span><span class="default_value">'none'</span></em>, <em class="sig-param"><span class="n">power_ac</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">power_hertz</span><span class="o">=</span><span class="default_value">50</span></em>, <em class="sig-param"><span class="n">power_voltage</span><span class="o">=</span><span class="default_value">230</span></em>, <em class="sig-param"><span class="n">market_context</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyopenadr.client.OpenADRClient.add_report" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a new reporting capability to the client.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>callable</strong> (<em>callable</em>) – A callable or coroutine that will fetch the value for a specific report. This callable will be passed the report_id and the r_id of the requested value.</p></li>
+<li><p><strong>report_id</strong> (<em>str</em>) – A unique identifier for this report.</p></li>
+<li><p><strong>report_name</strong> (<em>str</em>) – An OpenADR name for this report (one of pyopenadr.enums.REPORT_NAME)</p></li>
+<li><p><strong>reading_type</strong> (<em>str</em>) – An OpenADR reading type (found in pyopenadr.enums.READING_TYPE)</p></li>
+<li><p><strong>report_type</strong> (<em>str</em>) – An OpenADR report type (found in pyopenadr.enums.REPORT_TYPE)</p></li>
+<li><p><strong>sampling_rate</strong> (<em>datetime.timedelta</em>) – The sampling rate for the measurement.</p></li>
+<li><p><strong>resource_id</strong> – A specific name for this resource within this report.</p></li>
+<li><p><strong>unit</strong> (<em>str</em>) – The unit for this measurement.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pyopenadr.client.OpenADRClient.cancel_party_registration">
+<em class="property">async </em><code class="sig-name descname">cancel_party_registration</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyopenadr.client.OpenADRClient.cancel_party_registration" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="pyopenadr.client.OpenADRClient.create_party_registration">
+<em class="property">async </em><code class="sig-name descname">create_party_registration</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">http_pull_model</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">xml_signature</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">report_only</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">profile_name</span><span class="o">=</span><span class="default_value">'2.0b'</span></em>, <em class="sig-param"><span class="n">transport_name</span><span class="o">=</span><span class="default_value">'simpleHttp'</span></em>, <em class="sig-param"><span class="n">transport_address</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ven_id</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyopenadr.client.OpenADRClient.create_party_registration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Take the neccessary steps to register this client with the server.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>http_pull_model</strong> (<em>bool</em>) – Whether to use the ‘pull’ model for HTTP.</p></li>
+<li><p><strong>xml_signature</strong> (<em>bool</em>) – Whether to sign each XML message.</p></li>
+<li><p><strong>report_only</strong> (<em>bool</em>) – Whether or not this is a reporting-only client which does not deal with Events.</p></li>
+<li><p><strong>profile_name</strong> (<em>str</em>) – Which OpenADR profile to use.</p></li>
+<li><p><strong>transport_name</strong> (<em>str</em>) – The transport name to use. Either ‘simpleHttp’ or ‘xmpp’.</p></li>
+<li><p><strong>transport_address</strong> (<em>str</em>) – Which public-facing address the server should use to communicate.</p></li>
+<li><p><strong>ven_id</strong> (<em>str</em>) – The ID for this VEN. If you leave this blank, a VEN_ID will be assigned by the VTN.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pyopenadr.client.OpenADRClient.created_event">
+<em class="property">async </em><code class="sig-name descname">created_event</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request_id</span></em>, <em class="sig-param"><span class="n">event_id</span></em>, <em class="sig-param"><span class="n">opt_type</span></em>, <em class="sig-param"><span class="n">modification_number</span><span class="o">=</span><span class="default_value">1</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyopenadr.client.OpenADRClient.created_event" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inform the VTN that we created an event.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pyopenadr.client.OpenADRClient.created_report">
+<em class="property">async </em><code class="sig-name descname">created_report</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyopenadr.client.OpenADRClient.created_report" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="pyopenadr.client.OpenADRClient.poll">
+<em class="property">async </em><code class="sig-name descname">poll</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyopenadr.client.OpenADRClient.poll" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request the next available message from the Server. This coroutine is called automatically.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pyopenadr.client.OpenADRClient.query_registration">
+<em class="property">async </em><code class="sig-name descname">query_registration</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyopenadr.client.OpenADRClient.query_registration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request information about the VTN.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pyopenadr.client.OpenADRClient.register_report">
+<em class="property">async </em><code class="sig-name descname">register_report</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyopenadr.client.OpenADRClient.register_report" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tell the VTN about our reporting capabilities.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pyopenadr.client.OpenADRClient.request_event">
+<em class="property">async </em><code class="sig-name descname">request_event</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">reply_limit</span><span class="o">=</span><span class="default_value">1</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyopenadr.client.OpenADRClient.request_event" title="Permalink to this definition">¶</a></dt>
+<dd><p>Request the next Event from the VTN, if it has any.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pyopenadr.client.OpenADRClient.run">
+<em class="property">async </em><code class="sig-name descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyopenadr.client.OpenADRClient.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run the client in full-auto mode.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pyopenadr.client.OpenADRClient.update_report">
+<em class="property">async </em><code class="sig-name descname">update_report</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">report_id</span></em>, <em class="sig-param"><span class="n">resource_id</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyopenadr.client.OpenADRClient.update_report" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calls the previously registered report callable, and send the result as a message to the VTN.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pyopenadr.enums">
+<span id="pyopenadr-enums-module"></span><h2>pyopenadr.enums module<a class="headerlink" href="#module-pyopenadr.enums" title="Permalink to this headline">¶</a></h2>
+<p>A collection of useful enumerations that you can use to construct or
+interpret OpenADR messages. Can also be useful during testing.</p>
+<dl class="py class">
+<dt id="pyopenadr.enums.EVENT_STATUS">
+<em class="property">class </em><code class="sig-prename descclassname">pyopenadr.enums.</code><code class="sig-name descname">EVENT_STATUS</code><a class="headerlink" href="#pyopenadr.enums.EVENT_STATUS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt id="pyopenadr.enums.EVENT_STATUS.ACTIVE">
+<code class="sig-name descname">ACTIVE</code><em class="property"> = 'active'</em><a class="headerlink" href="#pyopenadr.enums.EVENT_STATUS.ACTIVE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.EVENT_STATUS.CANCELLED">
+<code class="sig-name descname">CANCELLED</code><em class="property"> = 'cancelled'</em><a class="headerlink" href="#pyopenadr.enums.EVENT_STATUS.CANCELLED" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.EVENT_STATUS.COMPLETED">
+<code class="sig-name descname">COMPLETED</code><em class="property"> = 'completed'</em><a class="headerlink" href="#pyopenadr.enums.EVENT_STATUS.COMPLETED" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.EVENT_STATUS.FAR">
+<code class="sig-name descname">FAR</code><em class="property"> = 'far'</em><a class="headerlink" href="#pyopenadr.enums.EVENT_STATUS.FAR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.EVENT_STATUS.NEAR">
+<code class="sig-name descname">NEAR</code><em class="property"> = 'near'</em><a class="headerlink" href="#pyopenadr.enums.EVENT_STATUS.NEAR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.EVENT_STATUS.NONE">
+<code class="sig-name descname">NONE</code><em class="property"> = 'none'</em><a class="headerlink" href="#pyopenadr.enums.EVENT_STATUS.NONE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="pyopenadr.enums.Enum">
+<em class="property">class </em><code class="sig-prename descclassname">pyopenadr.enums.</code><code class="sig-name descname">Enum</code><a class="headerlink" href="#pyopenadr.enums.Enum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">type</span></code></p>
+<dl class="py method">
+<dt id="pyopenadr.enums.Enum.members">
+<em class="property">property </em><code class="sig-name descname">members</code><a class="headerlink" href="#pyopenadr.enums.Enum.members" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="pyopenadr.enums.Enum.values">
+<em class="property">property </em><code class="sig-name descname">values</code><a class="headerlink" href="#pyopenadr.enums.Enum.values" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="pyopenadr.enums.OPT">
+<em class="property">class </em><code class="sig-prename descclassname">pyopenadr.enums.</code><code class="sig-name descname">OPT</code><a class="headerlink" href="#pyopenadr.enums.OPT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt id="pyopenadr.enums.OPT.OPT_IN">
+<code class="sig-name descname">OPT_IN</code><em class="property"> = 'optIn'</em><a class="headerlink" href="#pyopenadr.enums.OPT.OPT_IN" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.OPT.OPT_OUT">
+<code class="sig-name descname">OPT_OUT</code><em class="property"> = 'optOut'</em><a class="headerlink" href="#pyopenadr.enums.OPT.OPT_OUT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="pyopenadr.enums.OPT_REASON">
+<em class="property">class </em><code class="sig-prename descclassname">pyopenadr.enums.</code><code class="sig-name descname">OPT_REASON</code><a class="headerlink" href="#pyopenadr.enums.OPT_REASON" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt id="pyopenadr.enums.OPT_REASON.ECONOMIC">
+<code class="sig-name descname">ECONOMIC</code><em class="property"> = 'economic'</em><a class="headerlink" href="#pyopenadr.enums.OPT_REASON.ECONOMIC" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.OPT_REASON.EMERGENCY">
+<code class="sig-name descname">EMERGENCY</code><em class="property"> = 'emergency'</em><a class="headerlink" href="#pyopenadr.enums.OPT_REASON.EMERGENCY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.OPT_REASON.MUST_RUN">
+<code class="sig-name descname">MUST_RUN</code><em class="property"> = 'mustRun'</em><a class="headerlink" href="#pyopenadr.enums.OPT_REASON.MUST_RUN" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.OPT_REASON.NOT_PARTICIPATING">
+<code class="sig-name descname">NOT_PARTICIPATING</code><em class="property"> = 'notParticipating'</em><a class="headerlink" href="#pyopenadr.enums.OPT_REASON.NOT_PARTICIPATING" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.OPT_REASON.OUTAGE_RUN_STATUS">
+<code class="sig-name descname">OUTAGE_RUN_STATUS</code><em class="property"> = 'outageRunStatus'</em><a class="headerlink" href="#pyopenadr.enums.OPT_REASON.OUTAGE_RUN_STATUS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.OPT_REASON.OVERRIDE_STATUS">
+<code class="sig-name descname">OVERRIDE_STATUS</code><em class="property"> = 'overrideStatus'</em><a class="headerlink" href="#pyopenadr.enums.OPT_REASON.OVERRIDE_STATUS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.OPT_REASON.PARTICIPATING">
+<code class="sig-name descname">PARTICIPATING</code><em class="property"> = 'participating'</em><a class="headerlink" href="#pyopenadr.enums.OPT_REASON.PARTICIPATING" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.OPT_REASON.X_SCHEDULE">
+<code class="sig-name descname">X_SCHEDULE</code><em class="property"> = 'x-schedule'</em><a class="headerlink" href="#pyopenadr.enums.OPT_REASON.X_SCHEDULE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="pyopenadr.enums.READING_TYPE">
+<em class="property">class </em><code class="sig-prename descclassname">pyopenadr.enums.</code><code class="sig-name descname">READING_TYPE</code><a class="headerlink" href="#pyopenadr.enums.READING_TYPE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt id="pyopenadr.enums.READING_TYPE.ALLOCATED">
+<code class="sig-name descname">ALLOCATED</code><em class="property"> = 'Allocated'</em><a class="headerlink" href="#pyopenadr.enums.READING_TYPE.ALLOCATED" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.READING_TYPE.CONTRACT">
+<code class="sig-name descname">CONTRACT</code><em class="property"> = 'Contract'</em><a class="headerlink" href="#pyopenadr.enums.READING_TYPE.CONTRACT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.READING_TYPE.DERIVED">
+<code class="sig-name descname">DERIVED</code><em class="property"> = 'Derived'</em><a class="headerlink" href="#pyopenadr.enums.READING_TYPE.DERIVED" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.READING_TYPE.DIRECT_READ">
+<code class="sig-name descname">DIRECT_READ</code><em class="property"> = 'Direct Read'</em><a class="headerlink" href="#pyopenadr.enums.READING_TYPE.DIRECT_READ" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.READING_TYPE.ESTIMATED">
+<code class="sig-name descname">ESTIMATED</code><em class="property"> = 'Estimated'</em><a class="headerlink" href="#pyopenadr.enums.READING_TYPE.ESTIMATED" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.READING_TYPE.HYBRID">
+<code class="sig-name descname">HYBRID</code><em class="property"> = 'Hybrid'</em><a class="headerlink" href="#pyopenadr.enums.READING_TYPE.HYBRID" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.READING_TYPE.MEAN">
+<code class="sig-name descname">MEAN</code><em class="property"> = 'Mean'</em><a class="headerlink" href="#pyopenadr.enums.READING_TYPE.MEAN" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.READING_TYPE.NET">
+<code class="sig-name descname">NET</code><em class="property"> = 'Net'</em><a class="headerlink" href="#pyopenadr.enums.READING_TYPE.NET" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.READING_TYPE.PEAK">
+<code class="sig-name descname">PEAK</code><em class="property"> = 'Peak'</em><a class="headerlink" href="#pyopenadr.enums.READING_TYPE.PEAK" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.READING_TYPE.PROJECTED">
+<code class="sig-name descname">PROJECTED</code><em class="property"> = 'Projected'</em><a class="headerlink" href="#pyopenadr.enums.READING_TYPE.PROJECTED" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.READING_TYPE.SUMMED">
+<code class="sig-name descname">SUMMED</code><em class="property"> = 'Summed'</em><a class="headerlink" href="#pyopenadr.enums.READING_TYPE.SUMMED" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.READING_TYPE.X_NOT_APPLICABLE">
+<code class="sig-name descname">X_NOT_APPLICABLE</code><em class="property"> = 'x-notApplicable'</em><a class="headerlink" href="#pyopenadr.enums.READING_TYPE.X_NOT_APPLICABLE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.READING_TYPE.X_RMS">
+<code class="sig-name descname">X_RMS</code><em class="property"> = 'x-RMS'</em><a class="headerlink" href="#pyopenadr.enums.READING_TYPE.X_RMS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="pyopenadr.enums.REPORT_NAME">
+<em class="property">class </em><code class="sig-prename descclassname">pyopenadr.enums.</code><code class="sig-name descname">REPORT_NAME</code><a class="headerlink" href="#pyopenadr.enums.REPORT_NAME" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt id="pyopenadr.enums.REPORT_NAME.HISTORY_GREENBUTTON">
+<code class="sig-name descname">HISTORY_GREENBUTTON</code><em class="property"> = 'HISTORY_GREENBUTTON'</em><a class="headerlink" href="#pyopenadr.enums.REPORT_NAME.HISTORY_GREENBUTTON" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.REPORT_NAME.HISTORY_USAGE">
+<code class="sig-name descname">HISTORY_USAGE</code><em class="property"> = 'HISTORY_USAGE'</em><a class="headerlink" href="#pyopenadr.enums.REPORT_NAME.HISTORY_USAGE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.REPORT_NAME.METADATA_HISTORY_GREENBUTTON">
+<code class="sig-name descname">METADATA_HISTORY_GREENBUTTON</code><em class="property"> = 'METADATA_HISTORY_GREENBUTTON'</em><a class="headerlink" href="#pyopenadr.enums.REPORT_NAME.METADATA_HISTORY_GREENBUTTON" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.REPORT_NAME.METADATA_HISTORY_USAGE">
+<code class="sig-name descname">METADATA_HISTORY_USAGE</code><em class="property"> = 'METADATA_HISTORY_USAGE'</em><a class="headerlink" href="#pyopenadr.enums.REPORT_NAME.METADATA_HISTORY_USAGE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.REPORT_NAME.METADATA_TELEMETRY_STATUS">
+<code class="sig-name descname">METADATA_TELEMETRY_STATUS</code><em class="property"> = 'METADATA_TELEMETRY_STATUS'</em><a class="headerlink" href="#pyopenadr.enums.REPORT_NAME.METADATA_TELEMETRY_STATUS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.REPORT_NAME.METADATA_TELEMETRY_USAGE">
+<code class="sig-name descname">METADATA_TELEMETRY_USAGE</code><em class="property"> = 'METADATA_TELEMETRY_USAGE'</em><a class="headerlink" href="#pyopenadr.enums.REPORT_NAME.METADATA_TELEMETRY_USAGE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.REPORT_NAME.TELEMETRY_STATUS">
+<code class="sig-name descname">TELEMETRY_STATUS</code><em class="property"> = 'TELEMETRY_STATUS'</em><a class="headerlink" href="#pyopenadr.enums.REPORT_NAME.TELEMETRY_STATUS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.REPORT_NAME.TELEMETRY_USAGE">
+<code class="sig-name descname">TELEMETRY_USAGE</code><em class="property"> = 'TELEMETRY_USAGE'</em><a class="headerlink" href="#pyopenadr.enums.REPORT_NAME.TELEMETRY_USAGE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="pyopenadr.enums.REPORT_TYPE">
+<em class="property">class </em><code class="sig-prename descclassname">pyopenadr.enums.</code><code class="sig-name descname">REPORT_TYPE</code><a class="headerlink" href="#pyopenadr.enums.REPORT_TYPE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt id="pyopenadr.enums.REPORT_TYPE.AVAILABLE_ENERGY_STORAGE">
+<code class="sig-name descname">AVAILABLE_ENERGY_STORAGE</code><em class="property"> = 'availableEnergyStorage'</em><a class="headerlink" href="#pyopenadr.enums.REPORT_TYPE.AVAILABLE_ENERGY_STORAGE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.REPORT_TYPE.AVG_DEMAND">
+<code class="sig-name descname">AVG_DEMAND</code><em class="property"> = 'avgDemand'</em><a class="headerlink" href="#pyopenadr.enums.REPORT_TYPE.AVG_DEMAND" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.REPORT_TYPE.AVG_USAGE">
+<code class="sig-name descname">AVG_USAGE</code><em class="property"> = 'avgUsage'</em><a class="headerlink" href="#pyopenadr.enums.REPORT_TYPE.AVG_USAGE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.REPORT_TYPE.BASELINE">
+<code class="sig-name descname">BASELINE</code><em class="property"> = 'baseline'</em><a class="headerlink" href="#pyopenadr.enums.REPORT_TYPE.BASELINE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.REPORT_TYPE.DELTA_DEMAND">
+<code class="sig-name descname">DELTA_DEMAND</code><em class="property"> = 'deltaDemand'</em><a class="headerlink" href="#pyopenadr.enums.REPORT_TYPE.DELTA_DEMAND" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.REPORT_TYPE.DELTA_SET_POINT">
+<code class="sig-name descname">DELTA_SET_POINT</code><em class="property"> = 'deltaSetPoint'</em><a class="headerlink" href="#pyopenadr.enums.REPORT_TYPE.DELTA_SET_POINT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.REPORT_TYPE.DELTA_USAGE">
+<code class="sig-name descname">DELTA_USAGE</code><em class="property"> = 'deltaUsage'</em><a class="headerlink" href="#pyopenadr.enums.REPORT_TYPE.DELTA_USAGE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.REPORT_TYPE.DEMAND">
+<code class="sig-name descname">DEMAND</code><em class="property"> = 'demand'</em><a class="headerlink" href="#pyopenadr.enums.REPORT_TYPE.DEMAND" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.REPORT_TYPE.DEVIATION">
+<code class="sig-name descname">DEVIATION</code><em class="property"> = 'deviation'</em><a class="headerlink" href="#pyopenadr.enums.REPORT_TYPE.DEVIATION" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.REPORT_TYPE.DOWN_REGULATION_CAPACITY_AVAILABLE">
+<code class="sig-name descname">DOWN_REGULATION_CAPACITY_AVAILABLE</code><em class="property"> = 'downRegulationCapacityAvailable'</em><a class="headerlink" href="#pyopenadr.enums.REPORT_TYPE.DOWN_REGULATION_CAPACITY_AVAILABLE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.REPORT_TYPE.LEVEL">
+<code class="sig-name descname">LEVEL</code><em class="property"> = 'level'</em><a class="headerlink" href="#pyopenadr.enums.REPORT_TYPE.LEVEL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.REPORT_TYPE.OPERATING_STATE">
+<code class="sig-name descname">OPERATING_STATE</code><em class="property"> = 'operatingState'</em><a class="headerlink" href="#pyopenadr.enums.REPORT_TYPE.OPERATING_STATE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.REPORT_TYPE.PERCENT_DEMAND">
+<code class="sig-name descname">PERCENT_DEMAND</code><em class="property"> = 'percentDemand'</em><a class="headerlink" href="#pyopenadr.enums.REPORT_TYPE.PERCENT_DEMAND" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.REPORT_TYPE.PERCENT_USAGE">
+<code class="sig-name descname">PERCENT_USAGE</code><em class="property"> = 'percentUsage'</em><a class="headerlink" href="#pyopenadr.enums.REPORT_TYPE.PERCENT_USAGE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.REPORT_TYPE.POWER_FACTOR">
+<code class="sig-name descname">POWER_FACTOR</code><em class="property"> = 'powerFactor'</em><a class="headerlink" href="#pyopenadr.enums.REPORT_TYPE.POWER_FACTOR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.REPORT_TYPE.PRICE">
+<code class="sig-name descname">PRICE</code><em class="property"> = 'price'</em><a class="headerlink" href="#pyopenadr.enums.REPORT_TYPE.PRICE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.REPORT_TYPE.READING">
+<code class="sig-name descname">READING</code><em class="property"> = 'reading'</em><a class="headerlink" href="#pyopenadr.enums.REPORT_TYPE.READING" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.REPORT_TYPE.REGULATION_SETPOINT">
+<code class="sig-name descname">REGULATION_SETPOINT</code><em class="property"> = 'regulationSetpoint'</em><a class="headerlink" href="#pyopenadr.enums.REPORT_TYPE.REGULATION_SETPOINT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.REPORT_TYPE.SET_POINT">
+<code class="sig-name descname">SET_POINT</code><em class="property"> = 'setPoint'</em><a class="headerlink" href="#pyopenadr.enums.REPORT_TYPE.SET_POINT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.REPORT_TYPE.STORED_ENERGY">
+<code class="sig-name descname">STORED_ENERGY</code><em class="property"> = 'storedEnergy'</em><a class="headerlink" href="#pyopenadr.enums.REPORT_TYPE.STORED_ENERGY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.REPORT_TYPE.TARGET_ENERGY_STORAGE">
+<code class="sig-name descname">TARGET_ENERGY_STORAGE</code><em class="property"> = 'targetEnergyStorage'</em><a class="headerlink" href="#pyopenadr.enums.REPORT_TYPE.TARGET_ENERGY_STORAGE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.REPORT_TYPE.UP_REGULATION_CAPACITY_AVAILABLE">
+<code class="sig-name descname">UP_REGULATION_CAPACITY_AVAILABLE</code><em class="property"> = 'upRegulationCapacityAvailable'</em><a class="headerlink" href="#pyopenadr.enums.REPORT_TYPE.UP_REGULATION_CAPACITY_AVAILABLE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.REPORT_TYPE.USAGE">
+<code class="sig-name descname">USAGE</code><em class="property"> = 'usage'</em><a class="headerlink" href="#pyopenadr.enums.REPORT_TYPE.USAGE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.REPORT_TYPE.X_RESOURCE_STATUS">
+<code class="sig-name descname">X_RESOURCE_STATUS</code><em class="property"> = 'x-resourceStatus'</em><a class="headerlink" href="#pyopenadr.enums.REPORT_TYPE.X_RESOURCE_STATUS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="pyopenadr.enums.SECURITY_LEVEL">
+<em class="property">class </em><code class="sig-prename descclassname">pyopenadr.enums.</code><code class="sig-name descname">SECURITY_LEVEL</code><a class="headerlink" href="#pyopenadr.enums.SECURITY_LEVEL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt id="pyopenadr.enums.SECURITY_LEVEL.HIGH">
+<code class="sig-name descname">HIGH</code><em class="property">: <a class="reference internal" href="#pyopenadr.enums.SECURITY_LEVEL.HIGH" title="pyopenadr.enums.SECURITY_LEVEL.HIGH">HIGH</a></em><a class="headerlink" href="#pyopenadr.enums.SECURITY_LEVEL.HIGH" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.SECURITY_LEVEL.STANDARD">
+<code class="sig-name descname">STANDARD</code><em class="property">: <a class="reference internal" href="#pyopenadr.enums.SECURITY_LEVEL.STANDARD" title="pyopenadr.enums.SECURITY_LEVEL.STANDARD">STANDARD</a></em><a class="headerlink" href="#pyopenadr.enums.SECURITY_LEVEL.STANDARD" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="pyopenadr.enums.SIGNAL_NAME">
+<em class="property">class </em><code class="sig-prename descclassname">pyopenadr.enums.</code><code class="sig-name descname">SIGNAL_NAME</code><a class="headerlink" href="#pyopenadr.enums.SIGNAL_NAME" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt id="pyopenadr.enums.SIGNAL_NAME.BID_ENERGY">
+<code class="sig-name descname">BID_ENERGY</code><em class="property"> = 'BID_ENERGY'</em><a class="headerlink" href="#pyopenadr.enums.SIGNAL_NAME.BID_ENERGY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.SIGNAL_NAME.BID_LOAD">
+<code class="sig-name descname">BID_LOAD</code><em class="property"> = 'BID_LOAD'</em><a class="headerlink" href="#pyopenadr.enums.SIGNAL_NAME.BID_LOAD" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.SIGNAL_NAME.BID_PRICE">
+<code class="sig-name descname">BID_PRICE</code><em class="property"> = 'BID_PRICE'</em><a class="headerlink" href="#pyopenadr.enums.SIGNAL_NAME.BID_PRICE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.SIGNAL_NAME.CHARGE_STATE">
+<code class="sig-name descname">CHARGE_STATE</code><em class="property"> = 'CHARGE_STATE'</em><a class="headerlink" href="#pyopenadr.enums.SIGNAL_NAME.CHARGE_STATE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.SIGNAL_NAME.DEMAND_CHARGE">
+<code class="sig-name descname">DEMAND_CHARGE</code><em class="property"> = 'DEMAND_CHARGE'</em><a class="headerlink" href="#pyopenadr.enums.SIGNAL_NAME.DEMAND_CHARGE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.SIGNAL_NAME.ELECTRICITY_PRICE">
+<code class="sig-name descname">ELECTRICITY_PRICE</code><em class="property"> = 'ELECTRICITY_PRICE'</em><a class="headerlink" href="#pyopenadr.enums.SIGNAL_NAME.ELECTRICITY_PRICE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.SIGNAL_NAME.ENERGY_PRICE">
+<code class="sig-name descname">ENERGY_PRICE</code><em class="property"> = 'ENERGY_PRICE'</em><a class="headerlink" href="#pyopenadr.enums.SIGNAL_NAME.ENERGY_PRICE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.SIGNAL_NAME.LOAD_CONTROL">
+<code class="sig-name descname">LOAD_CONTROL</code><em class="property"> = 'LOAD_CONTROL'</em><a class="headerlink" href="#pyopenadr.enums.SIGNAL_NAME.LOAD_CONTROL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.SIGNAL_NAME.LOAD_DISPATCH">
+<code class="sig-name descname">LOAD_DISPATCH</code><em class="property"> = 'LOAD_DISPATCH'</em><a class="headerlink" href="#pyopenadr.enums.SIGNAL_NAME.LOAD_DISPATCH" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.SIGNAL_NAME.SIMPLE">
+<code class="sig-name descname">SIMPLE</code><em class="property"> = 'SIMPLE'</em><a class="headerlink" href="#pyopenadr.enums.SIGNAL_NAME.SIMPLE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.SIGNAL_NAME.simple">
+<code class="sig-name descname">simple</code><em class="property"> = 'simple'</em><a class="headerlink" href="#pyopenadr.enums.SIGNAL_NAME.simple" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="pyopenadr.enums.SIGNAL_TYPE">
+<em class="property">class </em><code class="sig-prename descclassname">pyopenadr.enums.</code><code class="sig-name descname">SIGNAL_TYPE</code><a class="headerlink" href="#pyopenadr.enums.SIGNAL_TYPE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt id="pyopenadr.enums.SIGNAL_TYPE.DELTA">
+<code class="sig-name descname">DELTA</code><em class="property"> = 'delta'</em><a class="headerlink" href="#pyopenadr.enums.SIGNAL_TYPE.DELTA" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.SIGNAL_TYPE.LEVEL">
+<code class="sig-name descname">LEVEL</code><em class="property"> = 'level'</em><a class="headerlink" href="#pyopenadr.enums.SIGNAL_TYPE.LEVEL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.SIGNAL_TYPE.MULTIPLIER">
+<code class="sig-name descname">MULTIPLIER</code><em class="property"> = 'multiplier'</em><a class="headerlink" href="#pyopenadr.enums.SIGNAL_TYPE.MULTIPLIER" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.SIGNAL_TYPE.PRICE">
+<code class="sig-name descname">PRICE</code><em class="property"> = 'price'</em><a class="headerlink" href="#pyopenadr.enums.SIGNAL_TYPE.PRICE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.SIGNAL_TYPE.PRICE_MULTIPLIER">
+<code class="sig-name descname">PRICE_MULTIPLIER</code><em class="property"> = 'priceMultiplier'</em><a class="headerlink" href="#pyopenadr.enums.SIGNAL_TYPE.PRICE_MULTIPLIER" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.SIGNAL_TYPE.PRICE_RELATIVE">
+<code class="sig-name descname">PRICE_RELATIVE</code><em class="property"> = 'priceRelative'</em><a class="headerlink" href="#pyopenadr.enums.SIGNAL_TYPE.PRICE_RELATIVE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.SIGNAL_TYPE.SETPOINT">
+<code class="sig-name descname">SETPOINT</code><em class="property"> = 'setpoint'</em><a class="headerlink" href="#pyopenadr.enums.SIGNAL_TYPE.SETPOINT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.SIGNAL_TYPE.X_LOAD_CONTROL_CAPACITY">
+<code class="sig-name descname">X_LOAD_CONTROL_CAPACITY</code><em class="property"> = 'x-loadControlCapacity'</em><a class="headerlink" href="#pyopenadr.enums.SIGNAL_TYPE.X_LOAD_CONTROL_CAPACITY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.SIGNAL_TYPE.X_LOAD_CONTROL_LEVEL_OFFSET">
+<code class="sig-name descname">X_LOAD_CONTROL_LEVEL_OFFSET</code><em class="property"> = 'x-loadControlLevelOffset'</em><a class="headerlink" href="#pyopenadr.enums.SIGNAL_TYPE.X_LOAD_CONTROL_LEVEL_OFFSET" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.SIGNAL_TYPE.X_LOAD_CONTROL_PERCENT_OFFSET">
+<code class="sig-name descname">X_LOAD_CONTROL_PERCENT_OFFSET</code><em class="property"> = 'x-loadControlPorcentOffset'</em><a class="headerlink" href="#pyopenadr.enums.SIGNAL_TYPE.X_LOAD_CONTROL_PERCENT_OFFSET" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.SIGNAL_TYPE.X_LOAD_CONTROL_SETPOINT">
+<code class="sig-name descname">X_LOAD_CONTROL_SETPOINT</code><em class="property"> = 'x-loadControlSetpoint'</em><a class="headerlink" href="#pyopenadr.enums.SIGNAL_TYPE.X_LOAD_CONTROL_SETPOINT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="pyopenadr.enums.SI_SCALE_CODE">
+<em class="property">class </em><code class="sig-prename descclassname">pyopenadr.enums.</code><code class="sig-name descname">SI_SCALE_CODE</code><a class="headerlink" href="#pyopenadr.enums.SI_SCALE_CODE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt id="pyopenadr.enums.SI_SCALE_CODE.G">
+<code class="sig-name descname">G</code><em class="property"> = 'G'</em><a class="headerlink" href="#pyopenadr.enums.SI_SCALE_CODE.G" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.SI_SCALE_CODE.M">
+<code class="sig-name descname">M</code><em class="property"> = 'M'</em><a class="headerlink" href="#pyopenadr.enums.SI_SCALE_CODE.M" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.SI_SCALE_CODE.T">
+<code class="sig-name descname">T</code><em class="property"> = 'T'</em><a class="headerlink" href="#pyopenadr.enums.SI_SCALE_CODE.T" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.SI_SCALE_CODE.c">
+<code class="sig-name descname">c</code><em class="property"> = 'c'</em><a class="headerlink" href="#pyopenadr.enums.SI_SCALE_CODE.c" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.SI_SCALE_CODE.d">
+<code class="sig-name descname">d</code><em class="property"> = 'd'</em><a class="headerlink" href="#pyopenadr.enums.SI_SCALE_CODE.d" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.SI_SCALE_CODE.k">
+<code class="sig-name descname">k</code><em class="property"> = 'k'</em><a class="headerlink" href="#pyopenadr.enums.SI_SCALE_CODE.k" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.SI_SCALE_CODE.m">
+<code class="sig-name descname">m</code><em class="property"> = 'm'</em><a class="headerlink" href="#pyopenadr.enums.SI_SCALE_CODE.m" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.SI_SCALE_CODE.micro">
+<code class="sig-name descname">micro</code><em class="property"> = 'micro'</em><a class="headerlink" href="#pyopenadr.enums.SI_SCALE_CODE.micro" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.SI_SCALE_CODE.n">
+<code class="sig-name descname">n</code><em class="property"> = 'n'</em><a class="headerlink" href="#pyopenadr.enums.SI_SCALE_CODE.n" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.SI_SCALE_CODE.none">
+<code class="sig-name descname">none</code><em class="property"> = 'none'</em><a class="headerlink" href="#pyopenadr.enums.SI_SCALE_CODE.none" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.SI_SCALE_CODE.p">
+<code class="sig-name descname">p</code><em class="property"> = 'p'</em><a class="headerlink" href="#pyopenadr.enums.SI_SCALE_CODE.p" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="pyopenadr.enums.STATUS_CODES">
+<em class="property">class </em><code class="sig-prename descclassname">pyopenadr.enums.</code><code class="sig-name descname">STATUS_CODES</code><a class="headerlink" href="#pyopenadr.enums.STATUS_CODES" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt id="pyopenadr.enums.STATUS_CODES.COMPLIANCE_ERROR">
+<code class="sig-name descname">COMPLIANCE_ERROR</code><em class="property"> = 459</em><a class="headerlink" href="#pyopenadr.enums.STATUS_CODES.COMPLIANCE_ERROR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.STATUS_CODES.DEPLOYMENT_ERROR_OTHER">
+<code class="sig-name descname">DEPLOYMENT_ERROR_OTHER</code><em class="property"> = 469</em><a class="headerlink" href="#pyopenadr.enums.STATUS_CODES.DEPLOYMENT_ERROR_OTHER" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.STATUS_CODES.INVALID_DATA">
+<code class="sig-name descname">INVALID_DATA</code><em class="property"> = 454</em><a class="headerlink" href="#pyopenadr.enums.STATUS_CODES.INVALID_DATA" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.STATUS_CODES.INVALID_ID">
+<code class="sig-name descname">INVALID_ID</code><em class="property"> = 452</em><a class="headerlink" href="#pyopenadr.enums.STATUS_CODES.INVALID_ID" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.STATUS_CODES.NOT_ALLOWED">
+<code class="sig-name descname">NOT_ALLOWED</code><em class="property"> = 451</em><a class="headerlink" href="#pyopenadr.enums.STATUS_CODES.NOT_ALLOWED" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.STATUS_CODES.NOT_RECOGNIZED">
+<code class="sig-name descname">NOT_RECOGNIZED</code><em class="property"> = 453</em><a class="headerlink" href="#pyopenadr.enums.STATUS_CODES.NOT_RECOGNIZED" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.STATUS_CODES.NOT_REGISTERED_OR_AUTHORIZED">
+<code class="sig-name descname">NOT_REGISTERED_OR_AUTHORIZED</code><em class="property"> = 463</em><a class="headerlink" href="#pyopenadr.enums.STATUS_CODES.NOT_REGISTERED_OR_AUTHORIZED" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.STATUS_CODES.OUT_OF_SEQUENCE">
+<code class="sig-name descname">OUT_OF_SEQUENCE</code><em class="property"> = 450</em><a class="headerlink" href="#pyopenadr.enums.STATUS_CODES.OUT_OF_SEQUENCE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.STATUS_CODES.REPORT_NOT_SUPPORTED">
+<code class="sig-name descname">REPORT_NOT_SUPPORTED</code><em class="property"> = 461</em><a class="headerlink" href="#pyopenadr.enums.STATUS_CODES.REPORT_NOT_SUPPORTED" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.STATUS_CODES.SIGNAL_NOT_SUPPORTED">
+<code class="sig-name descname">SIGNAL_NOT_SUPPORTED</code><em class="property"> = 460</em><a class="headerlink" href="#pyopenadr.enums.STATUS_CODES.SIGNAL_NOT_SUPPORTED" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.enums.STATUS_CODES.TARGET_MISMATCH">
+<code class="sig-name descname">TARGET_MISMATCH</code><em class="property"> = 462</em><a class="headerlink" href="#pyopenadr.enums.STATUS_CODES.TARGET_MISMATCH" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pyopenadr.errors">
+<span id="pyopenadr-errors-module"></span><h2>pyopenadr.errors module<a class="headerlink" href="#module-pyopenadr.errors" title="Permalink to this headline">¶</a></h2>
+<dl class="py exception">
+<dt id="pyopenadr.errors.OpenADRError">
+<em class="property">exception </em><code class="sig-prename descclassname">pyopenadr.errors.</code><code class="sig-name descname">OpenADRError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">status</span></em>, <em class="sig-param"><span class="n">description</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyopenadr.errors.OpenADRError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-pyopenadr.messaging">
+<span id="pyopenadr-messaging-module"></span><h2>pyopenadr.messaging module<a class="headerlink" href="#module-pyopenadr.messaging" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="pyopenadr.messaging.create_message">
+<code class="sig-prename descclassname">pyopenadr.messaging.</code><code class="sig-name descname">create_message</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">message_type</span></em>, <em class="sig-param"><span class="n">cert</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">key</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">passphrase</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">message_payload</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyopenadr.messaging.create_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create and optionally sign an OpenADR message. Returns an XML string.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyopenadr.messaging.parse_message">
+<code class="sig-prename descclassname">pyopenadr.messaging.</code><code class="sig-name descname">parse_message</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">fingerprint</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fingerprint_lookup</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyopenadr.messaging.parse_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse a message and distill its usable parts. Returns a message type and payload.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyopenadr.messaging.validate_and_authenticate_message">
+<code class="sig-prename descclassname">pyopenadr.messaging.</code><code class="sig-name descname">validate_and_authenticate_message</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">message_dict</span></em>, <em class="sig-param"><span class="n">fingerprint</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fingerprint_lookup</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyopenadr.messaging.validate_and_authenticate_message" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-pyopenadr.objects">
+<span id="pyopenadr-objects-module"></span><h2>pyopenadr.objects module<a class="headerlink" href="#module-pyopenadr.objects" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="pyopenadr.objects.ActivePeriod">
+<em class="property">class </em><code class="sig-prename descclassname">pyopenadr.objects.</code><code class="sig-name descname">ActivePeriod</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dtstart</span><span class="p">:</span> <span class="n">datetime.datetime</span></em>, <em class="sig-param"><span class="n">duration</span><span class="p">:</span> <span class="n">datetime.timedelta</span></em>, <em class="sig-param"><span class="n">tolerance</span><span class="p">:</span> <span class="n">dict</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">notification</span><span class="p">:</span> <span class="n">dict</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ramp_up</span><span class="p">:</span> <span class="n">dict</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">recovery</span><span class="p">:</span> <span class="n">dict</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyopenadr.objects.ActivePeriod" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pyopenadr.objects.objdict" title="pyopenadr.objects.objdict"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyopenadr.objects.objdict</span></code></a></p>
+<dl class="py attribute">
+<dt id="pyopenadr.objects.ActivePeriod.dtstart">
+<code class="sig-name descname">dtstart</code><em class="property">: datetime.datetime</em><a class="headerlink" href="#pyopenadr.objects.ActivePeriod.dtstart" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.objects.ActivePeriod.duration">
+<code class="sig-name descname">duration</code><em class="property">: datetime.timedelta</em><a class="headerlink" href="#pyopenadr.objects.ActivePeriod.duration" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.objects.ActivePeriod.notification">
+<code class="sig-name descname">notification</code><em class="property">: dict</em><em class="property"> = None</em><a class="headerlink" href="#pyopenadr.objects.ActivePeriod.notification" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.objects.ActivePeriod.ramp_up">
+<code class="sig-name descname">ramp_up</code><em class="property">: dict</em><em class="property"> = None</em><a class="headerlink" href="#pyopenadr.objects.ActivePeriod.ramp_up" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.objects.ActivePeriod.recovery">
+<code class="sig-name descname">recovery</code><em class="property">: dict</em><em class="property"> = None</em><a class="headerlink" href="#pyopenadr.objects.ActivePeriod.recovery" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.objects.ActivePeriod.tolerance">
+<code class="sig-name descname">tolerance</code><em class="property">: dict</em><em class="property"> = None</em><a class="headerlink" href="#pyopenadr.objects.ActivePeriod.tolerance" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="pyopenadr.objects.AggregatedPNode">
+<em class="property">class </em><code class="sig-prename descclassname">pyopenadr.objects.</code><code class="sig-name descname">AggregatedPNode</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyopenadr.objects.AggregatedPNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pyopenadr.objects.objdict" title="pyopenadr.objects.objdict"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyopenadr.objects.objdict</span></code></a></p>
+<dl class="py attribute">
+<dt id="pyopenadr.objects.AggregatedPNode.node">
+<code class="sig-name descname">node</code><em class="property">: str</em><a class="headerlink" href="#pyopenadr.objects.AggregatedPNode.node" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="pyopenadr.objects.EndDeviceAsset">
+<em class="property">class </em><code class="sig-prename descclassname">pyopenadr.objects.</code><code class="sig-name descname">EndDeviceAsset</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mrid</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyopenadr.objects.EndDeviceAsset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pyopenadr.objects.objdict" title="pyopenadr.objects.objdict"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyopenadr.objects.objdict</span></code></a></p>
+<dl class="py attribute">
+<dt id="pyopenadr.objects.EndDeviceAsset.mrid">
+<code class="sig-name descname">mrid</code><em class="property">: str</em><a class="headerlink" href="#pyopenadr.objects.EndDeviceAsset.mrid" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="pyopenadr.objects.Event">
+<em class="property">class </em><code class="sig-prename descclassname">pyopenadr.objects.</code><code class="sig-name descname">Event</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">event_descriptor</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#pyopenadr.objects.EventDescriptor" title="pyopenadr.objects.EventDescriptor">pyopenadr.objects.EventDescriptor</a></span></em>, <em class="sig-param"><span class="n">active_period</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#pyopenadr.objects.ActivePeriod" title="pyopenadr.objects.ActivePeriod">pyopenadr.objects.ActivePeriod</a></span></em>, <em class="sig-param"><span class="n">event_signals</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#pyopenadr.objects.EventSignal" title="pyopenadr.objects.EventSignal">pyopenadr.objects.EventSignal</a></span></em>, <em class="sig-param"><span class="n">target</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#pyopenadr.objects.Target" title="pyopenadr.objects.Target">pyopenadr.objects.Target</a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyopenadr.objects.Event" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pyopenadr.objects.objdict" title="pyopenadr.objects.objdict"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyopenadr.objects.objdict</span></code></a></p>
+<dl class="py attribute">
+<dt id="pyopenadr.objects.Event.active_period">
+<code class="sig-name descname">active_period</code><em class="property">: <a class="reference internal" href="#pyopenadr.objects.ActivePeriod" title="pyopenadr.objects.ActivePeriod">pyopenadr.objects.ActivePeriod</a></em><a class="headerlink" href="#pyopenadr.objects.Event.active_period" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.objects.Event.event_descriptor">
+<code class="sig-name descname">event_descriptor</code><em class="property">: <a class="reference internal" href="#pyopenadr.objects.EventDescriptor" title="pyopenadr.objects.EventDescriptor">pyopenadr.objects.EventDescriptor</a></em><a class="headerlink" href="#pyopenadr.objects.Event.event_descriptor" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.objects.Event.event_signals">
+<code class="sig-name descname">event_signals</code><em class="property">: <a class="reference internal" href="#pyopenadr.objects.EventSignal" title="pyopenadr.objects.EventSignal">pyopenadr.objects.EventSignal</a></em><a class="headerlink" href="#pyopenadr.objects.Event.event_signals" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.objects.Event.target">
+<code class="sig-name descname">target</code><em class="property">: <a class="reference internal" href="#pyopenadr.objects.Target" title="pyopenadr.objects.Target">pyopenadr.objects.Target</a></em><a class="headerlink" href="#pyopenadr.objects.Event.target" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="pyopenadr.objects.EventDescriptor">
+<em class="property">class </em><code class="sig-prename descclassname">pyopenadr.objects.</code><code class="sig-name descname">EventDescriptor</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">event_id</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">modification_number</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">market_context</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">event_status</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">created_date_time</span><span class="p">:</span> <span class="n">datetime.datetime</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">modification_date</span><span class="p">:</span> <span class="n">datetime.datetime</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">priority</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">0</span></em>, <em class="sig-param"><span class="n">test_event</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">vtn_comment</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyopenadr.objects.EventDescriptor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pyopenadr.objects.objdict" title="pyopenadr.objects.objdict"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyopenadr.objects.objdict</span></code></a></p>
+<dl class="py attribute">
+<dt id="pyopenadr.objects.EventDescriptor.created_date_time">
+<code class="sig-name descname">created_date_time</code><em class="property">: datetime.datetime</em><em class="property"> = None</em><a class="headerlink" href="#pyopenadr.objects.EventDescriptor.created_date_time" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.objects.EventDescriptor.event_id">
+<code class="sig-name descname">event_id</code><em class="property">: int</em><a class="headerlink" href="#pyopenadr.objects.EventDescriptor.event_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.objects.EventDescriptor.event_status">
+<code class="sig-name descname">event_status</code><em class="property">: str</em><a class="headerlink" href="#pyopenadr.objects.EventDescriptor.event_status" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.objects.EventDescriptor.market_context">
+<code class="sig-name descname">market_context</code><em class="property">: str</em><a class="headerlink" href="#pyopenadr.objects.EventDescriptor.market_context" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.objects.EventDescriptor.modification_date">
+<code class="sig-name descname">modification_date</code><em class="property">: datetime.datetime</em><em class="property"> = None</em><a class="headerlink" href="#pyopenadr.objects.EventDescriptor.modification_date" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.objects.EventDescriptor.modification_number">
+<code class="sig-name descname">modification_number</code><em class="property">: int</em><a class="headerlink" href="#pyopenadr.objects.EventDescriptor.modification_number" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.objects.EventDescriptor.priority">
+<code class="sig-name descname">priority</code><em class="property">: int</em><em class="property"> = 0</em><a class="headerlink" href="#pyopenadr.objects.EventDescriptor.priority" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.objects.EventDescriptor.test_event">
+<code class="sig-name descname">test_event</code><em class="property">: bool</em><em class="property"> = False</em><a class="headerlink" href="#pyopenadr.objects.EventDescriptor.test_event" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.objects.EventDescriptor.vtn_comment">
+<code class="sig-name descname">vtn_comment</code><em class="property">: str</em><em class="property"> = None</em><a class="headerlink" href="#pyopenadr.objects.EventDescriptor.vtn_comment" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="pyopenadr.objects.EventSignal">
+<em class="property">class </em><code class="sig-prename descclassname">pyopenadr.objects.</code><code class="sig-name descname">EventSignal</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">intervals</span><span class="p">:</span> <span class="n">List<span class="p">[</span><a class="reference internal" href="#pyopenadr.objects.Interval" title="pyopenadr.objects.Interval">pyopenadr.objects.Interval</a><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">target</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#pyopenadr.objects.Target" title="pyopenadr.objects.Target">pyopenadr.objects.Target</a></span></em>, <em class="sig-param"><span class="n">signal_name</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">signal_type</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">signal_id</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">current_value</span><span class="p">:</span> <span class="n">float</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyopenadr.objects.EventSignal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pyopenadr.objects.objdict" title="pyopenadr.objects.objdict"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyopenadr.objects.objdict</span></code></a></p>
+<dl class="py attribute">
+<dt id="pyopenadr.objects.EventSignal.current_value">
+<code class="sig-name descname">current_value</code><em class="property">: float</em><a class="headerlink" href="#pyopenadr.objects.EventSignal.current_value" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.objects.EventSignal.intervals">
+<code class="sig-name descname">intervals</code><em class="property">: List<span class="p">[</span><a class="reference internal" href="#pyopenadr.objects.Interval" title="pyopenadr.objects.Interval">pyopenadr.objects.Interval</a><span class="p">]</span></em><a class="headerlink" href="#pyopenadr.objects.EventSignal.intervals" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.objects.EventSignal.signal_id">
+<code class="sig-name descname">signal_id</code><em class="property">: str</em><a class="headerlink" href="#pyopenadr.objects.EventSignal.signal_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.objects.EventSignal.signal_name">
+<code class="sig-name descname">signal_name</code><em class="property">: str</em><a class="headerlink" href="#pyopenadr.objects.EventSignal.signal_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.objects.EventSignal.signal_type">
+<code class="sig-name descname">signal_type</code><em class="property">: str</em><a class="headerlink" href="#pyopenadr.objects.EventSignal.signal_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.objects.EventSignal.target">
+<code class="sig-name descname">target</code><em class="property">: <a class="reference internal" href="#pyopenadr.objects.Target" title="pyopenadr.objects.Target">pyopenadr.objects.Target</a></em><a class="headerlink" href="#pyopenadr.objects.EventSignal.target" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="pyopenadr.objects.FeatureCollection">
+<em class="property">class </em><code class="sig-prename descclassname">pyopenadr.objects.</code><code class="sig-name descname">FeatureCollection</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">location</span><span class="p">:</span> <span class="n">dict</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyopenadr.objects.FeatureCollection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pyopenadr.objects.objdict" title="pyopenadr.objects.objdict"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyopenadr.objects.objdict</span></code></a></p>
+<dl class="py attribute">
+<dt id="pyopenadr.objects.FeatureCollection.id">
+<code class="sig-name descname">id</code><em class="property">: str</em><a class="headerlink" href="#pyopenadr.objects.FeatureCollection.id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.objects.FeatureCollection.location">
+<code class="sig-name descname">location</code><em class="property">: dict</em><a class="headerlink" href="#pyopenadr.objects.FeatureCollection.location" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="pyopenadr.objects.Interval">
+<em class="property">class </em><code class="sig-prename descclassname">pyopenadr.objects.</code><code class="sig-name descname">Interval</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dtstart</span><span class="p">:</span> <span class="n">datetime.datetime</span></em>, <em class="sig-param"><span class="n">duration</span><span class="p">:</span> <span class="n">datetime.timedelta</span></em>, <em class="sig-param"><span class="n">uid</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyopenadr.objects.Interval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pyopenadr.objects.objdict" title="pyopenadr.objects.objdict"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyopenadr.objects.objdict</span></code></a></p>
+<dl class="py attribute">
+<dt id="pyopenadr.objects.Interval.dtstart">
+<code class="sig-name descname">dtstart</code><em class="property">: datetime.datetime</em><a class="headerlink" href="#pyopenadr.objects.Interval.dtstart" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.objects.Interval.duration">
+<code class="sig-name descname">duration</code><em class="property">: datetime.timedelta</em><a class="headerlink" href="#pyopenadr.objects.Interval.duration" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.objects.Interval.uid">
+<code class="sig-name descname">uid</code><em class="property">: int</em><a class="headerlink" href="#pyopenadr.objects.Interval.uid" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="pyopenadr.objects.MeterAsset">
+<em class="property">class </em><code class="sig-prename descclassname">pyopenadr.objects.</code><code class="sig-name descname">MeterAsset</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mrid</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyopenadr.objects.MeterAsset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pyopenadr.objects.objdict" title="pyopenadr.objects.objdict"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyopenadr.objects.objdict</span></code></a></p>
+<dl class="py attribute">
+<dt id="pyopenadr.objects.MeterAsset.mrid">
+<code class="sig-name descname">mrid</code><em class="property">: str</em><a class="headerlink" href="#pyopenadr.objects.MeterAsset.mrid" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="pyopenadr.objects.PNode">
+<em class="property">class </em><code class="sig-prename descclassname">pyopenadr.objects.</code><code class="sig-name descname">PNode</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyopenadr.objects.PNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pyopenadr.objects.objdict" title="pyopenadr.objects.objdict"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyopenadr.objects.objdict</span></code></a></p>
+<dl class="py attribute">
+<dt id="pyopenadr.objects.PNode.node">
+<code class="sig-name descname">node</code><em class="property">: str</em><a class="headerlink" href="#pyopenadr.objects.PNode.node" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="pyopenadr.objects.Response">
+<em class="property">class </em><code class="sig-prename descclassname">pyopenadr.objects.</code><code class="sig-name descname">Response</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">response_code</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">response_description</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">request_id</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyopenadr.objects.Response" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pyopenadr.objects.objdict" title="pyopenadr.objects.objdict"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyopenadr.objects.objdict</span></code></a></p>
+<dl class="py attribute">
+<dt id="pyopenadr.objects.Response.request_id">
+<code class="sig-name descname">request_id</code><em class="property">: str</em><a class="headerlink" href="#pyopenadr.objects.Response.request_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.objects.Response.response_code">
+<code class="sig-name descname">response_code</code><em class="property">: int</em><a class="headerlink" href="#pyopenadr.objects.Response.response_code" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.objects.Response.response_description">
+<code class="sig-name descname">response_description</code><em class="property">: str</em><a class="headerlink" href="#pyopenadr.objects.Response.response_description" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="pyopenadr.objects.ServiceArea">
+<em class="property">class </em><code class="sig-prename descclassname">pyopenadr.objects.</code><code class="sig-name descname">ServiceArea</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">feature_collection</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#pyopenadr.objects.FeatureCollection" title="pyopenadr.objects.FeatureCollection">pyopenadr.objects.FeatureCollection</a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyopenadr.objects.ServiceArea" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pyopenadr.objects.objdict" title="pyopenadr.objects.objdict"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyopenadr.objects.objdict</span></code></a></p>
+<dl class="py attribute">
+<dt id="pyopenadr.objects.ServiceArea.feature_collection">
+<code class="sig-name descname">feature_collection</code><em class="property">: <a class="reference internal" href="#pyopenadr.objects.FeatureCollection" title="pyopenadr.objects.FeatureCollection">pyopenadr.objects.FeatureCollection</a></em><a class="headerlink" href="#pyopenadr.objects.ServiceArea.feature_collection" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="pyopenadr.objects.ServiceDeliveryPoint">
+<em class="property">class </em><code class="sig-prename descclassname">pyopenadr.objects.</code><code class="sig-name descname">ServiceDeliveryPoint</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyopenadr.objects.ServiceDeliveryPoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pyopenadr.objects.objdict" title="pyopenadr.objects.objdict"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyopenadr.objects.objdict</span></code></a></p>
+<dl class="py attribute">
+<dt id="pyopenadr.objects.ServiceDeliveryPoint.node">
+<code class="sig-name descname">node</code><em class="property">: str</em><a class="headerlink" href="#pyopenadr.objects.ServiceDeliveryPoint.node" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="pyopenadr.objects.ServiceLocation">
+<em class="property">class </em><code class="sig-prename descclassname">pyopenadr.objects.</code><code class="sig-name descname">ServiceLocation</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyopenadr.objects.ServiceLocation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pyopenadr.objects.objdict" title="pyopenadr.objects.objdict"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyopenadr.objects.objdict</span></code></a></p>
+<dl class="py attribute">
+<dt id="pyopenadr.objects.ServiceLocation.node">
+<code class="sig-name descname">node</code><em class="property">: str</em><a class="headerlink" href="#pyopenadr.objects.ServiceLocation.node" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="pyopenadr.objects.Target">
+<em class="property">class </em><code class="sig-prename descclassname">pyopenadr.objects.</code><code class="sig-name descname">Target</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">aggregated_p_node</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#pyopenadr.objects.AggregatedPNode" title="pyopenadr.objects.AggregatedPNode">pyopenadr.objects.AggregatedPNode</a></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">end_device_asset</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#pyopenadr.objects.EndDeviceAsset" title="pyopenadr.objects.EndDeviceAsset">pyopenadr.objects.EndDeviceAsset</a></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">meter_asset</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#pyopenadr.objects.MeterAsset" title="pyopenadr.objects.MeterAsset">pyopenadr.objects.MeterAsset</a></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">p_node</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#pyopenadr.objects.PNode" title="pyopenadr.objects.PNode">pyopenadr.objects.PNode</a></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">service_area</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#pyopenadr.objects.ServiceArea" title="pyopenadr.objects.ServiceArea">pyopenadr.objects.ServiceArea</a></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">service_delivery_point</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#pyopenadr.objects.ServiceDeliveryPoint" title="pyopenadr.objects.ServiceDeliveryPoint">pyopenadr.objects.ServiceDeliveryPoint</a></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">service_location</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#pyopenadr.objects.ServiceLocation" title="pyopenadr.objects.ServiceLocation">pyopenadr.objects.ServiceLocation</a></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">transport_interface</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#pyopenadr.objects.TransportInterface" title="pyopenadr.objects.TransportInterface">pyopenadr.objects.TransportInterface</a></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">group_id</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">group_name</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">resource_id</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ven_id</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">party_id</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyopenadr.objects.Target" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pyopenadr.objects.objdict" title="pyopenadr.objects.objdict"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyopenadr.objects.objdict</span></code></a></p>
+<dl class="py attribute">
+<dt id="pyopenadr.objects.Target.aggregated_p_node">
+<code class="sig-name descname">aggregated_p_node</code><em class="property">: <a class="reference internal" href="#pyopenadr.objects.AggregatedPNode" title="pyopenadr.objects.AggregatedPNode">pyopenadr.objects.AggregatedPNode</a></em><em class="property"> = None</em><a class="headerlink" href="#pyopenadr.objects.Target.aggregated_p_node" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.objects.Target.end_device_asset">
+<code class="sig-name descname">end_device_asset</code><em class="property">: <a class="reference internal" href="#pyopenadr.objects.EndDeviceAsset" title="pyopenadr.objects.EndDeviceAsset">pyopenadr.objects.EndDeviceAsset</a></em><em class="property"> = None</em><a class="headerlink" href="#pyopenadr.objects.Target.end_device_asset" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.objects.Target.group_id">
+<code class="sig-name descname">group_id</code><em class="property">: str</em><em class="property"> = None</em><a class="headerlink" href="#pyopenadr.objects.Target.group_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.objects.Target.group_name">
+<code class="sig-name descname">group_name</code><em class="property">: str</em><em class="property"> = None</em><a class="headerlink" href="#pyopenadr.objects.Target.group_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.objects.Target.meter_asset">
+<code class="sig-name descname">meter_asset</code><em class="property">: <a class="reference internal" href="#pyopenadr.objects.MeterAsset" title="pyopenadr.objects.MeterAsset">pyopenadr.objects.MeterAsset</a></em><em class="property"> = None</em><a class="headerlink" href="#pyopenadr.objects.Target.meter_asset" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.objects.Target.p_node">
+<code class="sig-name descname">p_node</code><em class="property">: <a class="reference internal" href="#pyopenadr.objects.PNode" title="pyopenadr.objects.PNode">pyopenadr.objects.PNode</a></em><em class="property"> = None</em><a class="headerlink" href="#pyopenadr.objects.Target.p_node" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.objects.Target.party_id">
+<code class="sig-name descname">party_id</code><em class="property">: str</em><em class="property"> = None</em><a class="headerlink" href="#pyopenadr.objects.Target.party_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.objects.Target.resource_id">
+<code class="sig-name descname">resource_id</code><em class="property">: str</em><em class="property"> = None</em><a class="headerlink" href="#pyopenadr.objects.Target.resource_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.objects.Target.service_area">
+<code class="sig-name descname">service_area</code><em class="property">: <a class="reference internal" href="#pyopenadr.objects.ServiceArea" title="pyopenadr.objects.ServiceArea">pyopenadr.objects.ServiceArea</a></em><em class="property"> = None</em><a class="headerlink" href="#pyopenadr.objects.Target.service_area" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.objects.Target.service_delivery_point">
+<code class="sig-name descname">service_delivery_point</code><em class="property">: <a class="reference internal" href="#pyopenadr.objects.ServiceDeliveryPoint" title="pyopenadr.objects.ServiceDeliveryPoint">pyopenadr.objects.ServiceDeliveryPoint</a></em><em class="property"> = None</em><a class="headerlink" href="#pyopenadr.objects.Target.service_delivery_point" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.objects.Target.service_location">
+<code class="sig-name descname">service_location</code><em class="property">: <a class="reference internal" href="#pyopenadr.objects.ServiceLocation" title="pyopenadr.objects.ServiceLocation">pyopenadr.objects.ServiceLocation</a></em><em class="property"> = None</em><a class="headerlink" href="#pyopenadr.objects.Target.service_location" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.objects.Target.transport_interface">
+<code class="sig-name descname">transport_interface</code><em class="property">: <a class="reference internal" href="#pyopenadr.objects.TransportInterface" title="pyopenadr.objects.TransportInterface">pyopenadr.objects.TransportInterface</a></em><em class="property"> = None</em><a class="headerlink" href="#pyopenadr.objects.Target.transport_interface" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.objects.Target.ven_id">
+<code class="sig-name descname">ven_id</code><em class="property">: str</em><em class="property"> = None</em><a class="headerlink" href="#pyopenadr.objects.Target.ven_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="pyopenadr.objects.TransportInterface">
+<em class="property">class </em><code class="sig-prename descclassname">pyopenadr.objects.</code><code class="sig-name descname">TransportInterface</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">point_of_receipt</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">point_of_delivery</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyopenadr.objects.TransportInterface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pyopenadr.objects.objdict" title="pyopenadr.objects.objdict"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyopenadr.objects.objdict</span></code></a></p>
+<dl class="py attribute">
+<dt id="pyopenadr.objects.TransportInterface.point_of_delivery">
+<code class="sig-name descname">point_of_delivery</code><em class="property">: str</em><a class="headerlink" href="#pyopenadr.objects.TransportInterface.point_of_delivery" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="pyopenadr.objects.TransportInterface.point_of_receipt">
+<code class="sig-name descname">point_of_receipt</code><em class="property">: str</em><a class="headerlink" href="#pyopenadr.objects.TransportInterface.point_of_receipt" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="pyopenadr.objects.objdict">
+<em class="property">class </em><code class="sig-prename descclassname">pyopenadr.objects.</code><code class="sig-name descname">objdict</code><a class="headerlink" href="#pyopenadr.objects.objdict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-pyopenadr.preflight">
+<span id="pyopenadr-preflight-module"></span><h2>pyopenadr.preflight module<a class="headerlink" href="#module-pyopenadr.preflight" title="Permalink to this headline">¶</a></h2>
+<p>Tests message contents before sending them. It will correct benign errors and
+warn you about them. Uncorrectable errors will raise an Exception.</p>
+<dl class="py function">
+<dt id="pyopenadr.preflight.preflight_message">
+<code class="sig-prename descclassname">pyopenadr.preflight.</code><code class="sig-name descname">preflight_message</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">message_type</span></em>, <em class="sig-param"><span class="n">message_payload</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyopenadr.preflight.preflight_message" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="pyopenadr.preflight.preflight_oadrDistributeEvent">
+<code class="sig-prename descclassname">pyopenadr.preflight.</code><code class="sig-name descname">preflight_oadrDistributeEvent</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">message_payload</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyopenadr.preflight.preflight_oadrDistributeEvent" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-pyopenadr.server">
+<span id="pyopenadr-server-module"></span><h2>pyopenadr.server module<a class="headerlink" href="#module-pyopenadr.server" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="pyopenadr.server.OpenADRServer">
+<em class="property">class </em><code class="sig-prename descclassname">pyopenadr.server.</code><code class="sig-name descname">OpenADRServer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">vtn_id</span></em>, <em class="sig-param"><span class="n">cert</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">key</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">passphrase</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fingerprint_lookup</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyopenadr.server.OpenADRServer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Create a new OpenADR VTN (Server).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>string</strong> (<em>passphrase</em>) – An identifier string for this VTN. This is how you identify yourself to the VENs that talk to you.</p></li>
+<li><p><strong>string</strong> – Path to the PEM-formatted certificate file that is used to sign outgoing messages</p></li>
+<li><p><strong>string</strong> – Path to the PEM-formatted private key file that is used to sign outgoing messages</p></li>
+<li><p><strong>string</strong> – The passphrase used to decrypt the private key file</p></li>
+<li><p><strong>callable</strong> (<em>fingerprint_lookup</em>) – A callable that receives a ven_id and should return the registered fingerprint for that VEN.
+You should receive these fingerprints outside of OpenADR and configure them manually.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="pyopenadr.server.OpenADRServer.add_handler">
+<code class="sig-name descname">add_handler</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">func</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyopenadr.server.OpenADRServer.add_handler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a handler to the OpenADRServer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>string</strong> (<em>name</em>) – The name for this handler. Should be one of: on_created_event, on_request_event, on_register_report, on_create_report, on_created_report, on_request_report, on_update_report, on_poll, on_query_registration, on_create_party_registration, on_cancel_party_registration.</p></li>
+<li><p><strong>coroutine</strong> (<em>func</em>) – A coroutine that handles this event. It receives the message, and should return the contents of a response.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pyopenadr.server.OpenADRServer.run">
+<code class="sig-name descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyopenadr.server.OpenADRServer.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Starts the asyncio-loop and runs the server in it. This function is
+blocking. For other ways to run the server in a more flexible context,
+please refer to the <a class="reference external" href="https://docs.aiohttp.org/en/stable/web_advanced.html#aiohttp-web-app-runners">aiohttp documentation</a>.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pyopenadr.utils">
+<span id="pyopenadr-utils-module"></span><h2>pyopenadr.utils module<a class="headerlink" href="#module-pyopenadr.utils" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="pyopenadr.utils.booleanformat">
+<code class="sig-prename descclassname">pyopenadr.utils.</code><code class="sig-name descname">booleanformat</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyopenadr.utils.booleanformat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Format a boolean value</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyopenadr.utils.certificate_fingerprint">
+<code class="sig-prename descclassname">pyopenadr.utils.</code><code class="sig-name descname">certificate_fingerprint</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">certificate_str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyopenadr.utils.certificate_fingerprint" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="pyopenadr.utils.datetimeformat">
+<code class="sig-prename descclassname">pyopenadr.utils.</code><code class="sig-name descname">datetimeformat</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em>, <em class="sig-param"><span class="n">format</span><span class="o">=</span><span class="default_value">'%Y-%m-%dT%H:%M:%S.%fZ'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyopenadr.utils.datetimeformat" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="pyopenadr.utils.ensure_bytes">
+<code class="sig-prename descclassname">pyopenadr.utils.</code><code class="sig-name descname">ensure_bytes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obj</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyopenadr.utils.ensure_bytes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="pyopenadr.utils.ensure_str">
+<code class="sig-prename descclassname">pyopenadr.utils.</code><code class="sig-name descname">ensure_str</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obj</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyopenadr.utils.ensure_str" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="pyopenadr.utils.extract_pem_cert">
+<code class="sig-prename descclassname">pyopenadr.utils.</code><code class="sig-name descname">extract_pem_cert</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tree</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyopenadr.utils.extract_pem_cert" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="pyopenadr.utils.flatten_xml">
+<code class="sig-prename descclassname">pyopenadr.utils.</code><code class="sig-name descname">flatten_xml</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">message</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyopenadr.utils.flatten_xml" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="pyopenadr.utils.generate_id">
+<code class="sig-prename descclassname">pyopenadr.utils.</code><code class="sig-name descname">generate_id</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyopenadr.utils.generate_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="pyopenadr.utils.indent_xml">
+<code class="sig-prename descclassname">pyopenadr.utils.</code><code class="sig-name descname">indent_xml</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">message</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyopenadr.utils.indent_xml" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indents the XML in a nice way.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyopenadr.utils.new_request_id">
+<code class="sig-prename descclassname">pyopenadr.utils.</code><code class="sig-name descname">new_request_id</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyopenadr.utils.new_request_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="pyopenadr.utils.normalize_dict">
+<code class="sig-prename descclassname">pyopenadr.utils.</code><code class="sig-name descname">normalize_dict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ordered_dict</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyopenadr.utils.normalize_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert the OrderedDict to a regular dict, snake_case the key names, and promote uniform lists.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyopenadr.utils.parse_boolean">
+<code class="sig-prename descclassname">pyopenadr.utils.</code><code class="sig-name descname">parse_boolean</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyopenadr.utils.parse_boolean" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="pyopenadr.utils.parse_datetime">
+<code class="sig-prename descclassname">pyopenadr.utils.</code><code class="sig-name descname">parse_datetime</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyopenadr.utils.parse_datetime" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse an ISO8601 datetime</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyopenadr.utils.parse_duration">
+<code class="sig-prename descclassname">pyopenadr.utils.</code><code class="sig-name descname">parse_duration</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyopenadr.utils.parse_duration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse a RFC5545 duration.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyopenadr.utils.parse_float">
+<code class="sig-prename descclassname">pyopenadr.utils.</code><code class="sig-name descname">parse_float</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyopenadr.utils.parse_float" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="pyopenadr.utils.parse_int">
+<code class="sig-prename descclassname">pyopenadr.utils.</code><code class="sig-name descname">parse_int</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyopenadr.utils.parse_int" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="pyopenadr.utils.peek">
+<code class="sig-prename descclassname">pyopenadr.utils.</code><code class="sig-name descname">peek</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">iterable</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyopenadr.utils.peek" title="Permalink to this definition">¶</a></dt>
+<dd><p>Peek into an iterable.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyopenadr.utils.timedeltaformat">
+<code class="sig-prename descclassname">pyopenadr.utils.</code><code class="sig-name descname">timedeltaformat</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyopenadr.utils.timedeltaformat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Format a timedelta to a RFC5545 Duration.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-pyopenadr">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-pyopenadr" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">pyOpenADR</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../features.html">Feature Tour</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../openadr.html">OpenADR Basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../client.html">Client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../server.html">Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Ready-to-Run Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../roadmap.html">Project Status and Roadmap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../representations.html">Payload Representations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../message_signing.html">Message Signing</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">pyopenadr package</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">pyopenadr</a><ul>
+      <li>Previous: <a href="modules.html" title="previous chapter">pyopenadr</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Stan Janssen.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.2.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/api/pyopenadr.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

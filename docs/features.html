@@ -1,0 +1,145 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Feature Tour &#8212; pyOpenADR 0.4.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/css/custom.css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="OpenADR Basics" href="openadr.html" />
+    <link rel="prev" title="Welcome to pyOpenADR" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="feature-tour">
+<span id="id1"></span><h1>Feature Tour<a class="headerlink" href="#feature-tour" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="automatic-registration">
+<h2>Automatic registration<a class="headerlink" href="#automatic-registration" title="Permalink to this headline">¶</a></h2>
+<p>Registering your VEN to a VTN is a process that requires some service discovery, exchange of reporting capabilitiets, assignment of a VEN_ID, et cetera. You don’t have to see any of this in your own code. Just create a new OpenADRClient instance, provide a VTN URL, a VEN name, optionally provide signing certificates and a verification fingerprint, and registration happens automatically.</p>
+</div>
+<div class="section" id="automatic-reporting">
+<h2>Automatic reporting<a class="headerlink" href="#automatic-reporting" title="Permalink to this headline">¶</a></h2>
+<p>If you’re implementing a VEN (client), you configure which types of reports you can offer, you provide handlers that retrieve the measurements, and pyOpenADR will take care of the rest. It will offer the reports to the VTN, allow the VTN to pick the reports it requires, and it will call your data collection handlers at a set interval, and pack up the values into the reports.</p>
+<p>If you’re implementing a VTN (server), you configure which types of reports you wish to receive, and it will automatically request these reports from the VEN. Whenever new data arrives, it will call one of your handlers so you can hand the data off to your own systems for processing and archiving.</p>
+</div>
+<div class="section" id="event-driven">
+<h2>Event-driven<a class="headerlink" href="#event-driven" title="Permalink to this headline">¶</a></h2>
+<p>Once you have configured your client or server, all routine interactions happen automatically: polling for new Events, requesting reports, et cetera. Whenever pyOpenADR needs some information or data that it does not have, it will call your handlers in order to get it. Your handlers only have to deal with a very specific set of cases and they can usually be quite simple.</p>
+</div>
+<div class="section" id="dict-style-representations">
+<h2>Dict-style representations<a class="headerlink" href="#dict-style-representations" title="Permalink to this headline">¶</a></h2>
+<p>Although OpenADR is an XML-based protocol that is either transported over HTTP or XMPP, you don’t need to see any XML or custom object types at all. You use native Python dicts (and native Python types like <cite>datetime.datetime</cite> and <cite>datetime.timedelta</cite>) in your handlers.</p>
+</div>
+<div class="section" id="message-signing-for-secure-communications">
+<h2>Message Signing for secure communications<a class="headerlink" href="#message-signing-for-secure-communications" title="Permalink to this headline">¶</a></h2>
+<p>If you provide a PEM-formatted certificate and key, all outgoing messages will be cryptographically signed. If you also provide a fingerprint for the other side’s certificate, incoming messages can be securely authenticated and verified.</p>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">pyOpenADR</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Feature Tour</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#automatic-registration">Automatic registration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#automatic-reporting">Automatic reporting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#event-driven">Event-driven</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dict-style-representations">Dict-style representations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#message-signing-for-secure-communications">Message Signing for secure communications</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="openadr.html">OpenADR Basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="client.html">Client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server.html">Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Ready-to-Run Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="roadmap.html">Project Status and Roadmap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="representations.html">Payload Representations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="message_signing.html">Message Signing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/modules.html">API Reference</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Welcome to pyOpenADR</a></li>
+      <li>Next: <a href="openadr.html" title="next chapter">OpenADR Basics</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Stan Janssen.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.2.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/features.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

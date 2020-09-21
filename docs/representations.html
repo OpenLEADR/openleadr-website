@@ -1,0 +1,1322 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Payload Representations &#8212; pyOpenADR 0.4.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/css/custom.css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Message Signing" href="message_signing.html" />
+    <link rel="prev" title="Project Status and Roadmap" href="roadmap.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="payload-representations">
+<span id="representations"></span><h1>Payload Representations<a class="headerlink" href="#payload-representations" title="Permalink to this headline">¶</a></h1>
+<p>In PyOpenADR, the complex hierarchies of the OpenADR XML-payloads are represented as Python dictionaries. These have been simplified as much as possible, allowing for a more natural and more readable experience.</p>
+<p>This means that you don’t have to instantiate objects and sub-objects and sub-sub-objects, but that you can define the entire object in a single, declarative statement. This kan keep a simple implementation very compact. The downside is that there is little help from your IDE and there is little discoverability for what contents can be provided in the messages. This page can be used as a reference for that information.</p>
+<p>To help you, all outgong messages are validated against the XML schema, and you will receive warnings if your messages don’t comply to the schema.</p>
+<p>The following general principles have been applied to representing OpenADR objects in PyOpenADR:</p>
+<ul class="simple">
+<li><p>All property names are represented in snake_case instead of CamelCase or mixedCase names. For example: <code class="docutils literal notranslate"><span class="pre">requestID</span></code> becomes <code class="docutils literal notranslate"><span class="pre">request_id</span></code>.</p></li>
+<li><p>For all properties, the <code class="docutils literal notranslate"><span class="pre">oadr*</span></code> and <code class="docutils literal notranslate"><span class="pre">Ei*</span></code> prefixes have been stripped away. For example: <code class="docutils literal notranslate"><span class="pre">eiResponse</span></code> becomes <code class="docutils literal notranslate"><span class="pre">response</span></code> and <code class="docutils literal notranslate"><span class="pre">oadrResponse</span></code> becomes <code class="docutils literal notranslate"><span class="pre">response</span></code>.</p></li>
+<li><p>OpenADR timestamps are converted to Python <code class="docutils literal notranslate"><span class="pre">datetime.datetime</span></code> objects.</p></li>
+<li><p>OpenADR time intervals are converted to Python <code class="docutils literal notranslate"><span class="pre">datetime.timedelta</span></code> objects.</p></li>
+<li><p>Properties that might have more than 1 copy in the XML representation are put in a list, even if there is just one. This list will be identified by the pluralized version of the original property name. For example:</p></li>
+</ul>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;...&gt;</span>
+    <span class="nt">&lt;signal&gt;</span>1234<span class="nt">&lt;/signal&gt;</span>
+    <span class="nt">&lt;signal&gt;</span>5678<span class="nt">&lt;/signal&gt;</span>
+<span class="nt">&lt;...&gt;</span>
+</pre></div>
+</div>
+<p>Will become:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
+<span class="s2">&quot;signals&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1234</span><span class="p">,</span> <span class="mi">5678</span><span class="p">],</span>
+<span class="o">...</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>The messages are usually used as a <code class="docutils literal notranslate"><span class="pre">message_name,</span> <span class="pre">message_payload</span></code> tuple. The message name is kept, for instance, <code class="docutils literal notranslate"><span class="pre">oadrCanceledOpt</span></code>, and the payload is given as a dict.</p></li>
+</ul>
+<p>Below is an alphabetized overview of all payloads with their XML and Python representations.</p>
+<div class="section" id="oadrcanceledopt">
+<span id="id1"></span><h2>oadrCanceledOpt<a class="headerlink" href="#oadrcanceledopt" title="Permalink to this headline">¶</a></h2>
+<p>OpenADR payload:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span>
+<span class="nt">&lt;oadrPayload</span> <span class="na">xmlns:xsi=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span> <span class="na">xmlns:xsd=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema&quot;</span> <span class="na">xmlns=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07&quot;</span> <span class="na">xsi:schemaLocation=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07 oadr_20b.xsd&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;oadrSignedObject&gt;</span>
+    <span class="nt">&lt;oadrCanceledOpt</span> <span class="na">ei:schemaVersion=</span><span class="s">&quot;2.0b&quot;</span> <span class="na">xmlns:ei=</span><span class="s">&quot;http://docs.oasis-open.org/ns/energyinterop/201110&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;ei:eiResponse&gt;</span>
+        <span class="nt">&lt;ei:responseCode&gt;</span>200<span class="nt">&lt;/ei:responseCode&gt;</span>
+        <span class="nt">&lt;ei:responseDescription&gt;</span>OK<span class="nt">&lt;/ei:responseDescription&gt;</span>
+        <span class="nt">&lt;requestID</span> <span class="na">xmlns=</span><span class="s">&quot;http://docs.oasis-open.org/ns/energyinterop/201110/payloads&quot;</span><span class="nt">&gt;</span>f48e3b7e78<span class="nt">&lt;/requestID&gt;</span>
+      <span class="nt">&lt;/ei:eiResponse&gt;</span>
+      <span class="nt">&lt;ei:optID&gt;</span>pc1e8ace47<span class="nt">&lt;/ei:optID&gt;</span>
+    <span class="nt">&lt;/oadrCanceledOpt&gt;</span>
+  <span class="nt">&lt;/oadrSignedObject&gt;</span>
+<span class="nt">&lt;/oadrPayload&gt;</span>
+</pre></div>
+</div>
+<p>pyOpenADR representation:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;opt_id&#39;</span><span class="p">:</span> <span class="s1">&#39;pc1e8ace47&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;response&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;request_id&#39;</span><span class="p">:</span> <span class="s1">&#39;f48e3b7e78&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;response_code&#39;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
+              <span class="s1">&#39;response_description&#39;</span><span class="p">:</span> <span class="s1">&#39;OK&#39;</span><span class="p">}}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="oadrcanceledpartyregistration">
+<span id="id2"></span><h2>oadrCanceledPartyRegistration<a class="headerlink" href="#oadrcanceledpartyregistration" title="Permalink to this headline">¶</a></h2>
+<p>OpenADR payload:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span>
+<span class="nt">&lt;oadrPayload</span> <span class="na">xmlns:xsi=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span> <span class="na">xmlns:xsd=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema&quot;</span> <span class="na">xmlns=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07&quot;</span> <span class="na">xsi:schemaLocation=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07 oadr_20b.xsd&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;oadrSignedObject&gt;</span>
+    <span class="nt">&lt;oadrCanceledPartyRegistration</span> <span class="na">ei:schemaVersion=</span><span class="s">&quot;2.0b&quot;</span> <span class="na">xmlns:ei=</span><span class="s">&quot;http://docs.oasis-open.org/ns/energyinterop/201110&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;ei:eiResponse&gt;</span>
+        <span class="nt">&lt;ei:responseCode&gt;</span>200<span class="nt">&lt;/ei:responseCode&gt;</span>
+        <span class="nt">&lt;ei:responseDescription&gt;</span>OK<span class="nt">&lt;/ei:responseDescription&gt;</span>
+        <span class="nt">&lt;requestID</span> <span class="na">xmlns=</span><span class="s">&quot;http://docs.oasis-open.org/ns/energyinterop/201110/payloads&quot;</span><span class="nt">&gt;</span>aba0a805de<span class="nt">&lt;/requestID&gt;</span>
+      <span class="nt">&lt;/ei:eiResponse&gt;</span>
+      <span class="nt">&lt;ei:registrationID&gt;</span>zf68abb5c2<span class="nt">&lt;/ei:registrationID&gt;</span>
+      <span class="nt">&lt;ei:venID&gt;</span>123ABC<span class="nt">&lt;/ei:venID&gt;</span>
+    <span class="nt">&lt;/oadrCanceledPartyRegistration&gt;</span>
+  <span class="nt">&lt;/oadrSignedObject&gt;</span>
+<span class="nt">&lt;/oadrPayload&gt;</span>
+</pre></div>
+</div>
+<p>pyOpenADR representation:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;registration_id&#39;</span><span class="p">:</span> <span class="s1">&#39;zf68abb5c2&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;response&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;request_id&#39;</span><span class="p">:</span> <span class="s1">&#39;aba0a805de&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;response_code&#39;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
+              <span class="s1">&#39;response_description&#39;</span><span class="p">:</span> <span class="s1">&#39;OK&#39;</span><span class="p">},</span>
+ <span class="s1">&#39;ven_id&#39;</span><span class="p">:</span> <span class="s1">&#39;123ABC&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="oadrcanceledreport">
+<span id="id3"></span><h2>oadrCanceledReport<a class="headerlink" href="#oadrcanceledreport" title="Permalink to this headline">¶</a></h2>
+<p>OpenADR payload:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span>
+<span class="nt">&lt;oadrPayload</span> <span class="na">xmlns:xsi=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span> <span class="na">xmlns:xsd=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema&quot;</span> <span class="na">xmlns=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07&quot;</span> <span class="na">xsi:schemaLocation=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07 oadr_20b.xsd&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;oadrSignedObject&gt;</span>
+    <span class="nt">&lt;oadrCanceledReport</span> <span class="na">ei:schemaVersion=</span><span class="s">&quot;2.0b&quot;</span> <span class="na">xmlns:ei=</span><span class="s">&quot;http://docs.oasis-open.org/ns/energyinterop/201110&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;ei:eiResponse&gt;</span>
+        <span class="nt">&lt;ei:responseCode&gt;</span>200<span class="nt">&lt;/ei:responseCode&gt;</span>
+        <span class="nt">&lt;ei:responseDescription&gt;</span>OK<span class="nt">&lt;/ei:responseDescription&gt;</span>
+        <span class="nt">&lt;requestID</span> <span class="na">xmlns=</span><span class="s">&quot;http://docs.oasis-open.org/ns/energyinterop/201110/payloads&quot;</span><span class="nt">&gt;</span>e4dfe735ea<span class="nt">&lt;/requestID&gt;</span>
+      <span class="nt">&lt;/ei:eiResponse&gt;</span>
+      <span class="nt">&lt;oadrPendingReports&gt;</span>
+        <span class="nt">&lt;ei:reportRequestID&gt;</span>v5d42c35e6<span class="nt">&lt;/ei:reportRequestID&gt;</span>
+        <span class="nt">&lt;ei:reportRequestID&gt;</span>e8bf753e31<span class="nt">&lt;/ei:reportRequestID&gt;</span>
+      <span class="nt">&lt;/oadrPendingReports&gt;</span>
+    <span class="nt">&lt;/oadrCanceledReport&gt;</span>
+  <span class="nt">&lt;/oadrSignedObject&gt;</span>
+<span class="nt">&lt;/oadrPayload&gt;</span>
+</pre></div>
+</div>
+<p>pyOpenADR representation:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;pending_reports&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;request_id&#39;</span><span class="p">:</span> <span class="s1">&#39;v5d42c35e6&#39;</span><span class="p">},</span>
+                     <span class="p">{</span><span class="s1">&#39;request_id&#39;</span><span class="p">:</span> <span class="s1">&#39;e8bf753e31&#39;</span><span class="p">}],</span>
+ <span class="s1">&#39;response&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;request_id&#39;</span><span class="p">:</span> <span class="s1">&#39;e4dfe735ea&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;response_code&#39;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
+              <span class="s1">&#39;response_description&#39;</span><span class="p">:</span> <span class="s1">&#39;OK&#39;</span><span class="p">}}</span>
+</pre></div>
+</div>
+<p>OpenADR payload:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span>
+<span class="nt">&lt;oadrPayload</span> <span class="na">xmlns:xsi=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span> <span class="na">xmlns:xsd=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema&quot;</span> <span class="na">xmlns=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07&quot;</span> <span class="na">xsi:schemaLocation=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07 oadr_20b.xsd&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;oadrSignedObject&gt;</span>
+    <span class="nt">&lt;oadrCanceledReport</span> <span class="na">ei:schemaVersion=</span><span class="s">&quot;2.0b&quot;</span> <span class="na">xmlns:ei=</span><span class="s">&quot;http://docs.oasis-open.org/ns/energyinterop/201110&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;ei:eiResponse&gt;</span>
+        <span class="nt">&lt;ei:responseCode&gt;</span>200<span class="nt">&lt;/ei:responseCode&gt;</span>
+        <span class="nt">&lt;ei:responseDescription&gt;</span>OK<span class="nt">&lt;/ei:responseDescription&gt;</span>
+        <span class="nt">&lt;requestID</span> <span class="na">xmlns=</span><span class="s">&quot;http://docs.oasis-open.org/ns/energyinterop/201110/payloads&quot;</span><span class="nt">&gt;</span>c36bce5dcb<span class="nt">&lt;/requestID&gt;</span>
+      <span class="nt">&lt;/ei:eiResponse&gt;</span>
+      <span class="nt">&lt;oadrPendingReports&gt;</span>
+        <span class="nt">&lt;ei:reportRequestID&gt;</span>b04cbfb723<span class="nt">&lt;/ei:reportRequestID&gt;</span>
+        <span class="nt">&lt;ei:reportRequestID&gt;</span>ra6231a650<span class="nt">&lt;/ei:reportRequestID&gt;</span>
+      <span class="nt">&lt;/oadrPendingReports&gt;</span>
+      <span class="nt">&lt;ei:venID&gt;</span>123ABC<span class="nt">&lt;/ei:venID&gt;</span>
+    <span class="nt">&lt;/oadrCanceledReport&gt;</span>
+  <span class="nt">&lt;/oadrSignedObject&gt;</span>
+<span class="nt">&lt;/oadrPayload&gt;</span>
+</pre></div>
+</div>
+<p>pyOpenADR representation:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;pending_reports&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;request_id&#39;</span><span class="p">:</span> <span class="s1">&#39;b04cbfb723&#39;</span><span class="p">},</span>
+                     <span class="p">{</span><span class="s1">&#39;request_id&#39;</span><span class="p">:</span> <span class="s1">&#39;ra6231a650&#39;</span><span class="p">}],</span>
+ <span class="s1">&#39;response&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;request_id&#39;</span><span class="p">:</span> <span class="s1">&#39;c36bce5dcb&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;response_code&#39;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
+              <span class="s1">&#39;response_description&#39;</span><span class="p">:</span> <span class="s1">&#39;OK&#39;</span><span class="p">},</span>
+ <span class="s1">&#39;ven_id&#39;</span><span class="p">:</span> <span class="s1">&#39;123ABC&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="oadrcancelopt">
+<span id="id4"></span><h2>oadrCancelOpt<a class="headerlink" href="#oadrcancelopt" title="Permalink to this headline">¶</a></h2>
+<p>OpenADR payload:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span>
+<span class="nt">&lt;oadrPayload</span> <span class="na">xmlns:xsi=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span> <span class="na">xmlns:xsd=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema&quot;</span> <span class="na">xmlns=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07&quot;</span> <span class="na">xsi:schemaLocation=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07 oadr_20b.xsd&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;oadrSignedObject&gt;</span>
+    <span class="nt">&lt;oadrCancelOpt</span> <span class="na">ei:schemaVersion=</span><span class="s">&quot;2.0b&quot;</span> <span class="na">xmlns:ei=</span><span class="s">&quot;http://docs.oasis-open.org/ns/energyinterop/201110&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;requestID</span> <span class="na">xmlns=</span><span class="s">&quot;http://docs.oasis-open.org/ns/energyinterop/201110/payloads&quot;</span><span class="nt">&gt;</span>u07a26b1cc<span class="nt">&lt;/requestID&gt;</span>
+      <span class="nt">&lt;ei:optID&gt;</span>b1ef7afecc<span class="nt">&lt;/ei:optID&gt;</span>
+      <span class="nt">&lt;ei:venID&gt;</span>123ABC<span class="nt">&lt;/ei:venID&gt;</span>
+    <span class="nt">&lt;/oadrCancelOpt&gt;</span>
+  <span class="nt">&lt;/oadrSignedObject&gt;</span>
+<span class="nt">&lt;/oadrPayload&gt;</span>
+</pre></div>
+</div>
+<p>pyOpenADR representation:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;opt_id&#39;</span><span class="p">:</span> <span class="s1">&#39;b1ef7afecc&#39;</span><span class="p">,</span> <span class="s1">&#39;request_id&#39;</span><span class="p">:</span> <span class="s1">&#39;u07a26b1cc&#39;</span><span class="p">,</span> <span class="s1">&#39;ven_id&#39;</span><span class="p">:</span> <span class="s1">&#39;123ABC&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="oadrcancelpartyregistration">
+<span id="id5"></span><h2>oadrCancelPartyRegistration<a class="headerlink" href="#oadrcancelpartyregistration" title="Permalink to this headline">¶</a></h2>
+<p>OpenADR payload:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span>
+<span class="nt">&lt;oadrPayload</span> <span class="na">xmlns:xsi=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span> <span class="na">xmlns:xsd=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema&quot;</span> <span class="na">xmlns=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07&quot;</span> <span class="na">xsi:schemaLocation=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07 oadr_20b.xsd&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;oadrSignedObject&gt;</span>
+    <span class="nt">&lt;oadrCancelPartyRegistration</span> <span class="na">ei:schemaVersion=</span><span class="s">&quot;2.0b&quot;</span> <span class="na">xmlns:ei=</span><span class="s">&quot;http://docs.oasis-open.org/ns/energyinterop/201110&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;requestID</span> <span class="na">xmlns=</span><span class="s">&quot;http://docs.oasis-open.org/ns/energyinterop/201110/payloads&quot;</span><span class="nt">&gt;</span>z05e4ff0aa<span class="nt">&lt;/requestID&gt;</span>
+      <span class="nt">&lt;ei:registrationID&gt;</span>pfe04d8439<span class="nt">&lt;/ei:registrationID&gt;</span>
+      <span class="nt">&lt;ei:venID&gt;</span>123ABC<span class="nt">&lt;/ei:venID&gt;</span>
+    <span class="nt">&lt;/oadrCancelPartyRegistration&gt;</span>
+  <span class="nt">&lt;/oadrSignedObject&gt;</span>
+<span class="nt">&lt;/oadrPayload&gt;</span>
+</pre></div>
+</div>
+<p>pyOpenADR representation:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;registration_id&#39;</span><span class="p">:</span> <span class="s1">&#39;pfe04d8439&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;request_id&#39;</span><span class="p">:</span> <span class="s1">&#39;z05e4ff0aa&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;ven_id&#39;</span><span class="p">:</span> <span class="s1">&#39;123ABC&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="oadrcancelreport">
+<span id="id6"></span><h2>oadrCancelReport<a class="headerlink" href="#oadrcancelreport" title="Permalink to this headline">¶</a></h2>
+<p>OpenADR payload:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span>
+<span class="nt">&lt;oadrPayload</span> <span class="na">xmlns:xsi=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span> <span class="na">xmlns:xsd=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema&quot;</span> <span class="na">xmlns=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07&quot;</span> <span class="na">xsi:schemaLocation=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07 oadr_20b.xsd&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;oadrSignedObject&gt;</span>
+    <span class="nt">&lt;oadrCancelReport</span> <span class="na">ei:schemaVersion=</span><span class="s">&quot;2.0b&quot;</span> <span class="na">xmlns:ei=</span><span class="s">&quot;http://docs.oasis-open.org/ns/energyinterop/201110&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;requestID</span> <span class="na">xmlns=</span><span class="s">&quot;http://docs.oasis-open.org/ns/energyinterop/201110/payloads&quot;</span><span class="nt">&gt;</span>kcb7b5cf7a<span class="nt">&lt;/requestID&gt;</span>
+      <span class="nt">&lt;ei:reportRequestID&gt;</span>u1ebe92deb<span class="nt">&lt;/ei:reportRequestID&gt;</span>
+      <span class="nt">&lt;reportToFollow</span> <span class="na">xmlns=</span><span class="s">&quot;http://docs.oasis-open.org/ns/energyinterop/201110/payloads&quot;</span><span class="nt">&gt;</span>true<span class="nt">&lt;/reportToFollow&gt;</span>
+      <span class="nt">&lt;ei:venID&gt;</span>123ABC<span class="nt">&lt;/ei:venID&gt;</span>
+    <span class="nt">&lt;/oadrCancelReport&gt;</span>
+  <span class="nt">&lt;/oadrSignedObject&gt;</span>
+<span class="nt">&lt;/oadrPayload&gt;</span>
+</pre></div>
+</div>
+<p>pyOpenADR representation:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;report_request_id&#39;</span><span class="p">:</span> <span class="s1">&#39;u1ebe92deb&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;report_to_follow&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+ <span class="s1">&#39;request_id&#39;</span><span class="p">:</span> <span class="s1">&#39;kcb7b5cf7a&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;ven_id&#39;</span><span class="p">:</span> <span class="s1">&#39;123ABC&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="oadrcreatedevent">
+<span id="id7"></span><h2>oadrCreatedEvent<a class="headerlink" href="#oadrcreatedevent" title="Permalink to this headline">¶</a></h2>
+<p>OpenADR payload:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span>
+<span class="nt">&lt;oadrPayload</span> <span class="na">xmlns:xsi=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span> <span class="na">xmlns:xsd=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema&quot;</span> <span class="na">xmlns=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07&quot;</span> <span class="na">xsi:schemaLocation=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07 oadr_20b.xsd&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;oadrSignedObject&gt;</span>
+    <span class="nt">&lt;oadrCreatedEvent</span> <span class="na">ei:schemaVersion=</span><span class="s">&quot;2.0b&quot;</span> <span class="na">xmlns:ei=</span><span class="s">&quot;http://docs.oasis-open.org/ns/energyinterop/201110&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;eiCreatedEvent</span> <span class="na">xmlns=</span><span class="s">&quot;http://docs.oasis-open.org/ns/energyinterop/201110/payloads&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;ei:eiResponse&gt;</span>
+          <span class="nt">&lt;ei:responseCode&gt;</span>200<span class="nt">&lt;/ei:responseCode&gt;</span>
+          <span class="nt">&lt;ei:responseDescription&gt;</span>OK<span class="nt">&lt;/ei:responseDescription&gt;</span>
+          <span class="nt">&lt;requestID</span> <span class="na">xmlns=</span><span class="s">&quot;http://docs.oasis-open.org/ns/energyinterop/201110/payloads&quot;</span><span class="nt">&gt;</span>yaa3ee03b1<span class="nt">&lt;/requestID&gt;</span>
+        <span class="nt">&lt;/ei:eiResponse&gt;</span>
+        <span class="nt">&lt;ei:eventResponses&gt;</span>
+          <span class="nt">&lt;ei:eventResponse&gt;</span>
+            <span class="nt">&lt;ei:responseCode&gt;</span>200<span class="nt">&lt;/ei:responseCode&gt;</span>
+            <span class="nt">&lt;ei:responseDescription&gt;</span>OK<span class="nt">&lt;/ei:responseDescription&gt;</span>
+            <span class="nt">&lt;requestID</span> <span class="na">xmlns=</span><span class="s">&quot;http://docs.oasis-open.org/ns/energyinterop/201110/payloads&quot;</span><span class="nt">&gt;</span>ycab9acb9f<span class="nt">&lt;/requestID&gt;</span>
+            <span class="nt">&lt;ei:qualifiedEventID&gt;</span>
+              <span class="nt">&lt;ei:eventID&gt;</span>od864b4ea6<span class="nt">&lt;/ei:eventID&gt;</span>
+              <span class="nt">&lt;ei:modificationNumber&gt;</span>1<span class="nt">&lt;/ei:modificationNumber&gt;</span>
+            <span class="nt">&lt;/ei:qualifiedEventID&gt;</span>
+            <span class="nt">&lt;ei:optType&gt;</span>optIn<span class="nt">&lt;/ei:optType&gt;</span>
+          <span class="nt">&lt;/ei:eventResponse&gt;</span>
+          <span class="nt">&lt;ei:eventResponse&gt;</span>
+            <span class="nt">&lt;ei:responseCode&gt;</span>200<span class="nt">&lt;/ei:responseCode&gt;</span>
+            <span class="nt">&lt;ei:responseDescription&gt;</span>OK<span class="nt">&lt;/ei:responseDescription&gt;</span>
+            <span class="nt">&lt;requestID</span> <span class="na">xmlns=</span><span class="s">&quot;http://docs.oasis-open.org/ns/energyinterop/201110/payloads&quot;</span><span class="nt">&gt;</span>bf2aad9af8<span class="nt">&lt;/requestID&gt;</span>
+            <span class="nt">&lt;ei:qualifiedEventID&gt;</span>
+              <span class="nt">&lt;ei:eventID&gt;</span>hc6cf67dab<span class="nt">&lt;/ei:eventID&gt;</span>
+              <span class="nt">&lt;ei:modificationNumber&gt;</span>1<span class="nt">&lt;/ei:modificationNumber&gt;</span>
+            <span class="nt">&lt;/ei:qualifiedEventID&gt;</span>
+            <span class="nt">&lt;ei:optType&gt;</span>optIn<span class="nt">&lt;/ei:optType&gt;</span>
+          <span class="nt">&lt;/ei:eventResponse&gt;</span>
+          <span class="nt">&lt;ei:eventResponse&gt;</span>
+            <span class="nt">&lt;ei:responseCode&gt;</span>200<span class="nt">&lt;/ei:responseCode&gt;</span>
+            <span class="nt">&lt;ei:responseDescription&gt;</span>OK<span class="nt">&lt;/ei:responseDescription&gt;</span>
+            <span class="nt">&lt;requestID</span> <span class="na">xmlns=</span><span class="s">&quot;http://docs.oasis-open.org/ns/energyinterop/201110/payloads&quot;</span><span class="nt">&gt;</span>jefb88dcbd<span class="nt">&lt;/requestID&gt;</span>
+            <span class="nt">&lt;ei:qualifiedEventID&gt;</span>
+              <span class="nt">&lt;ei:eventID&gt;</span>qdff0da955<span class="nt">&lt;/ei:eventID&gt;</span>
+              <span class="nt">&lt;ei:modificationNumber&gt;</span>1<span class="nt">&lt;/ei:modificationNumber&gt;</span>
+            <span class="nt">&lt;/ei:qualifiedEventID&gt;</span>
+            <span class="nt">&lt;ei:optType&gt;</span>optIn<span class="nt">&lt;/ei:optType&gt;</span>
+          <span class="nt">&lt;/ei:eventResponse&gt;</span>
+        <span class="nt">&lt;/ei:eventResponses&gt;</span>
+        <span class="nt">&lt;ei:venID&gt;</span>123ABC<span class="nt">&lt;/ei:venID&gt;</span>
+      <span class="nt">&lt;/eiCreatedEvent&gt;</span>
+    <span class="nt">&lt;/oadrCreatedEvent&gt;</span>
+  <span class="nt">&lt;/oadrSignedObject&gt;</span>
+<span class="nt">&lt;/oadrPayload&gt;</span>
+</pre></div>
+</div>
+<p>pyOpenADR representation:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;event_responses&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;event_id&#39;</span><span class="p">:</span> <span class="s1">&#39;od864b4ea6&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;modification_number&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                      <span class="s1">&#39;opt_type&#39;</span><span class="p">:</span> <span class="s1">&#39;optIn&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;request_id&#39;</span><span class="p">:</span> <span class="s1">&#39;ycab9acb9f&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;response_code&#39;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
+                      <span class="s1">&#39;response_description&#39;</span><span class="p">:</span> <span class="s1">&#39;OK&#39;</span><span class="p">},</span>
+                     <span class="p">{</span><span class="s1">&#39;event_id&#39;</span><span class="p">:</span> <span class="s1">&#39;hc6cf67dab&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;modification_number&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                      <span class="s1">&#39;opt_type&#39;</span><span class="p">:</span> <span class="s1">&#39;optIn&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;request_id&#39;</span><span class="p">:</span> <span class="s1">&#39;bf2aad9af8&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;response_code&#39;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
+                      <span class="s1">&#39;response_description&#39;</span><span class="p">:</span> <span class="s1">&#39;OK&#39;</span><span class="p">},</span>
+                     <span class="p">{</span><span class="s1">&#39;event_id&#39;</span><span class="p">:</span> <span class="s1">&#39;qdff0da955&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;modification_number&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                      <span class="s1">&#39;opt_type&#39;</span><span class="p">:</span> <span class="s1">&#39;optIn&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;request_id&#39;</span><span class="p">:</span> <span class="s1">&#39;jefb88dcbd&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;response_code&#39;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
+                      <span class="s1">&#39;response_description&#39;</span><span class="p">:</span> <span class="s1">&#39;OK&#39;</span><span class="p">}],</span>
+ <span class="s1">&#39;response&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;request_id&#39;</span><span class="p">:</span> <span class="s1">&#39;yaa3ee03b1&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;response_code&#39;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
+              <span class="s1">&#39;response_description&#39;</span><span class="p">:</span> <span class="s1">&#39;OK&#39;</span><span class="p">},</span>
+ <span class="s1">&#39;ven_id&#39;</span><span class="p">:</span> <span class="s1">&#39;123ABC&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>OpenADR payload:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span>
+<span class="nt">&lt;oadrPayload</span> <span class="na">xmlns:xsi=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span> <span class="na">xmlns:xsd=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema&quot;</span> <span class="na">xmlns=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07&quot;</span> <span class="na">xsi:schemaLocation=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07 oadr_20b.xsd&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;oadrSignedObject&gt;</span>
+    <span class="nt">&lt;oadrCreatedEvent</span> <span class="na">ei:schemaVersion=</span><span class="s">&quot;2.0b&quot;</span> <span class="na">xmlns:ei=</span><span class="s">&quot;http://docs.oasis-open.org/ns/energyinterop/201110&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;eiCreatedEvent</span> <span class="na">xmlns=</span><span class="s">&quot;http://docs.oasis-open.org/ns/energyinterop/201110/payloads&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;ei:eiResponse&gt;</span>
+          <span class="nt">&lt;ei:responseCode&gt;</span>200<span class="nt">&lt;/ei:responseCode&gt;</span>
+          <span class="nt">&lt;ei:responseDescription&gt;</span>OK<span class="nt">&lt;/ei:responseDescription&gt;</span>
+          <span class="nt">&lt;requestID</span> <span class="na">xmlns=</span><span class="s">&quot;http://docs.oasis-open.org/ns/energyinterop/201110/payloads&quot;</span><span class="nt">&gt;</span>yde9c0369d<span class="nt">&lt;/requestID&gt;</span>
+        <span class="nt">&lt;/ei:eiResponse&gt;</span>
+        <span class="nt">&lt;ei:eventResponses&gt;</span>
+          <span class="nt">&lt;ei:eventResponse&gt;</span>
+            <span class="nt">&lt;ei:responseCode&gt;</span>200<span class="nt">&lt;/ei:responseCode&gt;</span>
+            <span class="nt">&lt;ei:responseDescription&gt;</span>OK<span class="nt">&lt;/ei:responseDescription&gt;</span>
+            <span class="nt">&lt;requestID</span> <span class="na">xmlns=</span><span class="s">&quot;http://docs.oasis-open.org/ns/energyinterop/201110/payloads&quot;</span><span class="nt">&gt;</span>zc9523b16d<span class="nt">&lt;/requestID&gt;</span>
+            <span class="nt">&lt;ei:qualifiedEventID&gt;</span>
+              <span class="nt">&lt;ei:eventID&gt;</span>fefaa2b0f2<span class="nt">&lt;/ei:eventID&gt;</span>
+              <span class="nt">&lt;ei:modificationNumber&gt;</span>1<span class="nt">&lt;/ei:modificationNumber&gt;</span>
+            <span class="nt">&lt;/ei:qualifiedEventID&gt;</span>
+            <span class="nt">&lt;ei:optType&gt;</span>optIn<span class="nt">&lt;/ei:optType&gt;</span>
+          <span class="nt">&lt;/ei:eventResponse&gt;</span>
+          <span class="nt">&lt;ei:eventResponse&gt;</span>
+            <span class="nt">&lt;ei:responseCode&gt;</span>200<span class="nt">&lt;/ei:responseCode&gt;</span>
+            <span class="nt">&lt;ei:responseDescription&gt;</span>OK<span class="nt">&lt;/ei:responseDescription&gt;</span>
+            <span class="nt">&lt;requestID</span> <span class="na">xmlns=</span><span class="s">&quot;http://docs.oasis-open.org/ns/energyinterop/201110/payloads&quot;</span><span class="nt">&gt;</span>tbeecb7c97<span class="nt">&lt;/requestID&gt;</span>
+            <span class="nt">&lt;ei:qualifiedEventID&gt;</span>
+              <span class="nt">&lt;ei:eventID&gt;</span>t63a63fea4<span class="nt">&lt;/ei:eventID&gt;</span>
+              <span class="nt">&lt;ei:modificationNumber&gt;</span>1<span class="nt">&lt;/ei:modificationNumber&gt;</span>
+            <span class="nt">&lt;/ei:qualifiedEventID&gt;</span>
+            <span class="nt">&lt;ei:optType&gt;</span>optOut<span class="nt">&lt;/ei:optType&gt;</span>
+          <span class="nt">&lt;/ei:eventResponse&gt;</span>
+        <span class="nt">&lt;/ei:eventResponses&gt;</span>
+        <span class="nt">&lt;ei:venID&gt;</span>123ABC<span class="nt">&lt;/ei:venID&gt;</span>
+      <span class="nt">&lt;/eiCreatedEvent&gt;</span>
+    <span class="nt">&lt;/oadrCreatedEvent&gt;</span>
+  <span class="nt">&lt;/oadrSignedObject&gt;</span>
+<span class="nt">&lt;/oadrPayload&gt;</span>
+</pre></div>
+</div>
+<p>pyOpenADR representation:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;event_responses&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;event_id&#39;</span><span class="p">:</span> <span class="s1">&#39;fefaa2b0f2&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;modification_number&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                      <span class="s1">&#39;opt_type&#39;</span><span class="p">:</span> <span class="s1">&#39;optIn&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;request_id&#39;</span><span class="p">:</span> <span class="s1">&#39;zc9523b16d&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;response_code&#39;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
+                      <span class="s1">&#39;response_description&#39;</span><span class="p">:</span> <span class="s1">&#39;OK&#39;</span><span class="p">},</span>
+                     <span class="p">{</span><span class="s1">&#39;event_id&#39;</span><span class="p">:</span> <span class="s1">&#39;t63a63fea4&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;modification_number&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                      <span class="s1">&#39;opt_type&#39;</span><span class="p">:</span> <span class="s1">&#39;optOut&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;request_id&#39;</span><span class="p">:</span> <span class="s1">&#39;tbeecb7c97&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;response_code&#39;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
+                      <span class="s1">&#39;response_description&#39;</span><span class="p">:</span> <span class="s1">&#39;OK&#39;</span><span class="p">}],</span>
+ <span class="s1">&#39;response&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;request_id&#39;</span><span class="p">:</span> <span class="s1">&#39;yde9c0369d&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;response_code&#39;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
+              <span class="s1">&#39;response_description&#39;</span><span class="p">:</span> <span class="s1">&#39;OK&#39;</span><span class="p">},</span>
+ <span class="s1">&#39;ven_id&#39;</span><span class="p">:</span> <span class="s1">&#39;123ABC&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="oadrcreatedreport">
+<span id="id8"></span><h2>oadrCreatedReport<a class="headerlink" href="#oadrcreatedreport" title="Permalink to this headline">¶</a></h2>
+<p>OpenADR payload:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span>
+<span class="nt">&lt;oadrPayload</span> <span class="na">xmlns:xsi=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span> <span class="na">xmlns:xsd=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema&quot;</span> <span class="na">xmlns=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07&quot;</span> <span class="na">xsi:schemaLocation=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07 oadr_20b.xsd&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;oadrSignedObject&gt;</span>
+    <span class="nt">&lt;oadrCreatedReport</span> <span class="na">ei:schemaVersion=</span><span class="s">&quot;2.0b&quot;</span> <span class="na">xmlns:ei=</span><span class="s">&quot;http://docs.oasis-open.org/ns/energyinterop/201110&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;ei:eiResponse&gt;</span>
+        <span class="nt">&lt;ei:responseCode&gt;</span>200<span class="nt">&lt;/ei:responseCode&gt;</span>
+        <span class="nt">&lt;ei:responseDescription&gt;</span>OK<span class="nt">&lt;/ei:responseDescription&gt;</span>
+        <span class="nt">&lt;requestID</span> <span class="na">xmlns=</span><span class="s">&quot;http://docs.oasis-open.org/ns/energyinterop/201110/payloads&quot;</span><span class="nt">&gt;</span>ie8ff94fbc<span class="nt">&lt;/requestID&gt;</span>
+      <span class="nt">&lt;/ei:eiResponse&gt;</span>
+      <span class="nt">&lt;oadrPendingReports&gt;</span>
+        <span class="nt">&lt;ei:reportRequestID&gt;</span>p8c56f9ed9<span class="nt">&lt;/ei:reportRequestID&gt;</span>
+        <span class="nt">&lt;ei:reportRequestID&gt;</span>hab1cced95<span class="nt">&lt;/ei:reportRequestID&gt;</span>
+      <span class="nt">&lt;/oadrPendingReports&gt;</span>
+      <span class="nt">&lt;ei:venID&gt;</span>123ABC<span class="nt">&lt;/ei:venID&gt;</span>
+    <span class="nt">&lt;/oadrCreatedReport&gt;</span>
+  <span class="nt">&lt;/oadrSignedObject&gt;</span>
+<span class="nt">&lt;/oadrPayload&gt;</span>
+</pre></div>
+</div>
+<p>pyOpenADR representation:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;pending_reports&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;request_id&#39;</span><span class="p">:</span> <span class="s1">&#39;p8c56f9ed9&#39;</span><span class="p">},</span>
+                     <span class="p">{</span><span class="s1">&#39;request_id&#39;</span><span class="p">:</span> <span class="s1">&#39;hab1cced95&#39;</span><span class="p">}],</span>
+ <span class="s1">&#39;response&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;request_id&#39;</span><span class="p">:</span> <span class="s1">&#39;ie8ff94fbc&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;response_code&#39;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
+              <span class="s1">&#39;response_description&#39;</span><span class="p">:</span> <span class="s1">&#39;OK&#39;</span><span class="p">},</span>
+ <span class="s1">&#39;ven_id&#39;</span><span class="p">:</span> <span class="s1">&#39;123ABC&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>OpenADR payload:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span>
+<span class="nt">&lt;oadrPayload</span> <span class="na">xmlns:xsi=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span> <span class="na">xmlns:xsd=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema&quot;</span> <span class="na">xmlns=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07&quot;</span> <span class="na">xsi:schemaLocation=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07 oadr_20b.xsd&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;oadrSignedObject&gt;</span>
+    <span class="nt">&lt;oadrCreatedReport</span> <span class="na">ei:schemaVersion=</span><span class="s">&quot;2.0b&quot;</span> <span class="na">xmlns:ei=</span><span class="s">&quot;http://docs.oasis-open.org/ns/energyinterop/201110&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;ei:eiResponse&gt;</span>
+        <span class="nt">&lt;ei:responseCode&gt;</span>200<span class="nt">&lt;/ei:responseCode&gt;</span>
+        <span class="nt">&lt;ei:responseDescription&gt;</span>OK<span class="nt">&lt;/ei:responseDescription&gt;</span>
+        <span class="nt">&lt;requestID</span> <span class="na">xmlns=</span><span class="s">&quot;http://docs.oasis-open.org/ns/energyinterop/201110/payloads&quot;</span><span class="nt">&gt;</span>gde557fcae<span class="nt">&lt;/requestID&gt;</span>
+      <span class="nt">&lt;/ei:eiResponse&gt;</span>
+      <span class="nt">&lt;oadrPendingReports&gt;</span>
+        <span class="nt">&lt;ei:reportRequestID&gt;</span>e1e16137f3<span class="nt">&lt;/ei:reportRequestID&gt;</span>
+        <span class="nt">&lt;ei:reportRequestID&gt;</span>d0f2bcbe89<span class="nt">&lt;/ei:reportRequestID&gt;</span>
+      <span class="nt">&lt;/oadrPendingReports&gt;</span>
+    <span class="nt">&lt;/oadrCreatedReport&gt;</span>
+  <span class="nt">&lt;/oadrSignedObject&gt;</span>
+<span class="nt">&lt;/oadrPayload&gt;</span>
+</pre></div>
+</div>
+<p>pyOpenADR representation:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;pending_reports&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;request_id&#39;</span><span class="p">:</span> <span class="s1">&#39;e1e16137f3&#39;</span><span class="p">},</span>
+                     <span class="p">{</span><span class="s1">&#39;request_id&#39;</span><span class="p">:</span> <span class="s1">&#39;d0f2bcbe89&#39;</span><span class="p">}],</span>
+ <span class="s1">&#39;response&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;request_id&#39;</span><span class="p">:</span> <span class="s1">&#39;gde557fcae&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;response_code&#39;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
+              <span class="s1">&#39;response_description&#39;</span><span class="p">:</span> <span class="s1">&#39;OK&#39;</span><span class="p">}}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="oadrcreatedpartyregistration">
+<span id="id9"></span><h2>oadrCreatedPartyRegistration<a class="headerlink" href="#oadrcreatedpartyregistration" title="Permalink to this headline">¶</a></h2>
+<p>This message is used by the VTN in two scenarios:</p>
+<ol class="arabic simple">
+<li><p>The VEN has just sent an <a class="reference internal" href="#oadrqueryregistration"><span class="std std-ref">oadrQueryRegistration</span></a> request, and the VTN makes its available profiles and transport mechanisms known to the VEN</p></li>
+<li><p>The VEN has just sent an <a class="reference internal" href="#oadrcreatepartyregistration"><span class="std std-ref">oadrCreatePartyRegistration</span></a> request, and the VTN responds by sending the registrationId to the VEN.</p></li>
+</ol>
+<p>OpenADR payload:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span>
+<span class="nt">&lt;oadrPayload</span> <span class="na">xmlns:xsi=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span> <span class="na">xmlns:xsd=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema&quot;</span> <span class="na">xmlns=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07&quot;</span> <span class="na">xsi:schemaLocation=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07 oadr_20b.xsd&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;oadrSignedObject&gt;</span>
+    <span class="nt">&lt;oadrCreatedPartyRegistration</span> <span class="na">ei:schemaVersion=</span><span class="s">&quot;2.0b&quot;</span> <span class="na">xmlns:ei=</span><span class="s">&quot;http://docs.oasis-open.org/ns/energyinterop/201110&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;ei:eiResponse&gt;</span>
+        <span class="nt">&lt;ei:responseCode&gt;</span>200<span class="nt">&lt;/ei:responseCode&gt;</span>
+        <span class="nt">&lt;ei:responseDescription&gt;</span>OK<span class="nt">&lt;/ei:responseDescription&gt;</span>
+        <span class="nt">&lt;requestID</span> <span class="na">xmlns=</span><span class="s">&quot;http://docs.oasis-open.org/ns/energyinterop/201110/payloads&quot;</span><span class="nt">&gt;</span>k6565d9280<span class="nt">&lt;/requestID&gt;</span>
+      <span class="nt">&lt;/ei:eiResponse&gt;</span>
+      <span class="nt">&lt;ei:registrationID&gt;</span>o852fdbac9<span class="nt">&lt;/ei:registrationID&gt;</span>
+      <span class="nt">&lt;ei:venID&gt;</span>123ABC<span class="nt">&lt;/ei:venID&gt;</span>
+      <span class="nt">&lt;ei:vtnID&gt;</span>VTN123<span class="nt">&lt;/ei:vtnID&gt;</span>
+      <span class="nt">&lt;oadrProfiles&gt;</span>
+        <span class="nt">&lt;oadrProfile&gt;</span>
+          <span class="nt">&lt;oadrProfileName&gt;</span>2.0b<span class="nt">&lt;/oadrProfileName&gt;</span>
+          <span class="nt">&lt;oadrTransports&gt;</span>
+            <span class="nt">&lt;oadrTransport&gt;</span>
+              <span class="nt">&lt;oadrTransportName&gt;</span>simpleHttp<span class="nt">&lt;/oadrTransportName&gt;</span>
+            <span class="nt">&lt;/oadrTransport&gt;</span>
+          <span class="nt">&lt;/oadrTransports&gt;</span>
+        <span class="nt">&lt;/oadrProfile&gt;</span>
+      <span class="nt">&lt;/oadrProfiles&gt;</span>
+    <span class="nt">&lt;/oadrCreatedPartyRegistration&gt;</span>
+  <span class="nt">&lt;/oadrSignedObject&gt;</span>
+<span class="nt">&lt;/oadrPayload&gt;</span>
+</pre></div>
+</div>
+<p>pyOpenADR representation:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;profiles&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;profile_name&#39;</span><span class="p">:</span> <span class="s1">&#39;2.0b&#39;</span><span class="p">,</span>
+               <span class="s1">&#39;transports&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;transport_name&#39;</span><span class="p">:</span> <span class="s1">&#39;simpleHttp&#39;</span><span class="p">}]}],</span>
+ <span class="s1">&#39;registration_id&#39;</span><span class="p">:</span> <span class="s1">&#39;o852fdbac9&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;response&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;request_id&#39;</span><span class="p">:</span> <span class="s1">&#39;k6565d9280&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;response_code&#39;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
+              <span class="s1">&#39;response_description&#39;</span><span class="p">:</span> <span class="s1">&#39;OK&#39;</span><span class="p">},</span>
+ <span class="s1">&#39;ven_id&#39;</span><span class="p">:</span> <span class="s1">&#39;123ABC&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;vtn_id&#39;</span><span class="p">:</span> <span class="s1">&#39;VTN123&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="oadrcreateopt">
+<span id="id10"></span><h2>oadrCreateOpt<a class="headerlink" href="#oadrcreateopt" title="Permalink to this headline">¶</a></h2>
+<p>OpenADR payload:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span>
+<span class="nt">&lt;oadrPayload</span> <span class="na">xmlns:xsi=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span> <span class="na">xmlns:xsd=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema&quot;</span> <span class="na">xmlns=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07&quot;</span> <span class="na">xsi:schemaLocation=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07 oadr_20b.xsd&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;oadrSignedObject&gt;</span>
+    <span class="nt">&lt;oadrCreateOpt</span> <span class="na">ei:schemaVersion=</span><span class="s">&quot;2.0b&quot;</span> <span class="na">xmlns:ei=</span><span class="s">&quot;http://docs.oasis-open.org/ns/energyinterop/201110&quot;</span> <span class="na">xmlns:xcal=</span><span class="s">&quot;urn:ietf:params:xml:ns:icalendar-2.0&quot;</span> <span class="na">xmlns:emix=</span><span class="s">&quot;http://docs.oasis-open.org/ns/emix/2011/06&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;ei:optID&gt;</span>l170fb7ea4<span class="nt">&lt;/ei:optID&gt;</span>
+      <span class="nt">&lt;ei:optType&gt;</span>optIn<span class="nt">&lt;/ei:optType&gt;</span>
+      <span class="nt">&lt;ei:optReason&gt;</span>participating<span class="nt">&lt;/ei:optReason&gt;</span>
+      <span class="nt">&lt;ei:venID&gt;</span>VEN123<span class="nt">&lt;/ei:venID&gt;</span>
+      <span class="nt">&lt;ei:createdDateTime&gt;</span>2020-07-09T15:54:03.151236Z <span class="nt">&lt;/ei:createdDateTime&gt;</span>
+      <span class="nt">&lt;requestID</span> <span class="na">xmlns=</span><span class="s">&quot;http://docs.oasis-open.org/ns/energyinterop/201110/payloads&quot;</span><span class="nt">&gt;</span>k6dc07ece8<span class="nt">&lt;/requestID&gt;</span>
+      <span class="nt">&lt;ei:qualifiedEventID&gt;</span>
+        <span class="nt">&lt;ei:eventID&gt;</span>sdfe18dd5c<span class="nt">&lt;/ei:eventID&gt;</span>
+        <span class="nt">&lt;ei:modificationNumber&gt;</span>1<span class="nt">&lt;/ei:modificationNumber&gt;</span>
+      <span class="nt">&lt;/ei:qualifiedEventID&gt;</span>
+      <span class="nt">&lt;ei:eiTarget&gt;</span>
+        <span class="nt">&lt;ei:venID&gt;</span>123ABC<span class="nt">&lt;/ei:venID&gt;</span>
+      <span class="nt">&lt;/ei:eiTarget&gt;</span>
+    <span class="nt">&lt;/oadrCreateOpt&gt;</span>
+  <span class="nt">&lt;/oadrSignedObject&gt;</span>
+<span class="nt">&lt;/oadrPayload&gt;</span>
+</pre></div>
+</div>
+<p>pyOpenADR representation:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;created_date_time&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2020</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">54</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">151236</span><span class="p">,</span> <span class="n">tzinfo</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">),</span>
+ <span class="s1">&#39;event_id&#39;</span><span class="p">:</span> <span class="s1">&#39;sdfe18dd5c&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;modification_number&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+ <span class="s1">&#39;opt_id&#39;</span><span class="p">:</span> <span class="s1">&#39;l170fb7ea4&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;opt_reason&#39;</span><span class="p">:</span> <span class="s1">&#39;participating&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;opt_type&#39;</span><span class="p">:</span> <span class="s1">&#39;optIn&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;request_id&#39;</span><span class="p">:</span> <span class="s1">&#39;k6dc07ece8&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;targets&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;ven_id&#39;</span><span class="p">:</span> <span class="s1">&#39;123ABC&#39;</span><span class="p">}],</span>
+ <span class="s1">&#39;ven_id&#39;</span><span class="p">:</span> <span class="s1">&#39;VEN123&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="oadrcreatepartyregistration">
+<span id="id11"></span><h2>oadrCreatePartyRegistration<a class="headerlink" href="#oadrcreatepartyregistration" title="Permalink to this headline">¶</a></h2>
+<p>OpenADR payload:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span>
+<span class="nt">&lt;oadrPayload</span> <span class="na">xmlns:xsi=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span> <span class="na">xmlns:xsd=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema&quot;</span> <span class="na">xmlns=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;oadrSignedObject&gt;</span>
+    <span class="nt">&lt;oadrCreatePartyRegistration</span> <span class="na">ei:schemaVersion=</span><span class="s">&quot;2.0b&quot;</span> <span class="na">xmlns:ei=</span><span class="s">&quot;http://docs.oasis-open.org/ns/energyinterop/201110&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;requestID</span> <span class="na">xmlns=</span><span class="s">&quot;http://docs.oasis-open.org/ns/energyinterop/201110/payloads&quot;</span><span class="nt">&gt;</span>g31f3a2aae<span class="nt">&lt;/requestID&gt;</span>
+      <span class="nt">&lt;ei:venID&gt;</span>123ABC<span class="nt">&lt;/ei:venID&gt;</span>
+      <span class="nt">&lt;oadrProfileName&gt;</span>2.0b<span class="nt">&lt;/oadrProfileName&gt;</span>
+      <span class="nt">&lt;oadrTransportName&gt;</span>simpleHttp<span class="nt">&lt;/oadrTransportName&gt;</span>
+      <span class="nt">&lt;oadrTransportAddress&gt;</span>http://localhost<span class="nt">&lt;/oadrTransportAddress&gt;</span>
+      <span class="nt">&lt;oadrReportOnly&gt;</span>false<span class="nt">&lt;/oadrReportOnly&gt;</span>
+      <span class="nt">&lt;oadrXmlSignature&gt;</span>false<span class="nt">&lt;/oadrXmlSignature&gt;</span>
+      <span class="nt">&lt;oadrVenName&gt;</span>test<span class="nt">&lt;/oadrVenName&gt;</span>
+      <span class="nt">&lt;oadrHttpPullModel&gt;</span>true<span class="nt">&lt;/oadrHttpPullModel&gt;</span>
+    <span class="nt">&lt;/oadrCreatePartyRegistration&gt;</span>
+  <span class="nt">&lt;/oadrSignedObject&gt;</span>
+<span class="nt">&lt;/oadrPayload&gt;</span>
+</pre></div>
+</div>
+<p>pyOpenADR representation:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;http_pull_model&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+ <span class="s1">&#39;profile_name&#39;</span><span class="p">:</span> <span class="s1">&#39;2.0b&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;report_only&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+ <span class="s1">&#39;request_id&#39;</span><span class="p">:</span> <span class="s1">&#39;g31f3a2aae&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;transport_address&#39;</span><span class="p">:</span> <span class="s1">&#39;http://localhost&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;transport_name&#39;</span><span class="p">:</span> <span class="s1">&#39;simpleHttp&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;ven_id&#39;</span><span class="p">:</span> <span class="s1">&#39;123ABC&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;ven_name&#39;</span><span class="p">:</span> <span class="s1">&#39;test&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;xml_signature&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="oadrcreatereport">
+<span id="id12"></span><h2>oadrCreateReport<a class="headerlink" href="#oadrcreatereport" title="Permalink to this headline">¶</a></h2>
+<p>OpenADR payload:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span>
+<span class="nt">&lt;oadrPayload</span> <span class="na">xmlns:xsi=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span> <span class="na">xmlns:xsd=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema&quot;</span> <span class="na">xmlns=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;oadrSignedObject&gt;</span>
+    <span class="nt">&lt;oadrCreateReport</span> <span class="na">ei:schemaVersion=</span><span class="s">&quot;2.0b&quot;</span> <span class="na">xmlns:ei=</span><span class="s">&quot;http://docs.oasis-open.org/ns/energyinterop/201110&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;requestID</span> <span class="na">xmlns=</span><span class="s">&quot;http://docs.oasis-open.org/ns/energyinterop/201110/payloads&quot;</span><span class="nt">&gt;</span>sdbbdefaad<span class="nt">&lt;/requestID&gt;</span>
+      <span class="nt">&lt;oadrReportRequest&gt;</span>
+        <span class="nt">&lt;ei:reportRequestID&gt;</span>d2b7bade5f<span class="nt">&lt;/ei:reportRequestID&gt;</span>
+        <span class="nt">&lt;ei:reportSpecifier</span> <span class="na">xmlns:xcal=</span><span class="s">&quot;urn:ietf:params:xml:ns:icalendar-2.0&quot;</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;ei:reportSpecifierID&gt;</span>9c8bdc00e7<span class="nt">&lt;/ei:reportSpecifierID&gt;</span>
+          <span class="nt">&lt;xcal:granularity&gt;</span>
+            <span class="nt">&lt;xcal:duration&gt;</span>PT15M<span class="nt">&lt;/xcal:duration&gt;</span>
+          <span class="nt">&lt;/xcal:granularity&gt;</span>
+          <span class="nt">&lt;ei:reportBackDuration&gt;</span>
+            <span class="nt">&lt;xcal:duration&gt;</span>PT15M<span class="nt">&lt;/xcal:duration&gt;</span>
+          <span class="nt">&lt;/ei:reportBackDuration&gt;</span>
+          <span class="nt">&lt;ei:reportInterval&gt;</span>
+            <span class="nt">&lt;xcal:properties&gt;</span>
+              <span class="nt">&lt;xcal:dtstart&gt;</span>
+                <span class="nt">&lt;xcal:date-time&gt;</span>2019-11-19T11:00:18.672768Z<span class="nt">&lt;/xcal:date-time&gt;</span>
+              <span class="nt">&lt;/xcal:dtstart&gt;</span>
+              <span class="nt">&lt;xcal:duration&gt;</span>
+                <span class="nt">&lt;xcal:duration&gt;</span>PT2H<span class="nt">&lt;/xcal:duration&gt;</span>
+              <span class="nt">&lt;/xcal:duration&gt;</span>
+              <span class="nt">&lt;xcal:tolerance&gt;</span>
+                <span class="nt">&lt;xcal:tolerate&gt;</span>
+                  <span class="nt">&lt;xcal:startafter&gt;</span>PT5M<span class="nt">&lt;/xcal:startafter&gt;</span>
+                <span class="nt">&lt;/xcal:tolerate&gt;</span>
+              <span class="nt">&lt;/xcal:tolerance&gt;</span>
+            <span class="nt">&lt;/xcal:properties&gt;</span>
+          <span class="nt">&lt;/ei:reportInterval&gt;</span>
+          <span class="nt">&lt;ei:specifierPayload&gt;</span>
+            <span class="nt">&lt;ei:rID&gt;</span>d6e2e07485<span class="nt">&lt;/ei:rID&gt;</span>
+            <span class="nt">&lt;ei:readingType&gt;</span>Direct Read<span class="nt">&lt;/ei:readingType&gt;</span>
+          <span class="nt">&lt;/ei:specifierPayload&gt;</span>
+        <span class="nt">&lt;/ei:reportSpecifier&gt;</span>
+      <span class="nt">&lt;/oadrReportRequest&gt;</span>
+      <span class="nt">&lt;ei:venID&gt;</span>123ABC<span class="nt">&lt;/ei:venID&gt;</span>
+    <span class="nt">&lt;/oadrCreateReport&gt;</span>
+  <span class="nt">&lt;/oadrSignedObject&gt;</span>
+<span class="nt">&lt;/oadrPayload&gt;</span>
+</pre></div>
+</div>
+<p>pyOpenADR representation:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;report_requests&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;report_request_id&#39;</span><span class="p">:</span> <span class="s1">&#39;d2b7bade5f&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;report_specifier&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;granularity&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">900</span><span class="p">),</span>
+                                           <span class="s1">&#39;report_back_duration&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">900</span><span class="p">),</span>
+                                           <span class="s1">&#39;report_interval&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;dtstart&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2019</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">19</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">18</span><span class="p">,</span> <span class="mi">672768</span><span class="p">,</span> <span class="n">tzinfo</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">),</span>
+                                                               <span class="s1">&#39;duration&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">7200</span><span class="p">),</span>
+                                                               <span class="s1">&#39;tolerance&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;tolerate&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;startafter&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">300</span><span class="p">)}}},</span>
+                                           <span class="s1">&#39;report_specifier_id&#39;</span><span class="p">:</span> <span class="s1">&#39;9c8bdc00e7&#39;</span><span class="p">,</span>
+                                           <span class="s1">&#39;specifier_payload&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;r_id&#39;</span><span class="p">:</span> <span class="s1">&#39;d6e2e07485&#39;</span><span class="p">,</span>
+                                                                 <span class="s1">&#39;reading_type&#39;</span><span class="p">:</span> <span class="s1">&#39;Direct &#39;</span>
+                                                                                 <span class="s1">&#39;Read&#39;</span><span class="p">}}}],</span>
+ <span class="s1">&#39;request_id&#39;</span><span class="p">:</span> <span class="s1">&#39;sdbbdefaad&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;ven_id&#39;</span><span class="p">:</span> <span class="s1">&#39;123ABC&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="oadrdistributeevent">
+<span id="id13"></span><h2>oadrDistributeEvent<a class="headerlink" href="#oadrdistributeevent" title="Permalink to this headline">¶</a></h2>
+<p>This message is sent by the VTN when it delivers an Event to a VEN. This is the main communication of the Event, and it contains myriad options to precisely define the event.</p>
+<p>The VEN responds with either an <a class="reference internal" href="#oadrcreatedevent"><span class="std std-ref">oadrCreatedEvent</span></a> message, indicating its ‘opt’ status (“Opt In” or “Opt Out”).</p>
+<p>OpenADR payload:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span>
+<span class="nt">&lt;oadrPayload</span> <span class="na">xmlns:xsi=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span> <span class="na">xmlns:xsd=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema&quot;</span> <span class="na">xmlns=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07&quot;</span> <span class="na">xsi:schemaLocation=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07 oadr_20b.xsd&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;oadrSignedObject&gt;</span>
+    <span class="nt">&lt;oadrDistributeEvent</span> <span class="na">ei:schemaVersion=</span><span class="s">&quot;2.0b&quot;</span> <span class="na">xmlns:ei=</span><span class="s">&quot;http://docs.oasis-open.org/ns/energyinterop/201110&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;ei:eiResponse&gt;</span>
+        <span class="nt">&lt;ei:responseCode&gt;</span>200<span class="nt">&lt;/ei:responseCode&gt;</span>
+        <span class="nt">&lt;ei:responseDescription&gt;</span>OK<span class="nt">&lt;/ei:responseDescription&gt;</span>
+        <span class="nt">&lt;requestID</span> <span class="na">xmlns=</span><span class="s">&quot;http://docs.oasis-open.org/ns/energyinterop/201110/payloads&quot;</span><span class="nt">&gt;</span>123<span class="nt">&lt;/requestID&gt;</span>
+      <span class="nt">&lt;/ei:eiResponse&gt;</span>
+      <span class="nt">&lt;requestID</span> <span class="na">xmlns=</span><span class="s">&quot;http://docs.oasis-open.org/ns/energyinterop/201110/payloads&quot;</span><span class="nt">&gt;</span>i5fea744ae<span class="nt">&lt;/requestID&gt;</span>
+      <span class="nt">&lt;ei:vtnID&gt;</span>VTN123<span class="nt">&lt;/ei:vtnID&gt;</span>
+      <span class="nt">&lt;oadrEvent&gt;</span>
+        <span class="nt">&lt;ei:eiEvent&gt;</span>
+          <span class="nt">&lt;ei:eventDescriptor&gt;</span>
+            <span class="nt">&lt;ei:eventID&gt;</span>ifdda7aff6<span class="nt">&lt;/ei:eventID&gt;</span>
+            <span class="nt">&lt;ei:modificationNumber&gt;</span>1<span class="nt">&lt;/ei:modificationNumber&gt;</span>
+            <span class="nt">&lt;ei:modificationDateTime&gt;</span>2020-07-09T15:54:03.166717Z<span class="nt">&lt;/ei:modificationDateTime&gt;</span>
+            <span class="nt">&lt;ei:priority&gt;</span>1<span class="nt">&lt;/ei:priority&gt;</span>
+            <span class="nt">&lt;ei:eiMarketContext&gt;</span>
+              <span class="nt">&lt;marketContext</span> <span class="na">xmlns=</span><span class="s">&quot;http://docs.oasis-open.org/ns/emix/2011/06&quot;</span><span class="nt">&gt;</span>http://MarketContext1<span class="nt">&lt;/marketContext&gt;</span>
+            <span class="nt">&lt;/ei:eiMarketContext&gt;</span>
+            <span class="nt">&lt;ei:createdDateTime&gt;</span>2020-07-09T15:54:03.166717Z<span class="nt">&lt;/ei:createdDateTime&gt;</span>
+            <span class="nt">&lt;ei:eventStatus&gt;</span>near<span class="nt">&lt;/ei:eventStatus&gt;</span>
+            <span class="nt">&lt;ei:testEvent&gt;</span>false<span class="nt">&lt;/ei:testEvent&gt;</span>
+            <span class="nt">&lt;ei:vtnComment&gt;</span>This is an event<span class="nt">&lt;/ei:vtnComment&gt;</span>
+          <span class="nt">&lt;/ei:eventDescriptor&gt;</span>
+          <span class="nt">&lt;ei:eiActivePeriod&gt;</span>
+            <span class="nt">&lt;properties</span> <span class="na">xmlns=</span><span class="s">&quot;urn:ietf:params:xml:ns:icalendar-2.0&quot;</span><span class="nt">&gt;</span>
+              <span class="nt">&lt;dtstart&gt;</span>
+                <span class="nt">&lt;date-time&gt;</span>2020-07-09T15:55:03.166717Z<span class="nt">&lt;/date-time&gt;</span>
+              <span class="nt">&lt;/dtstart&gt;</span>
+              <span class="nt">&lt;duration&gt;</span>
+                <span class="nt">&lt;duration&gt;</span>PT10M<span class="nt">&lt;/duration&gt;</span>
+              <span class="nt">&lt;/duration&gt;</span>
+            <span class="nt">&lt;/properties&gt;</span>
+            <span class="nt">&lt;components</span> <span class="na">xsi:nil=</span><span class="s">&quot;true&quot;</span> <span class="na">xmlns=</span><span class="s">&quot;urn:ietf:params:xml:ns:icalendar-2.0&quot;</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;/ei:eiActivePeriod&gt;</span>
+          <span class="nt">&lt;ei:eiEventSignals&gt;</span>
+            <span class="nt">&lt;ei:eiEventSignal&gt;</span>
+              <span class="nt">&lt;intervals</span> <span class="na">xmlns=</span><span class="s">&quot;urn:ietf:params:xml:ns:icalendar-2.0:stream&quot;</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;ei:interval&gt;</span>
+                  <span class="nt">&lt;duration</span> <span class="na">xmlns=</span><span class="s">&quot;urn:ietf:params:xml:ns:icalendar-2.0&quot;</span><span class="nt">&gt;</span>
+                    <span class="nt">&lt;duration&gt;</span>PT1M<span class="nt">&lt;/duration&gt;</span>
+                  <span class="nt">&lt;/duration&gt;</span>
+                  <span class="nt">&lt;uid</span> <span class="na">xmlns=</span><span class="s">&quot;urn:ietf:params:xml:ns:icalendar-2.0&quot;</span><span class="nt">&gt;</span>
+                    <span class="nt">&lt;text&gt;</span>1<span class="nt">&lt;/text&gt;</span>
+                  <span class="nt">&lt;/uid&gt;</span>
+                  <span class="nt">&lt;ei:signalPayload&gt;</span>
+                    <span class="nt">&lt;ei:payloadFloat&gt;</span>
+                      <span class="nt">&lt;ei:value&gt;</span>8<span class="nt">&lt;/ei:value&gt;</span>
+                    <span class="nt">&lt;/ei:payloadFloat&gt;</span>
+                  <span class="nt">&lt;/ei:signalPayload&gt;</span>
+                <span class="nt">&lt;/ei:interval&gt;</span>
+                <span class="nt">&lt;ei:interval&gt;</span>
+                  <span class="nt">&lt;duration</span> <span class="na">xmlns=</span><span class="s">&quot;urn:ietf:params:xml:ns:icalendar-2.0&quot;</span><span class="nt">&gt;</span>
+                    <span class="nt">&lt;duration&gt;</span>PT1M<span class="nt">&lt;/duration&gt;</span>
+                  <span class="nt">&lt;/duration&gt;</span>
+                  <span class="nt">&lt;uid</span> <span class="na">xmlns=</span><span class="s">&quot;urn:ietf:params:xml:ns:icalendar-2.0&quot;</span><span class="nt">&gt;</span>
+                    <span class="nt">&lt;text&gt;</span>2<span class="nt">&lt;/text&gt;</span>
+                  <span class="nt">&lt;/uid&gt;</span>
+                  <span class="nt">&lt;ei:signalPayload&gt;</span>
+                    <span class="nt">&lt;ei:payloadFloat&gt;</span>
+                      <span class="nt">&lt;ei:value&gt;</span>10<span class="nt">&lt;/ei:value&gt;</span>
+                    <span class="nt">&lt;/ei:payloadFloat&gt;</span>
+                  <span class="nt">&lt;/ei:signalPayload&gt;</span>
+                <span class="nt">&lt;/ei:interval&gt;</span>
+                <span class="nt">&lt;ei:interval&gt;</span>
+                  <span class="nt">&lt;duration</span> <span class="na">xmlns=</span><span class="s">&quot;urn:ietf:params:xml:ns:icalendar-2.0&quot;</span><span class="nt">&gt;</span>
+                    <span class="nt">&lt;duration&gt;</span>PT1M<span class="nt">&lt;/duration&gt;</span>
+                  <span class="nt">&lt;/duration&gt;</span>
+                  <span class="nt">&lt;uid</span> <span class="na">xmlns=</span><span class="s">&quot;urn:ietf:params:xml:ns:icalendar-2.0&quot;</span><span class="nt">&gt;</span>
+                    <span class="nt">&lt;text&gt;</span>3<span class="nt">&lt;/text&gt;</span>
+                  <span class="nt">&lt;/uid&gt;</span>
+                  <span class="nt">&lt;ei:signalPayload&gt;</span>
+                    <span class="nt">&lt;ei:payloadFloat&gt;</span>
+                      <span class="nt">&lt;ei:value&gt;</span>12<span class="nt">&lt;/ei:value&gt;</span>
+                    <span class="nt">&lt;/ei:payloadFloat&gt;</span>
+                  <span class="nt">&lt;/ei:signalPayload&gt;</span>
+                <span class="nt">&lt;/ei:interval&gt;</span>
+                <span class="nt">&lt;ei:interval&gt;</span>
+                  <span class="nt">&lt;duration</span> <span class="na">xmlns=</span><span class="s">&quot;urn:ietf:params:xml:ns:icalendar-2.0&quot;</span><span class="nt">&gt;</span>
+                    <span class="nt">&lt;duration&gt;</span>PT1M<span class="nt">&lt;/duration&gt;</span>
+                  <span class="nt">&lt;/duration&gt;</span>
+                  <span class="nt">&lt;uid</span> <span class="na">xmlns=</span><span class="s">&quot;urn:ietf:params:xml:ns:icalendar-2.0&quot;</span><span class="nt">&gt;</span>
+                    <span class="nt">&lt;text&gt;</span>4<span class="nt">&lt;/text&gt;</span>
+                  <span class="nt">&lt;/uid&gt;</span>
+                  <span class="nt">&lt;ei:signalPayload&gt;</span>
+                    <span class="nt">&lt;ei:payloadFloat&gt;</span>
+                      <span class="nt">&lt;ei:value&gt;</span>14<span class="nt">&lt;/ei:value&gt;</span>
+                    <span class="nt">&lt;/ei:payloadFloat&gt;</span>
+                  <span class="nt">&lt;/ei:signalPayload&gt;</span>
+                <span class="nt">&lt;/ei:interval&gt;</span>
+                <span class="nt">&lt;ei:interval&gt;</span>
+                  <span class="nt">&lt;duration</span> <span class="na">xmlns=</span><span class="s">&quot;urn:ietf:params:xml:ns:icalendar-2.0&quot;</span><span class="nt">&gt;</span>
+                    <span class="nt">&lt;duration&gt;</span>PT1M<span class="nt">&lt;/duration&gt;</span>
+                  <span class="nt">&lt;/duration&gt;</span>
+                  <span class="nt">&lt;uid</span> <span class="na">xmlns=</span><span class="s">&quot;urn:ietf:params:xml:ns:icalendar-2.0&quot;</span><span class="nt">&gt;</span>
+                    <span class="nt">&lt;text&gt;</span>5<span class="nt">&lt;/text&gt;</span>
+                  <span class="nt">&lt;/uid&gt;</span>
+                  <span class="nt">&lt;ei:signalPayload&gt;</span>
+                    <span class="nt">&lt;ei:payloadFloat&gt;</span>
+                      <span class="nt">&lt;ei:value&gt;</span>16<span class="nt">&lt;/ei:value&gt;</span>
+                    <span class="nt">&lt;/ei:payloadFloat&gt;</span>
+                  <span class="nt">&lt;/ei:signalPayload&gt;</span>
+                <span class="nt">&lt;/ei:interval&gt;</span>
+                <span class="nt">&lt;ei:interval&gt;</span>
+                  <span class="nt">&lt;duration</span> <span class="na">xmlns=</span><span class="s">&quot;urn:ietf:params:xml:ns:icalendar-2.0&quot;</span><span class="nt">&gt;</span>
+                    <span class="nt">&lt;duration&gt;</span>PT1M<span class="nt">&lt;/duration&gt;</span>
+                  <span class="nt">&lt;/duration&gt;</span>
+                  <span class="nt">&lt;uid</span> <span class="na">xmlns=</span><span class="s">&quot;urn:ietf:params:xml:ns:icalendar-2.0&quot;</span><span class="nt">&gt;</span>
+                    <span class="nt">&lt;text&gt;</span>6<span class="nt">&lt;/text&gt;</span>
+                  <span class="nt">&lt;/uid&gt;</span>
+                  <span class="nt">&lt;ei:signalPayload&gt;</span>
+                    <span class="nt">&lt;ei:payloadFloat&gt;</span>
+                      <span class="nt">&lt;ei:value&gt;</span>18<span class="nt">&lt;/ei:value&gt;</span>
+                    <span class="nt">&lt;/ei:payloadFloat&gt;</span>
+                  <span class="nt">&lt;/ei:signalPayload&gt;</span>
+                <span class="nt">&lt;/ei:interval&gt;</span>
+                <span class="nt">&lt;ei:interval&gt;</span>
+                  <span class="nt">&lt;duration</span> <span class="na">xmlns=</span><span class="s">&quot;urn:ietf:params:xml:ns:icalendar-2.0&quot;</span><span class="nt">&gt;</span>
+                    <span class="nt">&lt;duration&gt;</span>PT1M<span class="nt">&lt;/duration&gt;</span>
+                  <span class="nt">&lt;/duration&gt;</span>
+                  <span class="nt">&lt;uid</span> <span class="na">xmlns=</span><span class="s">&quot;urn:ietf:params:xml:ns:icalendar-2.0&quot;</span><span class="nt">&gt;</span>
+                    <span class="nt">&lt;text&gt;</span>7<span class="nt">&lt;/text&gt;</span>
+                  <span class="nt">&lt;/uid&gt;</span>
+                  <span class="nt">&lt;ei:signalPayload&gt;</span>
+                    <span class="nt">&lt;ei:payloadFloat&gt;</span>
+                      <span class="nt">&lt;ei:value&gt;</span>20<span class="nt">&lt;/ei:value&gt;</span>
+                    <span class="nt">&lt;/ei:payloadFloat&gt;</span>
+                  <span class="nt">&lt;/ei:signalPayload&gt;</span>
+                <span class="nt">&lt;/ei:interval&gt;</span>
+                <span class="nt">&lt;ei:interval&gt;</span>
+                  <span class="nt">&lt;duration</span> <span class="na">xmlns=</span><span class="s">&quot;urn:ietf:params:xml:ns:icalendar-2.0&quot;</span><span class="nt">&gt;</span>
+                    <span class="nt">&lt;duration&gt;</span>PT1M<span class="nt">&lt;/duration&gt;</span>
+                  <span class="nt">&lt;/duration&gt;</span>
+                  <span class="nt">&lt;uid</span> <span class="na">xmlns=</span><span class="s">&quot;urn:ietf:params:xml:ns:icalendar-2.0&quot;</span><span class="nt">&gt;</span>
+                    <span class="nt">&lt;text&gt;</span>8<span class="nt">&lt;/text&gt;</span>
+                  <span class="nt">&lt;/uid&gt;</span>
+                  <span class="nt">&lt;ei:signalPayload&gt;</span>
+                    <span class="nt">&lt;ei:payloadFloat&gt;</span>
+                      <span class="nt">&lt;ei:value&gt;</span>10<span class="nt">&lt;/ei:value&gt;</span>
+                    <span class="nt">&lt;/ei:payloadFloat&gt;</span>
+                  <span class="nt">&lt;/ei:signalPayload&gt;</span>
+                <span class="nt">&lt;/ei:interval&gt;</span>
+                <span class="nt">&lt;ei:interval&gt;</span>
+                  <span class="nt">&lt;duration</span> <span class="na">xmlns=</span><span class="s">&quot;urn:ietf:params:xml:ns:icalendar-2.0&quot;</span><span class="nt">&gt;</span>
+                    <span class="nt">&lt;duration&gt;</span>PT1M<span class="nt">&lt;/duration&gt;</span>
+                  <span class="nt">&lt;/duration&gt;</span>
+                  <span class="nt">&lt;uid</span> <span class="na">xmlns=</span><span class="s">&quot;urn:ietf:params:xml:ns:icalendar-2.0&quot;</span><span class="nt">&gt;</span>
+                    <span class="nt">&lt;text&gt;</span>9<span class="nt">&lt;/text&gt;</span>
+                  <span class="nt">&lt;/uid&gt;</span>
+                  <span class="nt">&lt;ei:signalPayload&gt;</span>
+                    <span class="nt">&lt;ei:payloadFloat&gt;</span>
+                      <span class="nt">&lt;ei:value&gt;</span>20<span class="nt">&lt;/ei:value&gt;</span>
+                    <span class="nt">&lt;/ei:payloadFloat&gt;</span>
+                  <span class="nt">&lt;/ei:signalPayload&gt;</span>
+                <span class="nt">&lt;/ei:interval&gt;</span>
+              <span class="nt">&lt;/intervals&gt;</span>
+              <span class="nt">&lt;ei:signalName&gt;</span>LOAD_CONTROL<span class="nt">&lt;/ei:signalName&gt;</span>
+              <span class="nt">&lt;ei:signalType&gt;</span>x-loadControlCapacity<span class="nt">&lt;/ei:signalType&gt;</span>
+              <span class="nt">&lt;ei:signalID&gt;</span>zccf1b86ee<span class="nt">&lt;/ei:signalID&gt;</span>
+              <span class="nt">&lt;ei:currentValue&gt;</span>
+                <span class="nt">&lt;ei:payloadFloat&gt;</span>
+                  <span class="nt">&lt;ei:value&gt;</span>9.99<span class="nt">&lt;/ei:value&gt;</span>
+                <span class="nt">&lt;/ei:payloadFloat&gt;</span>
+              <span class="nt">&lt;/ei:currentValue&gt;</span>
+            <span class="nt">&lt;/ei:eiEventSignal&gt;</span>
+          <span class="nt">&lt;/ei:eiEventSignals&gt;</span>
+          <span class="nt">&lt;ei:eiTarget&gt;</span>
+            <span class="nt">&lt;ei:venID&gt;</span>VEN001<span class="nt">&lt;/ei:venID&gt;</span>
+            <span class="nt">&lt;ei:venID&gt;</span>VEN002<span class="nt">&lt;/ei:venID&gt;</span>
+          <span class="nt">&lt;/ei:eiTarget&gt;</span>
+        <span class="nt">&lt;/ei:eiEvent&gt;</span>
+        <span class="nt">&lt;oadrResponseRequired&gt;</span>always<span class="nt">&lt;/oadrResponseRequired&gt;</span>
+      <span class="nt">&lt;/oadrEvent&gt;</span>
+    <span class="nt">&lt;/oadrDistributeEvent&gt;</span>
+  <span class="nt">&lt;/oadrSignedObject&gt;</span>
+<span class="nt">&lt;/oadrPayload&gt;</span>
+</pre></div>
+</div>
+<p>pyOpenADR representation:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;events&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;active_period&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;dtstart&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2020</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">55</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">166717</span><span class="p">,</span> <span class="n">tzinfo</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">),</span>
+                               <span class="s1">&#39;duration&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">600</span><span class="p">)},</span>
+             <span class="s1">&#39;event_descriptor&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;created_date_time&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2020</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">54</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">166717</span><span class="p">,</span> <span class="n">tzinfo</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">),</span>
+                                  <span class="s1">&#39;event_id&#39;</span><span class="p">:</span> <span class="s1">&#39;ifdda7aff6&#39;</span><span class="p">,</span>
+                                  <span class="s1">&#39;event_status&#39;</span><span class="p">:</span> <span class="s1">&#39;near&#39;</span><span class="p">,</span>
+                                  <span class="s1">&#39;market_context&#39;</span><span class="p">:</span> <span class="s1">&#39;http://MarketContext1&#39;</span><span class="p">,</span>
+                                  <span class="s1">&#39;modification_date_time&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2020</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">54</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">166717</span><span class="p">,</span> <span class="n">tzinfo</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">),</span>
+                                  <span class="s1">&#39;modification_number&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                                  <span class="s1">&#39;priority&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                                  <span class="s1">&#39;test_event&#39;</span><span class="p">:</span> <span class="s1">&#39;false&#39;</span><span class="p">,</span>
+                                  <span class="s1">&#39;vtn_comment&#39;</span><span class="p">:</span> <span class="s1">&#39;This is an event&#39;</span><span class="p">},</span>
+             <span class="s1">&#39;event_signals&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;current_value&#39;</span><span class="p">:</span> <span class="mf">9.99</span><span class="p">,</span>
+                                <span class="s1">&#39;intervals&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;duration&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">60</span><span class="p">),</span>
+                                               <span class="s1">&#39;signal_payload&#39;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
+                                               <span class="s1">&#39;uid&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
+                                              <span class="p">{</span><span class="s1">&#39;duration&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">60</span><span class="p">),</span>
+                                               <span class="s1">&#39;signal_payload&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+                                               <span class="s1">&#39;uid&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span>
+                                              <span class="p">{</span><span class="s1">&#39;duration&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">60</span><span class="p">),</span>
+                                               <span class="s1">&#39;signal_payload&#39;</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span>
+                                               <span class="s1">&#39;uid&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">},</span>
+                                              <span class="p">{</span><span class="s1">&#39;duration&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">60</span><span class="p">),</span>
+                                               <span class="s1">&#39;signal_payload&#39;</span><span class="p">:</span> <span class="mi">14</span><span class="p">,</span>
+                                               <span class="s1">&#39;uid&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">},</span>
+                                              <span class="p">{</span><span class="s1">&#39;duration&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">60</span><span class="p">),</span>
+                                               <span class="s1">&#39;signal_payload&#39;</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
+                                               <span class="s1">&#39;uid&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">},</span>
+                                              <span class="p">{</span><span class="s1">&#39;duration&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">60</span><span class="p">),</span>
+                                               <span class="s1">&#39;signal_payload&#39;</span><span class="p">:</span> <span class="mi">18</span><span class="p">,</span>
+                                               <span class="s1">&#39;uid&#39;</span><span class="p">:</span> <span class="mi">6</span><span class="p">},</span>
+                                              <span class="p">{</span><span class="s1">&#39;duration&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">60</span><span class="p">),</span>
+                                               <span class="s1">&#39;signal_payload&#39;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
+                                               <span class="s1">&#39;uid&#39;</span><span class="p">:</span> <span class="mi">7</span><span class="p">},</span>
+                                              <span class="p">{</span><span class="s1">&#39;duration&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">60</span><span class="p">),</span>
+                                               <span class="s1">&#39;signal_payload&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+                                               <span class="s1">&#39;uid&#39;</span><span class="p">:</span> <span class="mi">8</span><span class="p">},</span>
+                                              <span class="p">{</span><span class="s1">&#39;duration&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">60</span><span class="p">),</span>
+                                               <span class="s1">&#39;signal_payload&#39;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
+                                               <span class="s1">&#39;uid&#39;</span><span class="p">:</span> <span class="mi">9</span><span class="p">}],</span>
+                                <span class="s1">&#39;signal_id&#39;</span><span class="p">:</span> <span class="s1">&#39;zccf1b86ee&#39;</span><span class="p">,</span>
+                                <span class="s1">&#39;signal_name&#39;</span><span class="p">:</span> <span class="s1">&#39;LOAD_CONTROL&#39;</span><span class="p">,</span>
+                                <span class="s1">&#39;signal_type&#39;</span><span class="p">:</span> <span class="s1">&#39;x-loadControlCapacity&#39;</span><span class="p">}],</span>
+             <span class="s1">&#39;response_required&#39;</span><span class="p">:</span> <span class="s1">&#39;always&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;targets&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;ven_id&#39;</span><span class="p">:</span> <span class="s1">&#39;VEN001&#39;</span><span class="p">},</span> <span class="p">{</span><span class="s1">&#39;ven_id&#39;</span><span class="p">:</span> <span class="s1">&#39;VEN002&#39;</span><span class="p">}]}],</span>
+ <span class="s1">&#39;request_id&#39;</span><span class="p">:</span> <span class="s1">&#39;i5fea744ae&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;response&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;request_id&#39;</span><span class="p">:</span> <span class="mi">123</span><span class="p">,</span>
+              <span class="s1">&#39;response_code&#39;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
+              <span class="s1">&#39;response_description&#39;</span><span class="p">:</span> <span class="s1">&#39;OK&#39;</span><span class="p">},</span>
+ <span class="s1">&#39;vtn_id&#39;</span><span class="p">:</span> <span class="s1">&#39;VTN123&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="oadrpoll">
+<span id="id14"></span><h2>oadrPoll<a class="headerlink" href="#oadrpoll" title="Permalink to this headline">¶</a></h2>
+<p>This message is sent by the VEN to the VTN to poll for new messages. The VTN responds by sending an empty <a class="reference internal" href="#oadrresponse"><span class="std std-ref">oadrResponse</span></a>, a <a class="reference internal" href="#oadrdistributeevent"><span class="std std-ref">oadrDistributeEvent</span></a> in case there is an Event for the VEN, a <a class="reference internal" href="#oadrrequestreregistration"><span class="std std-ref">oadrRequestReregistration</span></a> message in case the VTN want the VEN to register again.</p>
+<p>In case the VEN wants to hear only about new Events, it can send a <a class="reference internal" href="#oadrrequestevent"><span class="std std-ref">oadrRequestEvent</span></a> message to the VTN.</p>
+<p>OpenADR payload:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span>
+<span class="nt">&lt;oadrPayload</span> <span class="na">xmlns:xsi=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span> <span class="na">xmlns:xsd=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema&quot;</span> <span class="na">xmlns=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;oadrSignedObject&gt;</span>
+    <span class="nt">&lt;oadrPoll</span> <span class="na">ei:schemaVersion=</span><span class="s">&quot;2.0b&quot;</span> <span class="na">xmlns:ei=</span><span class="s">&quot;http://docs.oasis-open.org/ns/energyinterop/201110&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;ei:venID&gt;</span>123ABC<span class="nt">&lt;/ei:venID&gt;</span>
+    <span class="nt">&lt;/oadrPoll&gt;</span>
+  <span class="nt">&lt;/oadrSignedObject&gt;</span>
+<span class="nt">&lt;/oadrPayload&gt;</span>
+</pre></div>
+</div>
+<p>pyOpenADR representation:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;ven_id&#39;</span><span class="p">:</span> <span class="s1">&#39;123ABC&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="oadrqueryregistration">
+<span id="id15"></span><h2>oadrQueryRegistration<a class="headerlink" href="#oadrqueryregistration" title="Permalink to this headline">¶</a></h2>
+<p>This message is used by the VEN to request information on the VTN’s capabilities before registering. The VTN will respond with a <a class="reference internal" href="#oadrcreatedpartyregistration"><span class="std std-ref">oadrCreatedPartyRegistration</span></a> message.</p>
+<p>OpenADR payload:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span>
+<span class="nt">&lt;oadrPayload</span> <span class="na">xmlns:xsi=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span> <span class="na">xmlns:xsd=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema&quot;</span> <span class="na">xmlns=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07&quot;</span> <span class="na">xsi:schemaLocation=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07 oadr_20b.xsd&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;oadrSignedObject&gt;</span>
+    <span class="nt">&lt;oadrQueryRegistration</span> <span class="na">ei:schemaVersion=</span><span class="s">&quot;2.0b&quot;</span> <span class="na">xmlns:ei=</span><span class="s">&quot;http://docs.oasis-open.org/ns/energyinterop/201110&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;requestID</span> <span class="na">xmlns=</span><span class="s">&quot;http://docs.oasis-open.org/ns/energyinterop/201110/payloads&quot;</span><span class="nt">&gt;</span>i8cf15d21f<span class="nt">&lt;/requestID&gt;</span>
+    <span class="nt">&lt;/oadrQueryRegistration&gt;</span>
+  <span class="nt">&lt;/oadrSignedObject&gt;</span>
+<span class="nt">&lt;/oadrPayload&gt;</span>
+</pre></div>
+</div>
+<p>pyOpenADR representation:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;request_id&#39;</span><span class="p">:</span> <span class="s1">&#39;i8cf15d21f&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="oadrregisteredreport">
+<span id="id16"></span><h2>oadrRegisteredReport<a class="headerlink" href="#oadrregisteredreport" title="Permalink to this headline">¶</a></h2>
+<p>OpenADR payload:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span>
+<span class="nt">&lt;oadrPayload</span> <span class="na">xmlns:xsi=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span> <span class="na">xmlns:xsd=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema&quot;</span> <span class="na">xmlns=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;oadrSignedObject&gt;</span>
+    <span class="nt">&lt;oadrRegisteredReport</span> <span class="na">ei:schemaVersion=</span><span class="s">&quot;2.0b&quot;</span> <span class="na">xmlns:ei=</span><span class="s">&quot;http://docs.oasis-open.org/ns/energyinterop/201110&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;ei:eiResponse&gt;</span>
+        <span class="nt">&lt;ei:responseCode&gt;</span>200<span class="nt">&lt;/ei:responseCode&gt;</span>
+        <span class="nt">&lt;ei:responseDescription&gt;</span>OK<span class="nt">&lt;/ei:responseDescription&gt;</span>
+        <span class="nt">&lt;requestID</span> <span class="na">xmlns=</span><span class="s">&quot;http://docs.oasis-open.org/ns/energyinterop/201110/payloads&quot;</span><span class="nt">&gt;</span>uadb7d5fe5<span class="nt">&lt;/requestID&gt;</span>
+      <span class="nt">&lt;/ei:eiResponse&gt;</span>
+      <span class="nt">&lt;oadrReportRequest&gt;</span>
+        <span class="nt">&lt;ei:reportRequestID&gt;</span>f5308f6138<span class="nt">&lt;/ei:reportRequestID&gt;</span>
+        <span class="nt">&lt;ei:reportSpecifier</span> <span class="na">xmlns:xcal=</span><span class="s">&quot;urn:ietf:params:xml:ns:icalendar-2.0&quot;</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;ei:reportSpecifierID&gt;</span>se40c348d9<span class="nt">&lt;/ei:reportSpecifierID&gt;</span>
+          <span class="nt">&lt;xcal:granularity&gt;</span>
+            <span class="nt">&lt;xcal:duration&gt;</span>PT15M<span class="nt">&lt;/xcal:duration&gt;</span>
+          <span class="nt">&lt;/xcal:granularity&gt;</span>
+          <span class="nt">&lt;ei:reportBackDuration&gt;</span>
+            <span class="nt">&lt;xcal:duration&gt;</span>PT15M<span class="nt">&lt;/xcal:duration&gt;</span>
+          <span class="nt">&lt;/ei:reportBackDuration&gt;</span>
+          <span class="nt">&lt;ei:reportInterval&gt;</span>
+            <span class="nt">&lt;xcal:properties&gt;</span>
+              <span class="nt">&lt;xcal:dtstart&gt;</span>
+                <span class="nt">&lt;xcal:date-time&gt;</span>2020-07-09T15:54:03.184498Z<span class="nt">&lt;/xcal:date-time&gt;</span>
+              <span class="nt">&lt;/xcal:dtstart&gt;</span>
+              <span class="nt">&lt;xcal:duration&gt;</span>
+                <span class="nt">&lt;xcal:duration&gt;</span>PT2H<span class="nt">&lt;/xcal:duration&gt;</span>
+              <span class="nt">&lt;/xcal:duration&gt;</span>
+              <span class="nt">&lt;xcal:tolerance&gt;</span>
+                <span class="nt">&lt;xcal:tolerate&gt;</span>
+                  <span class="nt">&lt;xcal:startafter&gt;</span>PT5M<span class="nt">&lt;/xcal:startafter&gt;</span>
+                <span class="nt">&lt;/xcal:tolerate&gt;</span>
+              <span class="nt">&lt;/xcal:tolerance&gt;</span>
+              <span class="nt">&lt;ei:x-eiNotification&gt;</span>
+                <span class="nt">&lt;xcal:duration&gt;</span>PT30M<span class="nt">&lt;/xcal:duration&gt;</span>
+              <span class="nt">&lt;/ei:x-eiNotification&gt;</span>
+              <span class="nt">&lt;ei:x-eiRampUp&gt;</span>
+                <span class="nt">&lt;xcal:duration&gt;</span>PT15M<span class="nt">&lt;/xcal:duration&gt;</span>
+              <span class="nt">&lt;/ei:x-eiRampUp&gt;</span>
+              <span class="nt">&lt;ei:x-eiRecovery&gt;</span>
+                <span class="nt">&lt;xcal:duration&gt;</span>PT5M<span class="nt">&lt;/xcal:duration&gt;</span>
+              <span class="nt">&lt;/ei:x-eiRecovery&gt;</span>
+            <span class="nt">&lt;/xcal:properties&gt;</span>
+          <span class="nt">&lt;/ei:reportInterval&gt;</span>
+          <span class="nt">&lt;ei:specifierPayload&gt;</span>
+            <span class="nt">&lt;ei:rID&gt;</span>u461c6e37e<span class="nt">&lt;/ei:rID&gt;</span>
+            <span class="nt">&lt;ei:readingType&gt;</span>Direct Read<span class="nt">&lt;/ei:readingType&gt;</span>
+          <span class="nt">&lt;/ei:specifierPayload&gt;</span>
+        <span class="nt">&lt;/ei:reportSpecifier&gt;</span>
+      <span class="nt">&lt;/oadrReportRequest&gt;</span>
+      <span class="nt">&lt;oadrReportRequest&gt;</span>
+        <span class="nt">&lt;ei:reportRequestID&gt;</span>tc88cf616d<span class="nt">&lt;/ei:reportRequestID&gt;</span>
+        <span class="nt">&lt;ei:reportSpecifier</span> <span class="na">xmlns:xcal=</span><span class="s">&quot;urn:ietf:params:xml:ns:icalendar-2.0&quot;</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;ei:reportSpecifierID&gt;</span>le65d1bd2e<span class="nt">&lt;/ei:reportSpecifierID&gt;</span>
+          <span class="nt">&lt;xcal:granularity&gt;</span>
+            <span class="nt">&lt;xcal:duration&gt;</span>PT15M<span class="nt">&lt;/xcal:duration&gt;</span>
+          <span class="nt">&lt;/xcal:granularity&gt;</span>
+          <span class="nt">&lt;ei:reportBackDuration&gt;</span>
+            <span class="nt">&lt;xcal:duration&gt;</span>PT15M<span class="nt">&lt;/xcal:duration&gt;</span>
+          <span class="nt">&lt;/ei:reportBackDuration&gt;</span>
+          <span class="nt">&lt;ei:reportInterval&gt;</span>
+            <span class="nt">&lt;xcal:properties&gt;</span>
+              <span class="nt">&lt;xcal:dtstart&gt;</span>
+                <span class="nt">&lt;xcal:date-time&gt;</span>2020-07-09T15:54:03.184526Z<span class="nt">&lt;/xcal:date-time&gt;</span>
+              <span class="nt">&lt;/xcal:dtstart&gt;</span>
+              <span class="nt">&lt;xcal:duration&gt;</span>
+                <span class="nt">&lt;xcal:duration&gt;</span>PT2H<span class="nt">&lt;/xcal:duration&gt;</span>
+              <span class="nt">&lt;/xcal:duration&gt;</span>
+              <span class="nt">&lt;xcal:tolerance&gt;</span>
+                <span class="nt">&lt;xcal:tolerate&gt;</span>
+                  <span class="nt">&lt;xcal:startafter&gt;</span>PT5M<span class="nt">&lt;/xcal:startafter&gt;</span>
+                <span class="nt">&lt;/xcal:tolerate&gt;</span>
+              <span class="nt">&lt;/xcal:tolerance&gt;</span>
+              <span class="nt">&lt;ei:x-eiNotification&gt;</span>
+                <span class="nt">&lt;xcal:duration&gt;</span>PT30M<span class="nt">&lt;/xcal:duration&gt;</span>
+              <span class="nt">&lt;/ei:x-eiNotification&gt;</span>
+              <span class="nt">&lt;ei:x-eiRampUp&gt;</span>
+                <span class="nt">&lt;xcal:duration&gt;</span>PT15M<span class="nt">&lt;/xcal:duration&gt;</span>
+              <span class="nt">&lt;/ei:x-eiRampUp&gt;</span>
+              <span class="nt">&lt;ei:x-eiRecovery&gt;</span>
+                <span class="nt">&lt;xcal:duration&gt;</span>PT5M<span class="nt">&lt;/xcal:duration&gt;</span>
+              <span class="nt">&lt;/ei:x-eiRecovery&gt;</span>
+            <span class="nt">&lt;/xcal:properties&gt;</span>
+          <span class="nt">&lt;/ei:reportInterval&gt;</span>
+          <span class="nt">&lt;ei:specifierPayload&gt;</span>
+            <span class="nt">&lt;ei:rID&gt;</span>caaff64e5a<span class="nt">&lt;/ei:rID&gt;</span>
+            <span class="nt">&lt;ei:readingType&gt;</span>Direct Read<span class="nt">&lt;/ei:readingType&gt;</span>
+          <span class="nt">&lt;/ei:specifierPayload&gt;</span>
+        <span class="nt">&lt;/ei:reportSpecifier&gt;</span>
+      <span class="nt">&lt;/oadrReportRequest&gt;</span>
+      <span class="nt">&lt;ei:venID&gt;</span>VEN123<span class="nt">&lt;/ei:venID&gt;</span>
+    <span class="nt">&lt;/oadrRegisteredReport&gt;</span>
+  <span class="nt">&lt;/oadrSignedObject&gt;</span>
+<span class="nt">&lt;/oadrPayload&gt;</span>
+</pre></div>
+</div>
+<p>pyOpenADR representation:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;report_requests&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;report_request_id&#39;</span><span class="p">:</span> <span class="s1">&#39;f5308f6138&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;report_specifier&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;granularity&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">900</span><span class="p">),</span>
+                                           <span class="s1">&#39;report_back_duration&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">900</span><span class="p">),</span>
+                                           <span class="s1">&#39;report_interval&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;dtstart&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2020</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">54</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">184498</span><span class="p">,</span> <span class="n">tzinfo</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">),</span>
+                                                               <span class="s1">&#39;duration&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">7200</span><span class="p">),</span>
+                                                               <span class="s1">&#39;notification&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">1800</span><span class="p">),</span>
+                                                               <span class="s1">&#39;ramp_up&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">900</span><span class="p">),</span>
+                                                               <span class="s1">&#39;recovery&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">300</span><span class="p">),</span>
+                                                               <span class="s1">&#39;tolerance&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;tolerate&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;startafter&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">300</span><span class="p">)}}},</span>
+                                           <span class="s1">&#39;report_specifier_id&#39;</span><span class="p">:</span> <span class="s1">&#39;se40c348d9&#39;</span><span class="p">,</span>
+                                           <span class="s1">&#39;specifier_payload&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;r_id&#39;</span><span class="p">:</span> <span class="s1">&#39;u461c6e37e&#39;</span><span class="p">,</span>
+                                                                 <span class="s1">&#39;reading_type&#39;</span><span class="p">:</span> <span class="s1">&#39;Direct &#39;</span>
+                                                                                 <span class="s1">&#39;Read&#39;</span><span class="p">}}},</span>
+                     <span class="p">{</span><span class="s1">&#39;report_request_id&#39;</span><span class="p">:</span> <span class="s1">&#39;tc88cf616d&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;report_specifier&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;granularity&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">900</span><span class="p">),</span>
+                                           <span class="s1">&#39;report_back_duration&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">900</span><span class="p">),</span>
+                                           <span class="s1">&#39;report_interval&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;dtstart&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2020</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">54</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">184526</span><span class="p">,</span> <span class="n">tzinfo</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">),</span>
+                                                               <span class="s1">&#39;duration&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">7200</span><span class="p">),</span>
+                                                               <span class="s1">&#39;notification&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">1800</span><span class="p">),</span>
+                                                               <span class="s1">&#39;ramp_up&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">900</span><span class="p">),</span>
+                                                               <span class="s1">&#39;recovery&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">300</span><span class="p">),</span>
+                                                               <span class="s1">&#39;tolerance&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;tolerate&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;startafter&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">300</span><span class="p">)}}},</span>
+                                           <span class="s1">&#39;report_specifier_id&#39;</span><span class="p">:</span> <span class="s1">&#39;le65d1bd2e&#39;</span><span class="p">,</span>
+                                           <span class="s1">&#39;specifier_payload&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;r_id&#39;</span><span class="p">:</span> <span class="s1">&#39;caaff64e5a&#39;</span><span class="p">,</span>
+                                                                 <span class="s1">&#39;reading_type&#39;</span><span class="p">:</span> <span class="s1">&#39;Direct &#39;</span>
+                                                                                 <span class="s1">&#39;Read&#39;</span><span class="p">}}}],</span>
+ <span class="s1">&#39;response&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;request_id&#39;</span><span class="p">:</span> <span class="s1">&#39;uadb7d5fe5&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;response_code&#39;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
+              <span class="s1">&#39;response_description&#39;</span><span class="p">:</span> <span class="s1">&#39;OK&#39;</span><span class="p">},</span>
+ <span class="s1">&#39;ven_id&#39;</span><span class="p">:</span> <span class="s1">&#39;VEN123&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="oadrrequestevent">
+<span id="id17"></span><h2>oadrRequestEvent<a class="headerlink" href="#oadrrequestevent" title="Permalink to this headline">¶</a></h2>
+<p>OpenADR payload:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span>
+<span class="nt">&lt;oadrPayload</span> <span class="na">xmlns:xsi=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span> <span class="na">xmlns:xsd=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema&quot;</span> <span class="na">xmlns=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;oadrSignedObject&gt;</span>
+    <span class="nt">&lt;oadrRequestEvent</span> <span class="na">ei:schemaVersion=</span><span class="s">&quot;2.0b&quot;</span> <span class="na">xmlns:ei=</span><span class="s">&quot;http://docs.oasis-open.org/ns/energyinterop/201110&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;eiRequestEvent</span> <span class="na">xmlns=</span><span class="s">&quot;http://docs.oasis-open.org/ns/energyinterop/201110/payloads&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;requestID&gt;</span>oa1c52db3f<span class="nt">&lt;/requestID&gt;</span>
+        <span class="nt">&lt;ei:venID&gt;</span>123ABC<span class="nt">&lt;/ei:venID&gt;</span>
+      <span class="nt">&lt;/eiRequestEvent&gt;</span>
+    <span class="nt">&lt;/oadrRequestEvent&gt;</span>
+  <span class="nt">&lt;/oadrSignedObject&gt;</span>
+<span class="nt">&lt;/oadrPayload&gt;</span>
+</pre></div>
+</div>
+<p>pyOpenADR representation:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;request_id&#39;</span><span class="p">:</span> <span class="s1">&#39;oa1c52db3f&#39;</span><span class="p">,</span> <span class="s1">&#39;ven_id&#39;</span><span class="p">:</span> <span class="s1">&#39;123ABC&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="oadrrequestreregistration">
+<span id="id18"></span><h2>oadrRequestReregistration<a class="headerlink" href="#oadrrequestreregistration" title="Permalink to this headline">¶</a></h2>
+<p>This message is sent by the VTN whenever it want the VEN to go through the registration procedure again. Usually sent in reply to a <a class="reference internal" href="#oadrpoll"><span class="std std-ref">oadrPoll</span></a> message.</p>
+<p>OpenADR payload:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span>
+<span class="nt">&lt;oadrPayload</span> <span class="na">xmlns:xsi=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span> <span class="na">xmlns:xsd=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema&quot;</span> <span class="na">xmlns=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07&quot;</span> <span class="na">xsi:schemaLocation=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07 oadr_20b.xsd&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;oadrSignedObject&gt;</span>
+    <span class="nt">&lt;oadrRequestReregistration</span> <span class="na">ei:schemaVersion=</span><span class="s">&quot;2.0b&quot;</span> <span class="na">xmlns:ei=</span><span class="s">&quot;http://docs.oasis-open.org/ns/energyinterop/201110&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;ei:venID&gt;</span>123ABC<span class="nt">&lt;/ei:venID&gt;</span>
+    <span class="nt">&lt;/oadrRequestReregistration&gt;</span>
+  <span class="nt">&lt;/oadrSignedObject&gt;</span>
+<span class="nt">&lt;/oadrPayload&gt;</span>
+</pre></div>
+</div>
+<p>pyOpenADR representation:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;ven_id&#39;</span><span class="p">:</span> <span class="s1">&#39;123ABC&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="oadrresponse">
+<span id="id19"></span><h2>oadrResponse<a class="headerlink" href="#oadrresponse" title="Permalink to this headline">¶</a></h2>
+<p>This is a generic message that the VTN sends to the VEN if there is no other message for the VEN. Usually sent in response to an <a class="reference internal" href="#oadrpoll"><span class="std std-ref">oadrPoll</span></a> or <a class="reference internal" href="#oadrrequestevent"><span class="std std-ref">oadrRequestEvent</span></a> message.</p>
+<p>OpenADR payload:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span>
+<span class="nt">&lt;oadrPayload</span> <span class="na">xmlns:xsi=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span> <span class="na">xmlns:xsd=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema&quot;</span> <span class="na">xmlns=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07&quot;</span> <span class="na">xsi:schemaLocation=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07 oadr_20b.xsd&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;oadrSignedObject&gt;</span>
+    <span class="nt">&lt;oadrResponse</span> <span class="na">ei:schemaVersion=</span><span class="s">&quot;2.0b&quot;</span> <span class="na">xmlns:ei=</span><span class="s">&quot;http://docs.oasis-open.org/ns/energyinterop/201110&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;ei:eiResponse&gt;</span>
+        <span class="nt">&lt;ei:responseCode&gt;</span>200<span class="nt">&lt;/ei:responseCode&gt;</span>
+        <span class="nt">&lt;ei:responseDescription&gt;</span>OK<span class="nt">&lt;/ei:responseDescription&gt;</span>
+        <span class="nt">&lt;requestID</span> <span class="na">xmlns=</span><span class="s">&quot;http://docs.oasis-open.org/ns/energyinterop/201110/payloads&quot;</span><span class="nt">&gt;</span>i4a4d03ae5<span class="nt">&lt;/requestID&gt;</span>
+      <span class="nt">&lt;/ei:eiResponse&gt;</span>
+      <span class="nt">&lt;ei:venID&gt;</span>123ABC<span class="nt">&lt;/ei:venID&gt;</span>
+    <span class="nt">&lt;/oadrResponse&gt;</span>
+  <span class="nt">&lt;/oadrSignedObject&gt;</span>
+<span class="nt">&lt;/oadrPayload&gt;</span>
+</pre></div>
+</div>
+<p>pyOpenADR representation:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;response&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;request_id&#39;</span><span class="p">:</span> <span class="s1">&#39;i4a4d03ae5&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;response_code&#39;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
+              <span class="s1">&#39;response_description&#39;</span><span class="p">:</span> <span class="s1">&#39;OK&#39;</span><span class="p">},</span>
+ <span class="s1">&#39;ven_id&#39;</span><span class="p">:</span> <span class="s1">&#39;123ABC&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>OpenADR payload:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span>
+<span class="nt">&lt;oadrPayload</span> <span class="na">xmlns:xsi=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span> <span class="na">xmlns:xsd=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema&quot;</span> <span class="na">xmlns=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07&quot;</span> <span class="na">xsi:schemaLocation=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07 oadr_20b.xsd&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;oadrSignedObject&gt;</span>
+    <span class="nt">&lt;oadrResponse</span> <span class="na">ei:schemaVersion=</span><span class="s">&quot;2.0b&quot;</span> <span class="na">xmlns:ei=</span><span class="s">&quot;http://docs.oasis-open.org/ns/energyinterop/201110&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;ei:eiResponse&gt;</span>
+        <span class="nt">&lt;ei:responseCode&gt;</span>200<span class="nt">&lt;/ei:responseCode&gt;</span>
+        <span class="nt">&lt;ei:responseDescription&gt;</span>OK<span class="nt">&lt;/ei:responseDescription&gt;</span>
+        <span class="nt">&lt;requestID</span> <span class="na">xmlns=</span><span class="s">&quot;http://docs.oasis-open.org/ns/energyinterop/201110/payloads&quot;</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;/ei:eiResponse&gt;</span>
+      <span class="nt">&lt;ei:venID&gt;</span>123ABC<span class="nt">&lt;/ei:venID&gt;</span>
+    <span class="nt">&lt;/oadrResponse&gt;</span>
+  <span class="nt">&lt;/oadrSignedObject&gt;</span>
+<span class="nt">&lt;/oadrPayload&gt;</span>
+</pre></div>
+</div>
+<p>pyOpenADR representation:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;response&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;request_id&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+              <span class="s1">&#39;response_code&#39;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
+              <span class="s1">&#39;response_description&#39;</span><span class="p">:</span> <span class="s1">&#39;OK&#39;</span><span class="p">},</span>
+ <span class="s1">&#39;ven_id&#39;</span><span class="p">:</span> <span class="s1">&#39;123ABC&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="oadrupdatedreport">
+<span id="id20"></span><h2>oadrUpdatedReport<a class="headerlink" href="#oadrupdatedreport" title="Permalink to this headline">¶</a></h2>
+<p>OpenADR payload:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span>
+<span class="nt">&lt;oadrPayload</span> <span class="na">xmlns:xsi=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span> <span class="na">xmlns:xsd=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema&quot;</span> <span class="na">xmlns=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07&quot;</span> <span class="na">xmlns:pyld=</span><span class="s">&quot;http://docs.oasis-open.org/ns/energyinterop/201110/payloads&quot;</span> <span class="na">xsi:schemaLocation=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07 oadr_20b.xsd&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;oadrSignedObject&gt;</span>
+    <span class="nt">&lt;oadrUpdatedReport</span> <span class="na">ei:schemaVersion=</span><span class="s">&quot;2.0b&quot;</span> <span class="na">xmlns:ei=</span><span class="s">&quot;http://docs.oasis-open.org/ns/energyinterop/201110&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;ei:eiResponse&gt;</span>
+        <span class="nt">&lt;ei:responseCode&gt;</span>200<span class="nt">&lt;/ei:responseCode&gt;</span>
+        <span class="nt">&lt;ei:responseDescription&gt;</span>OK<span class="nt">&lt;/ei:responseDescription&gt;</span>
+        <span class="nt">&lt;pyld:requestID&gt;</span>icaffaa44f<span class="nt">&lt;/pyld:requestID&gt;</span>
+      <span class="nt">&lt;/ei:eiResponse&gt;</span>
+      <span class="nt">&lt;oadrCancelReport&gt;</span>
+        <span class="nt">&lt;pyld:requestID&gt;</span>ra11e4fee3<span class="nt">&lt;/pyld:requestID&gt;</span>
+        <span class="nt">&lt;ei:reportRequestID&gt;</span>kbf16facdd<span class="nt">&lt;/ei:reportRequestID&gt;</span>
+        <span class="nt">&lt;ei:reportRequestID&gt;</span>kfbae403c3<span class="nt">&lt;/ei:reportRequestID&gt;</span>
+        <span class="nt">&lt;ei:reportRequestID&gt;</span>k91557da99<span class="nt">&lt;/ei:reportRequestID&gt;</span>
+        <span class="nt">&lt;pyld:reportToFollow&gt;</span>false<span class="nt">&lt;/pyld:reportToFollow&gt;</span>
+        <span class="nt">&lt;ei:venID&gt;</span>123ABC<span class="nt">&lt;/ei:venID&gt;</span>
+      <span class="nt">&lt;/oadrCancelReport&gt;</span>
+      <span class="nt">&lt;ei:venID&gt;</span>123ABC<span class="nt">&lt;/ei:venID&gt;</span>
+    <span class="nt">&lt;/oadrUpdatedReport&gt;</span>
+  <span class="nt">&lt;/oadrSignedObject&gt;</span>
+<span class="nt">&lt;/oadrPayload&gt;</span>
+</pre></div>
+</div>
+<p>pyOpenADR representation:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;cancel_report&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;report_request_id&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;kbf16facdd&#39;</span><span class="p">,</span>
+                                         <span class="s1">&#39;kfbae403c3&#39;</span><span class="p">,</span>
+                                         <span class="s1">&#39;k91557da99&#39;</span><span class="p">],</span>
+                   <span class="s1">&#39;report_to_follow&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                   <span class="s1">&#39;request_id&#39;</span><span class="p">:</span> <span class="s1">&#39;ra11e4fee3&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;ven_id&#39;</span><span class="p">:</span> <span class="s1">&#39;123ABC&#39;</span><span class="p">},</span>
+ <span class="s1">&#39;response&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;request_id&#39;</span><span class="p">:</span> <span class="s1">&#39;icaffaa44f&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;response_code&#39;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
+              <span class="s1">&#39;response_description&#39;</span><span class="p">:</span> <span class="s1">&#39;OK&#39;</span><span class="p">},</span>
+ <span class="s1">&#39;ven_id&#39;</span><span class="p">:</span> <span class="s1">&#39;123ABC&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="oadrupdatereport">
+<span id="id21"></span><h2>oadrUpdateReport<a class="headerlink" href="#oadrupdatereport" title="Permalink to this headline">¶</a></h2>
+<p>This message contains a report.</p>
+<p>OpenADR payload:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span>
+<span class="nt">&lt;oadrPayload</span> <span class="na">xmlns:xsi=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span> <span class="na">xmlns:xsd=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema&quot;</span> <span class="na">xmlns=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07&quot;</span> <span class="na">xmlns:pyld=</span><span class="s">&quot;http://docs.oasis-open.org/ns/energyinterop/201110/payloads&quot;</span> <span class="na">xmlns:emix=</span><span class="s">&quot;http://docs.oasis-open.org/ns/emix/2011/06&quot;</span> <span class="na">xsi:schemaLocation=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07 oadr_20b.xsd&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;oadrSignedObject&gt;</span>
+    <span class="nt">&lt;oadrUpdateReport</span> <span class="na">ei:schemaVersion=</span><span class="s">&quot;2.0b&quot;</span> <span class="na">xmlns:ei=</span><span class="s">&quot;http://docs.oasis-open.org/ns/energyinterop/201110&quot;</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;pyld:requestID&gt;</span>bfbaaa469c<span class="nt">&lt;/pyld:requestID&gt;</span>
+      <span class="nt">&lt;oadrReport&gt;</span>
+        <span class="nt">&lt;ei:eiReportID&gt;</span>z4edcf6f9d<span class="nt">&lt;/ei:eiReportID&gt;</span>
+        <span class="nt">&lt;oadrReportDescription</span> <span class="na">xmlns:emix=</span><span class="s">&quot;http://docs.oasis-open.org/ns/emix/2011/06&quot;</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;ei:rID&gt;</span>s1167debd8<span class="nt">&lt;/ei:rID&gt;</span>
+          <span class="nt">&lt;ei:reportSubject&gt;</span>
+            <span class="nt">&lt;ei:venID&gt;</span>123ABC<span class="nt">&lt;/ei:venID&gt;</span>
+            <span class="nt">&lt;ei:venID&gt;</span>DEF456<span class="nt">&lt;/ei:venID&gt;</span>
+          <span class="nt">&lt;/ei:reportSubject&gt;</span>
+          <span class="nt">&lt;ei:reportDataSource&gt;</span>
+            <span class="nt">&lt;ei:venID&gt;</span>123ABC<span class="nt">&lt;/ei:venID&gt;</span>
+          <span class="nt">&lt;/ei:reportDataSource&gt;</span>
+          <span class="nt">&lt;ei:reportType&gt;</span>x-resourceStatus<span class="nt">&lt;/ei:reportType&gt;</span>
+          <span class="nt">&lt;ei:readingType&gt;</span>x-RMS<span class="nt">&lt;/ei:readingType&gt;</span>
+          <span class="nt">&lt;emix:marketContext&gt;</span>http://localhost<span class="nt">&lt;/emix:marketContext&gt;</span>
+          <span class="nt">&lt;oadrSamplingRate&gt;</span>
+            <span class="nt">&lt;oadrMinPeriod&gt;</span>PT1M<span class="nt">&lt;/oadrMinPeriod&gt;</span>
+            <span class="nt">&lt;oadrMaxPeriod&gt;</span>PT2M<span class="nt">&lt;/oadrMaxPeriod&gt;</span>
+            <span class="nt">&lt;oadrOnChange&gt;</span>false<span class="nt">&lt;/oadrOnChange&gt;</span>
+          <span class="nt">&lt;/oadrSamplingRate&gt;</span>
+        <span class="nt">&lt;/oadrReportDescription&gt;</span>
+        <span class="nt">&lt;ei:reportRequestID&gt;</span>m04fa486ef<span class="nt">&lt;/ei:reportRequestID&gt;</span>
+        <span class="nt">&lt;ei:reportSpecifierID&gt;</span>w5fdcab8d0<span class="nt">&lt;/ei:reportSpecifierID&gt;</span>
+        <span class="nt">&lt;ei:reportName&gt;</span>TELEMETRY_USAGE<span class="nt">&lt;/ei:reportName&gt;</span>
+        <span class="nt">&lt;ei:createdDateTime&gt;</span>2020-07-10T09:24:38.606626Z<span class="nt">&lt;/ei:createdDateTime&gt;</span>
+      <span class="nt">&lt;/oadrReport&gt;</span>
+      <span class="nt">&lt;ei:venID&gt;</span>123ABC<span class="nt">&lt;/ei:venID&gt;</span>
+    <span class="nt">&lt;/oadrUpdateReport&gt;</span>
+  <span class="nt">&lt;/oadrSignedObject&gt;</span>
+<span class="nt">&lt;/oadrPayload&gt;</span>
+</pre></div>
+</div>
+<p>pyOpenADR representation:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;reports&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;created_date_time&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2020</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="mi">38</span><span class="p">,</span> <span class="mi">606626</span><span class="p">,</span> <span class="n">tzinfo</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">),</span>
+              <span class="s1">&#39;report_descriptions&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;market_context&#39;</span><span class="p">:</span> <span class="s1">&#39;http://localhost&#39;</span><span class="p">,</span>
+                                       <span class="s1">&#39;r_id&#39;</span><span class="p">:</span> <span class="s1">&#39;s1167debd8&#39;</span><span class="p">,</span>
+                                       <span class="s1">&#39;reading_type&#39;</span><span class="p">:</span> <span class="s1">&#39;x-RMS&#39;</span><span class="p">,</span>
+                                       <span class="s1">&#39;report_data_sources&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;ven_id&#39;</span><span class="p">:</span> <span class="s1">&#39;123ABC&#39;</span><span class="p">}],</span>
+                                       <span class="s1">&#39;report_subjects&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;ven_id&#39;</span><span class="p">:</span> <span class="s1">&#39;123ABC&#39;</span><span class="p">},</span>
+                                                           <span class="p">{</span><span class="s1">&#39;ven_id&#39;</span><span class="p">:</span> <span class="s1">&#39;DEF456&#39;</span><span class="p">}],</span>
+                                       <span class="s1">&#39;report_type&#39;</span><span class="p">:</span> <span class="s1">&#39;x-resourceStatus&#39;</span><span class="p">,</span>
+                                       <span class="s1">&#39;sampling_rate&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;max_period&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">120</span><span class="p">),</span>
+                                                         <span class="s1">&#39;min_period&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">60</span><span class="p">),</span>
+                                                         <span class="s1">&#39;on_change&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}}],</span>
+              <span class="s1">&#39;report_id&#39;</span><span class="p">:</span> <span class="s1">&#39;z4edcf6f9d&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;report_name&#39;</span><span class="p">:</span> <span class="s1">&#39;TELEMETRY_USAGE&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;report_request_id&#39;</span><span class="p">:</span> <span class="s1">&#39;m04fa486ef&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;report_specifier_id&#39;</span><span class="p">:</span> <span class="s1">&#39;w5fdcab8d0&#39;</span><span class="p">}],</span>
+ <span class="s1">&#39;request_id&#39;</span><span class="p">:</span> <span class="s1">&#39;bfbaaa469c&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;ven_id&#39;</span><span class="p">:</span> <span class="s1">&#39;123ABC&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">pyOpenADR</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="features.html">Feature Tour</a></li>
+<li class="toctree-l1"><a class="reference internal" href="openadr.html">OpenADR Basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="client.html">Client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server.html">Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Ready-to-Run Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="roadmap.html">Project Status and Roadmap</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Payload Representations</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#oadrcanceledopt">oadrCanceledOpt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#oadrcanceledpartyregistration">oadrCanceledPartyRegistration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#oadrcanceledreport">oadrCanceledReport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#oadrcancelopt">oadrCancelOpt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#oadrcancelpartyregistration">oadrCancelPartyRegistration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#oadrcancelreport">oadrCancelReport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#oadrcreatedevent">oadrCreatedEvent</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#oadrcreatedreport">oadrCreatedReport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#oadrcreatedpartyregistration">oadrCreatedPartyRegistration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#oadrcreateopt">oadrCreateOpt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#oadrcreatepartyregistration">oadrCreatePartyRegistration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#oadrcreatereport">oadrCreateReport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#oadrdistributeevent">oadrDistributeEvent</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#oadrpoll">oadrPoll</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#oadrqueryregistration">oadrQueryRegistration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#oadrregisteredreport">oadrRegisteredReport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#oadrrequestevent">oadrRequestEvent</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#oadrrequestreregistration">oadrRequestReregistration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#oadrresponse">oadrResponse</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#oadrupdatedreport">oadrUpdatedReport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#oadrupdatereport">oadrUpdateReport</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="message_signing.html">Message Signing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/modules.html">API Reference</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="roadmap.html" title="previous chapter">Project Status and Roadmap</a></li>
+      <li>Next: <a href="message_signing.html" title="next chapter">Message Signing</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Stan Janssen.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.2.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/representations.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
