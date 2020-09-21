@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Payload Representations &#8212; pyOpenADR 0.4.0 documentation</title>
+    <title>Payload Representations &#8212; OpenLEADR 0.4.0 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/css/custom.css" />
@@ -36,10 +36,10 @@
             
   <div class="section" id="payload-representations">
 <span id="representations"></span><h1>Payload Representations<a class="headerlink" href="#payload-representations" title="Permalink to this headline">¶</a></h1>
-<p>In PyOpenADR, the complex hierarchies of the OpenADR XML-payloads are represented as Python dictionaries. These have been simplified as much as possible, allowing for a more natural and more readable experience.</p>
+<p>In OpenLEADR, the complex hierarchies of the OpenADR XML-payloads are represented as Python dictionaries. These have been simplified as much as possible, allowing for a more natural and more readable experience.</p>
 <p>This means that you don’t have to instantiate objects and sub-objects and sub-sub-objects, but that you can define the entire object in a single, declarative statement. This kan keep a simple implementation very compact. The downside is that there is little help from your IDE and there is little discoverability for what contents can be provided in the messages. This page can be used as a reference for that information.</p>
 <p>To help you, all outgong messages are validated against the XML schema, and you will receive warnings if your messages don’t comply to the schema.</p>
-<p>The following general principles have been applied to representing OpenADR objects in PyOpenADR:</p>
+<p>The following general principles have been applied to representing OpenADR objects in OpenLEADR:</p>
 <ul class="simple">
 <li><p>All property names are represented in snake_case instead of CamelCase or mixedCase names. For example: <code class="docutils literal notranslate"><span class="pre">requestID</span></code> becomes <code class="docutils literal notranslate"><span class="pre">request_id</span></code>.</p></li>
 <li><p>For all properties, the <code class="docutils literal notranslate"><span class="pre">oadr*</span></code> and <code class="docutils literal notranslate"><span class="pre">Ei*</span></code> prefixes have been stripped away. For example: <code class="docutils literal notranslate"><span class="pre">eiResponse</span></code> becomes <code class="docutils literal notranslate"><span class="pre">response</span></code> and <code class="docutils literal notranslate"><span class="pre">oadrResponse</span></code> becomes <code class="docutils literal notranslate"><span class="pre">response</span></code>.</p></li>
@@ -81,7 +81,7 @@
 <span class="nt">&lt;/oadrPayload&gt;</span>
 </pre></div>
 </div>
-<p>pyOpenADR representation:</p>
+<p>OpenLEADR representation:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;opt_id&#39;</span><span class="p">:</span> <span class="s1">&#39;pc1e8ace47&#39;</span><span class="p">,</span>
  <span class="s1">&#39;response&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;request_id&#39;</span><span class="p">:</span> <span class="s1">&#39;f48e3b7e78&#39;</span><span class="p">,</span>
               <span class="s1">&#39;response_code&#39;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
@@ -108,7 +108,7 @@
 <span class="nt">&lt;/oadrPayload&gt;</span>
 </pre></div>
 </div>
-<p>pyOpenADR representation:</p>
+<p>OpenLEADR representation:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;registration_id&#39;</span><span class="p">:</span> <span class="s1">&#39;zf68abb5c2&#39;</span><span class="p">,</span>
  <span class="s1">&#39;response&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;request_id&#39;</span><span class="p">:</span> <span class="s1">&#39;aba0a805de&#39;</span><span class="p">,</span>
               <span class="s1">&#39;response_code&#39;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
@@ -138,7 +138,7 @@
 <span class="nt">&lt;/oadrPayload&gt;</span>
 </pre></div>
 </div>
-<p>pyOpenADR representation:</p>
+<p>OpenLEADR representation:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;pending_reports&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;request_id&#39;</span><span class="p">:</span> <span class="s1">&#39;v5d42c35e6&#39;</span><span class="p">},</span>
                      <span class="p">{</span><span class="s1">&#39;request_id&#39;</span><span class="p">:</span> <span class="s1">&#39;e8bf753e31&#39;</span><span class="p">}],</span>
  <span class="s1">&#39;response&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;request_id&#39;</span><span class="p">:</span> <span class="s1">&#39;e4dfe735ea&#39;</span><span class="p">,</span>
@@ -166,7 +166,7 @@
 <span class="nt">&lt;/oadrPayload&gt;</span>
 </pre></div>
 </div>
-<p>pyOpenADR representation:</p>
+<p>OpenLEADR representation:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;pending_reports&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;request_id&#39;</span><span class="p">:</span> <span class="s1">&#39;b04cbfb723&#39;</span><span class="p">},</span>
                      <span class="p">{</span><span class="s1">&#39;request_id&#39;</span><span class="p">:</span> <span class="s1">&#39;ra6231a650&#39;</span><span class="p">}],</span>
  <span class="s1">&#39;response&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;request_id&#39;</span><span class="p">:</span> <span class="s1">&#39;c36bce5dcb&#39;</span><span class="p">,</span>
@@ -191,7 +191,7 @@
 <span class="nt">&lt;/oadrPayload&gt;</span>
 </pre></div>
 </div>
-<p>pyOpenADR representation:</p>
+<p>OpenLEADR representation:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;opt_id&#39;</span><span class="p">:</span> <span class="s1">&#39;b1ef7afecc&#39;</span><span class="p">,</span> <span class="s1">&#39;request_id&#39;</span><span class="p">:</span> <span class="s1">&#39;u07a26b1cc&#39;</span><span class="p">,</span> <span class="s1">&#39;ven_id&#39;</span><span class="p">:</span> <span class="s1">&#39;123ABC&#39;</span><span class="p">}</span>
 </pre></div>
 </div>
@@ -211,7 +211,7 @@
 <span class="nt">&lt;/oadrPayload&gt;</span>
 </pre></div>
 </div>
-<p>pyOpenADR representation:</p>
+<p>OpenLEADR representation:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;registration_id&#39;</span><span class="p">:</span> <span class="s1">&#39;pfe04d8439&#39;</span><span class="p">,</span>
  <span class="s1">&#39;request_id&#39;</span><span class="p">:</span> <span class="s1">&#39;z05e4ff0aa&#39;</span><span class="p">,</span>
  <span class="s1">&#39;ven_id&#39;</span><span class="p">:</span> <span class="s1">&#39;123ABC&#39;</span><span class="p">}</span>
@@ -234,7 +234,7 @@
 <span class="nt">&lt;/oadrPayload&gt;</span>
 </pre></div>
 </div>
-<p>pyOpenADR representation:</p>
+<p>OpenLEADR representation:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;report_request_id&#39;</span><span class="p">:</span> <span class="s1">&#39;u1ebe92deb&#39;</span><span class="p">,</span>
  <span class="s1">&#39;report_to_follow&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
  <span class="s1">&#39;request_id&#39;</span><span class="p">:</span> <span class="s1">&#39;kcb7b5cf7a&#39;</span><span class="p">,</span>
@@ -294,7 +294,7 @@
 <span class="nt">&lt;/oadrPayload&gt;</span>
 </pre></div>
 </div>
-<p>pyOpenADR representation:</p>
+<p>OpenLEADR representation:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;event_responses&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;event_id&#39;</span><span class="p">:</span> <span class="s1">&#39;od864b4ea6&#39;</span><span class="p">,</span>
                       <span class="s1">&#39;modification_number&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
                       <span class="s1">&#39;opt_type&#39;</span><span class="p">:</span> <span class="s1">&#39;optIn&#39;</span><span class="p">,</span>
@@ -359,7 +359,7 @@
 <span class="nt">&lt;/oadrPayload&gt;</span>
 </pre></div>
 </div>
-<p>pyOpenADR representation:</p>
+<p>OpenLEADR representation:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;event_responses&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;event_id&#39;</span><span class="p">:</span> <span class="s1">&#39;fefaa2b0f2&#39;</span><span class="p">,</span>
                       <span class="s1">&#39;modification_number&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
                       <span class="s1">&#39;opt_type&#39;</span><span class="p">:</span> <span class="s1">&#39;optIn&#39;</span><span class="p">,</span>
@@ -401,7 +401,7 @@
 <span class="nt">&lt;/oadrPayload&gt;</span>
 </pre></div>
 </div>
-<p>pyOpenADR representation:</p>
+<p>OpenLEADR representation:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;pending_reports&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;request_id&#39;</span><span class="p">:</span> <span class="s1">&#39;p8c56f9ed9&#39;</span><span class="p">},</span>
                      <span class="p">{</span><span class="s1">&#39;request_id&#39;</span><span class="p">:</span> <span class="s1">&#39;hab1cced95&#39;</span><span class="p">}],</span>
  <span class="s1">&#39;response&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;request_id&#39;</span><span class="p">:</span> <span class="s1">&#39;ie8ff94fbc&#39;</span><span class="p">,</span>
@@ -429,7 +429,7 @@
 <span class="nt">&lt;/oadrPayload&gt;</span>
 </pre></div>
 </div>
-<p>pyOpenADR representation:</p>
+<p>OpenLEADR representation:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;pending_reports&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;request_id&#39;</span><span class="p">:</span> <span class="s1">&#39;e1e16137f3&#39;</span><span class="p">},</span>
                      <span class="p">{</span><span class="s1">&#39;request_id&#39;</span><span class="p">:</span> <span class="s1">&#39;d0f2bcbe89&#39;</span><span class="p">}],</span>
  <span class="s1">&#39;response&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;request_id&#39;</span><span class="p">:</span> <span class="s1">&#39;gde557fcae&#39;</span><span class="p">,</span>
@@ -473,7 +473,7 @@
 <span class="nt">&lt;/oadrPayload&gt;</span>
 </pre></div>
 </div>
-<p>pyOpenADR representation:</p>
+<p>OpenLEADR representation:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;profiles&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;profile_name&#39;</span><span class="p">:</span> <span class="s1">&#39;2.0b&#39;</span><span class="p">,</span>
                <span class="s1">&#39;transports&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;transport_name&#39;</span><span class="p">:</span> <span class="s1">&#39;simpleHttp&#39;</span><span class="p">}]}],</span>
  <span class="s1">&#39;registration_id&#39;</span><span class="p">:</span> <span class="s1">&#39;o852fdbac9&#39;</span><span class="p">,</span>
@@ -510,7 +510,7 @@
 <span class="nt">&lt;/oadrPayload&gt;</span>
 </pre></div>
 </div>
-<p>pyOpenADR representation:</p>
+<p>OpenLEADR representation:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;created_date_time&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2020</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">54</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">151236</span><span class="p">,</span> <span class="n">tzinfo</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">),</span>
  <span class="s1">&#39;event_id&#39;</span><span class="p">:</span> <span class="s1">&#39;sdfe18dd5c&#39;</span><span class="p">,</span>
  <span class="s1">&#39;modification_number&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
@@ -544,7 +544,7 @@
 <span class="nt">&lt;/oadrPayload&gt;</span>
 </pre></div>
 </div>
-<p>pyOpenADR representation:</p>
+<p>OpenLEADR representation:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;http_pull_model&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
  <span class="s1">&#39;profile_name&#39;</span><span class="p">:</span> <span class="s1">&#39;2.0b&#39;</span><span class="p">,</span>
  <span class="s1">&#39;report_only&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
@@ -602,7 +602,7 @@
 <span class="nt">&lt;/oadrPayload&gt;</span>
 </pre></div>
 </div>
-<p>pyOpenADR representation:</p>
+<p>OpenLEADR representation:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;report_requests&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;report_request_id&#39;</span><span class="p">:</span> <span class="s1">&#39;d2b7bade5f&#39;</span><span class="p">,</span>
                       <span class="s1">&#39;report_specifier&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;granularity&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">900</span><span class="p">),</span>
                                            <span class="s1">&#39;report_back_duration&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">900</span><span class="p">),</span>
@@ -803,7 +803,7 @@
 <span class="nt">&lt;/oadrPayload&gt;</span>
 </pre></div>
 </div>
-<p>pyOpenADR representation:</p>
+<p>OpenLEADR representation:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;events&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;active_period&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;dtstart&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2020</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">55</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">166717</span><span class="p">,</span> <span class="n">tzinfo</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">),</span>
                                <span class="s1">&#39;duration&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">600</span><span class="p">)},</span>
              <span class="s1">&#39;event_descriptor&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;created_date_time&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2020</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">54</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">166717</span><span class="p">,</span> <span class="n">tzinfo</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">),</span>
@@ -871,7 +871,7 @@
 <span class="nt">&lt;/oadrPayload&gt;</span>
 </pre></div>
 </div>
-<p>pyOpenADR representation:</p>
+<p>OpenLEADR representation:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;ven_id&#39;</span><span class="p">:</span> <span class="s1">&#39;123ABC&#39;</span><span class="p">}</span>
 </pre></div>
 </div>
@@ -890,7 +890,7 @@
 <span class="nt">&lt;/oadrPayload&gt;</span>
 </pre></div>
 </div>
-<p>pyOpenADR representation:</p>
+<p>OpenLEADR representation:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;request_id&#39;</span><span class="p">:</span> <span class="s1">&#39;i8cf15d21f&#39;</span><span class="p">}</span>
 </pre></div>
 </div>
@@ -993,7 +993,7 @@
 <span class="nt">&lt;/oadrPayload&gt;</span>
 </pre></div>
 </div>
-<p>pyOpenADR representation:</p>
+<p>OpenLEADR representation:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;report_requests&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;report_request_id&#39;</span><span class="p">:</span> <span class="s1">&#39;f5308f6138&#39;</span><span class="p">,</span>
                       <span class="s1">&#39;report_specifier&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;granularity&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">900</span><span class="p">),</span>
                                            <span class="s1">&#39;report_back_duration&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">900</span><span class="p">),</span>
@@ -1043,7 +1043,7 @@
 <span class="nt">&lt;/oadrPayload&gt;</span>
 </pre></div>
 </div>
-<p>pyOpenADR representation:</p>
+<p>OpenLEADR representation:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;request_id&#39;</span><span class="p">:</span> <span class="s1">&#39;oa1c52db3f&#39;</span><span class="p">,</span> <span class="s1">&#39;ven_id&#39;</span><span class="p">:</span> <span class="s1">&#39;123ABC&#39;</span><span class="p">}</span>
 </pre></div>
 </div>
@@ -1062,7 +1062,7 @@
 <span class="nt">&lt;/oadrPayload&gt;</span>
 </pre></div>
 </div>
-<p>pyOpenADR representation:</p>
+<p>OpenLEADR representation:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;ven_id&#39;</span><span class="p">:</span> <span class="s1">&#39;123ABC&#39;</span><span class="p">}</span>
 </pre></div>
 </div>
@@ -1086,7 +1086,7 @@
 <span class="nt">&lt;/oadrPayload&gt;</span>
 </pre></div>
 </div>
-<p>pyOpenADR representation:</p>
+<p>OpenLEADR representation:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;response&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;request_id&#39;</span><span class="p">:</span> <span class="s1">&#39;i4a4d03ae5&#39;</span><span class="p">,</span>
               <span class="s1">&#39;response_code&#39;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
               <span class="s1">&#39;response_description&#39;</span><span class="p">:</span> <span class="s1">&#39;OK&#39;</span><span class="p">},</span>
@@ -1109,7 +1109,7 @@
 <span class="nt">&lt;/oadrPayload&gt;</span>
 </pre></div>
 </div>
-<p>pyOpenADR representation:</p>
+<p>OpenLEADR representation:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;response&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;request_id&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
               <span class="s1">&#39;response_code&#39;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
               <span class="s1">&#39;response_description&#39;</span><span class="p">:</span> <span class="s1">&#39;OK&#39;</span><span class="p">},</span>
@@ -1143,7 +1143,7 @@
 <span class="nt">&lt;/oadrPayload&gt;</span>
 </pre></div>
 </div>
-<p>pyOpenADR representation:</p>
+<p>OpenLEADR representation:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;cancel_report&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;report_request_id&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;kbf16facdd&#39;</span><span class="p">,</span>
                                          <span class="s1">&#39;kfbae403c3&#39;</span><span class="p">,</span>
                                          <span class="s1">&#39;k91557da99&#39;</span><span class="p">],</span>
@@ -1197,7 +1197,7 @@
 <span class="nt">&lt;/oadrPayload&gt;</span>
 </pre></div>
 </div>
-<p>pyOpenADR representation:</p>
+<p>OpenLEADR representation:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;reports&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;created_date_time&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2020</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="mi">38</span><span class="p">,</span> <span class="mi">606626</span><span class="p">,</span> <span class="n">tzinfo</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">),</span>
               <span class="s1">&#39;report_descriptions&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;market_context&#39;</span><span class="p">:</span> <span class="s1">&#39;http://localhost&#39;</span><span class="p">,</span>
                                        <span class="s1">&#39;r_id&#39;</span><span class="p">:</span> <span class="s1">&#39;s1167debd8&#39;</span><span class="p">,</span>
@@ -1227,7 +1227,10 @@
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="index.html">pyOpenADR</a></h1>
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/logo-tall.png" alt="Logo"/>
+            </a></p>
+<h1 class="logo"><a href="index.html">OpenLEADR</a></h1>
 
 
 

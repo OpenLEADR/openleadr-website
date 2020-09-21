@@ -40,5 +40,5 @@ Replay Protection
 
 To prevent an attacker from simple re-playing a previous message (for instance, an Event), unmodified, each signed message contains a ReplayProtect property. This contains a random string (nonce) and a timestamp. Upon validation of the message, it is verified that the timestamp is not older then some preconfigured value (default: 5 seconds), and that the random string has not already been seen during that time window. A cache of the nonces is kept automatically to verify this.
 
-pyOpenADR automatically generates and validates these portions of the signature. Signed messages that do not contain a ReplayProtect element are rejected, as required by the OpenADR specification.
+OpenLEADR automatically generates and validates these portions of the signature. Signed messages that do not contain a ReplayProtect element are rejected, as required by the OpenADR specification.
 

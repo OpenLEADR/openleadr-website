@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Welcome to pyOpenADR &#8212; pyOpenADR 0.4.0 documentation</title>
+    <title>Welcome to OpenLEADR &#8212; OpenLEADR 0.4.0 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/css/custom.css" />
@@ -33,16 +33,15 @@
 
           <div class="body" role="main">
             
-  <div class="section" id="welcome-to-pyopenadr">
-<h1>Welcome to pyOpenADR<a class="headerlink" href="#welcome-to-pyopenadr" title="Permalink to this headline">¶</a></h1>
-<p>Super-convenient Python implementation of an OpenADR client and server.</p>
+  <div class="section" id="welcome-to-openleadr">
+<h1>Welcome to OpenLEADR<a class="headerlink" href="#welcome-to-openleadr" title="Permalink to this headline">¶</a></h1>
+<p>A friendly and compliant OpenADR implementation for Python 3.</p>
 <div class="section" id="key-features">
 <h2>Key Features<a class="headerlink" href="#key-features" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Fully compliant OpenADR 2.0b implementation for both servers (Virtual Top Node) and clients (Virtual End Node)</p></li>
 <li><p>Fully asyncio: you set up the coroutines that can handle certain events, and they get called when needed.</p></li>
-<li><p>All messages are represented as simple Python dictionaries. All XML parsing and generation is done for you.</p></li>
-<li><p>You only have to deal with your own logic.</p></li>
+<li><p>Fully pythonic: all messages are represented as simple Python dictionaries. All XML parsing and generation is done for you.</p></li>
 </ul>
 <p>Take a <a class="reference internal" href="features.html#feature-tour"><span class="std std-ref">Feature Tour</span></a>!</p>
 </div>
@@ -57,15 +56,15 @@
 </div>
 <div class="section" id="library-installation">
 <h2>Library Installation<a class="headerlink" href="#library-installation" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ pip install pyopenadr
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ pip install openleadr
 </pre></div>
 </div>
-<p>pyOpenADR is compatible with Python 3.6+</p>
+<p>OpenLEADR is compatible with Python 3.6+</p>
 </div>
 <div class="section" id="getting-started">
 <h2>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h2>
 <p>Client example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyopenadr</span> <span class="kn">import</span> <span class="n">OpenADRClient</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">openleadr</span> <span class="kn">import</span> <span class="n">OpenADRClient</span>
 <span class="kn">import</span> <span class="nn">asyncio</span>
 
 <span class="k">async</span> <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
@@ -178,7 +177,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="api/modules.html">API Reference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="api/pyopenadr.html">pyopenadr package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/openleadr.html">openleadr package</a></li>
 </ul>
 </li>
 </ul>
@@ -186,7 +185,7 @@
 </div>
 <div class="section" id="representations-of-openadr-payloads">
 <h2>Representations of OpenADR payloads<a class="headerlink" href="#representations-of-openadr-payloads" title="Permalink to this headline">¶</a></h2>
-<p>PyOpenADR uses Python dictionaries and vanilla Python types (like datetime and timedelta) to represent the OpenADR payloads. These pages serve as a reference to these representations.</p>
+<p>OpenLEADR uses Python dictionaries and vanilla Python types (like datetime and timedelta) to represent the OpenADR payloads. These pages serve as a reference to these representations.</p>
 <p>For example, this XML payload:</p>
 <div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span>
 <span class="nt">&lt;oadrPayload</span> <span class="na">xmlns:xsi=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span> <span class="na">xmlns:xsd=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema&quot;</span> <span class="na">xmlns=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07&quot;</span> <span class="na">xsi:schemaLocation=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07 oadr_20b.xsd&quot;</span><span class="nt">&gt;</span>
@@ -203,7 +202,7 @@
 <span class="nt">&lt;/oadrPayload&gt;</span>
 </pre></div>
 </div>
-<p>is represented in pyOpenADR as:</p>
+<p>is represented in OpenLEADR as:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;response&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;response_code&#39;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
               <span class="s1">&#39;response_description&#39;</span><span class="p">:</span> <span class="s1">&#39;OK&#39;</span><span class="p">},</span>
  <span class="s1">&#39;ven_id&#39;</span><span class="p">:</span> <span class="s1">&#39;o57b65be83&#39;</span><span class="p">}</span>
@@ -228,7 +227,10 @@
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="#">pyOpenADR</a></h1>
+            <p class="logo"><a href="#">
+              <img class="logo" src="_static/logo-tall.png" alt="Logo"/>
+            </a></p>
+<h1 class="logo"><a href="#">OpenLEADR</a></h1>
 
 
 

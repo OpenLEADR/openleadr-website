@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Feature Tour &#8212; pyOpenADR 0.4.0 documentation</title>
+    <title>Feature Tour &#8212; OpenLEADR 0.4.0 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/css/custom.css" />
@@ -17,7 +17,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="OpenADR Basics" href="openadr.html" />
-    <link rel="prev" title="Welcome to pyOpenADR" href="index.html" />
+    <link rel="prev" title="Welcome to OpenLEADR" href="index.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -42,12 +42,12 @@
 </div>
 <div class="section" id="automatic-reporting">
 <h2>Automatic reporting<a class="headerlink" href="#automatic-reporting" title="Permalink to this headline">¶</a></h2>
-<p>If you’re implementing a VEN (client), you configure which types of reports you can offer, you provide handlers that retrieve the measurements, and pyOpenADR will take care of the rest. It will offer the reports to the VTN, allow the VTN to pick the reports it requires, and it will call your data collection handlers at a set interval, and pack up the values into the reports.</p>
+<p>If you’re implementing a VEN (client), you configure which types of reports you can offer, you provide handlers that retrieve the measurements, and OpenLEADR will take care of the rest. It will offer the reports to the VTN, allow the VTN to pick the reports it requires, and it will call your data collection handlers at a set interval, and pack up the values into the reports.</p>
 <p>If you’re implementing a VTN (server), you configure which types of reports you wish to receive, and it will automatically request these reports from the VEN. Whenever new data arrives, it will call one of your handlers so you can hand the data off to your own systems for processing and archiving.</p>
 </div>
 <div class="section" id="event-driven">
 <h2>Event-driven<a class="headerlink" href="#event-driven" title="Permalink to this headline">¶</a></h2>
-<p>Once you have configured your client or server, all routine interactions happen automatically: polling for new Events, requesting reports, et cetera. Whenever pyOpenADR needs some information or data that it does not have, it will call your handlers in order to get it. Your handlers only have to deal with a very specific set of cases and they can usually be quite simple.</p>
+<p>Once you have configured your client or server, all routine interactions happen automatically: polling for new Events, requesting reports, et cetera. Whenever OpenLEADR needs some information or data that it does not have, it will call your handlers in order to get it. Your handlers only have to deal with a very specific set of cases and they can usually be quite simple.</p>
 </div>
 <div class="section" id="dict-style-representations">
 <h2>Dict-style representations<a class="headerlink" href="#dict-style-representations" title="Permalink to this headline">¶</a></h2>
@@ -66,7 +66,10 @@
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="index.html">pyOpenADR</a></h1>
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/logo-tall.png" alt="Logo"/>
+            </a></p>
+<h1 class="logo"><a href="index.html">OpenLEADR</a></h1>
 
 
 
@@ -99,7 +102,7 @@
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="index.html" title="previous chapter">Welcome to pyOpenADR</a></li>
+      <li>Previous: <a href="index.html" title="previous chapter">Welcome to OpenLEADR</a></li>
       <li>Next: <a href="openadr.html" title="next chapter">OpenADR Basics</a></li>
   </ul></li>
 </ul>

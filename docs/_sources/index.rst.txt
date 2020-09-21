@@ -1,21 +1,20 @@
-.. pyOpenAdr documentation master file, created by
+.. OpenLEADR documentation master file, created by
    sphinx-quickstart on Thu Jul  9 14:09:27 2020.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
 ====================
-Welcome to pyOpenADR
+Welcome to OpenLEADR
 ====================
 
-Super-convenient Python implementation of an OpenADR client and server.
+A friendly and compliant OpenADR implementation for Python 3.
 
 Key Features
 ============
 
 - Fully compliant OpenADR 2.0b implementation for both servers (Virtual Top Node) and clients (Virtual End Node)
 - Fully asyncio: you set up the coroutines that can handle certain events, and they get called when needed.
-- All messages are represented as simple Python dictionaries. All XML parsing and generation is done for you.
-- You only have to deal with your own logic.
+- Fully pythonic: all messages are represented as simple Python dictionaries. All XML parsing and generation is done for you.
 
 Take a :ref:`feature_tour`!
 
@@ -36,16 +35,16 @@ Library Installation
 
 .. code-block:: bash
 
-   $ pip install pyopenadr
+   $ pip install openleadr
 
-pyOpenADR is compatible with Python 3.6+
+OpenLEADR is compatible with Python 3.6+
 
 Getting Started
 ===============
 
 Client example::
 
-    from pyopenadr import OpenADRClient
+    from openleadr import OpenADRClient
     import asyncio
 
     async def main():
@@ -102,7 +101,7 @@ Table of Contents
 Representations of OpenADR payloads
 ===================================
 
-PyOpenADR uses Python dictionaries and vanilla Python types (like datetime and timedelta) to represent the OpenADR payloads. These pages serve as a reference to these representations.
+OpenLEADR uses Python dictionaries and vanilla Python types (like datetime and timedelta) to represent the OpenADR payloads. These pages serve as a reference to these representations.
 
 For example, this XML payload:
 
@@ -122,7 +121,7 @@ For example, this XML payload:
       </oadrSignedObject>
     </oadrPayload>
 
-is represented in pyOpenADR as:
+is represented in OpenLEADR as:
 
 .. code-block:: python3
 

@@ -13,7 +13,7 @@ Registering your VEN to a VTN is a process that requires some service discovery,
 Automatic reporting
 -------------------
 
-If you're implementing a VEN (client), you configure which types of reports you can offer, you provide handlers that retrieve the measurements, and pyOpenADR will take care of the rest. It will offer the reports to the VTN, allow the VTN to pick the reports it requires, and it will call your data collection handlers at a set interval, and pack up the values into the reports.
+If you're implementing a VEN (client), you configure which types of reports you can offer, you provide handlers that retrieve the measurements, and OpenLEADR will take care of the rest. It will offer the reports to the VTN, allow the VTN to pick the reports it requires, and it will call your data collection handlers at a set interval, and pack up the values into the reports.
 
 If you're implementing a VTN (server), you configure which types of reports you wish to receive, and it will automatically request these reports from the VEN. Whenever new data arrives, it will call one of your handlers so you can hand the data off to your own systems for processing and archiving.
 
@@ -21,7 +21,7 @@ If you're implementing a VTN (server), you configure which types of reports you 
 Event-driven
 ------------
 
-Once you have configured your client or server, all routine interactions happen automatically: polling for new Events, requesting reports, et cetera. Whenever pyOpenADR needs some information or data that it does not have, it will call your handlers in order to get it. Your handlers only have to deal with a very specific set of cases and they can usually be quite simple.
+Once you have configured your client or server, all routine interactions happen automatically: polling for new Events, requesting reports, et cetera. Whenever OpenLEADR needs some information or data that it does not have, it will call your handlers in order to get it. Your handlers only have to deal with a very specific set of cases and they can usually be quite simple.
 
 
 Dict-style representations

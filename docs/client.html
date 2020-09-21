@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Client &#8212; pyOpenADR 0.4.0 documentation</title>
+    <title>Client &#8212; OpenLEADR 0.4.0 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/css/custom.css" />
@@ -47,7 +47,7 @@
 <li><p>A list of Targets to which the Event applies (<code class="docutils literal notranslate"><span class="pre">target</span></code>). This can be the VEN as a whole, or specific groups, assets, geographic areas, et cetera that this VEN represents.</p></li>
 <li><p>A list of Signals (<code class="docutils literal notranslate"><span class="pre">signals</span></code>), which form the content of the Event. This can be price signals, load reduction signals, et cetera. Each signal has a name, a type, multiple Intervals that contain the relative start times, and some payload value for the client to interpret.</p></li>
 </ol>
-<p>After you evaluate all these properties, you have only one decision to make: Opt In or Opt Out. Your handler must return either the string <code class="docutils literal notranslate"><span class="pre">optIn</span></code> or <code class="docutils literal notranslate"><span class="pre">optOut</span></code>, and pyOpenADR will see to it that your response is correctly formatted for the server.</p>
+<p>After you evaluate all these properties, you have only one decision to make: Opt In or Opt Out. Your handler must return either the string <code class="docutils literal notranslate"><span class="pre">optIn</span></code> or <code class="docutils literal notranslate"><span class="pre">optOut</span></code>, and OpenLEADR will see to it that your response is correctly formatted for the server.</p>
 <p>Example implementation:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">openadr</span> <span class="kn">import</span> <span class="n">OpenADRClient</span>
 
@@ -63,28 +63,24 @@
 </div>
 <div class="section" id="dealing-with-reports">
 <span id="client-reports"></span><h2>Dealing with Reports<a class="headerlink" href="#dealing-with-reports" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="receiving-reports">
-<h3>Receiving reports<a class="headerlink" href="#receiving-reports" title="Permalink to this headline">¶</a></h3>
-<p>Upon registration, the server will tell you which reports it has available.</p>
-</div>
-<div class="section" id="providing-reports">
-<h3>Providing reports<a class="headerlink" href="#providing-reports" title="Permalink to this headline">¶</a></h3>
-<p>If you tell pyOpenADR what reports you are able to provide, and give it a handler that will retrieve those reports from your own systems, pyOpenADR will make sure that the server receives the reports it asks for and at the requested interval.</p>
+<p>The VTN Server will most like want to receive some reports like metering values or availability status from you.
+Providing reports
+—————–</p>
+<p>If you tell OpenLEADR what reports you are able to provide, and give it a handler that will retrieve those reports from your own systems, OpenLEADR will make sure that the server receives the reports it asks for and at the requested interval.</p>
 <p>For example: you can provide 15-minute meter readings for an energy meter at your site. You have a coroutine set up like this:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span> <span class="nf">get_metervalue</span><span class="p">():</span>
     <span class="n">current_value</span> <span class="o">=</span> <span class="k">await</span> <span class="n">meter</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">current_value</span>
 </pre></div>
 </div>
-<p>And you configure this report in pyOpenADR using an <span class="xref std std-ref">oadrReportDescription</span> dict:</p>
+<p>And you configure this report in OpenLEADR using an <span class="xref std std-ref">oadrReportDescription</span> dict:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
     <span class="n">client</span> <span class="o">=</span> <span class="n">OpenADRClient</span><span class="p">(</span><span class="n">ven_name</span><span class="o">=</span><span class="s1">&#39;MyVEN&#39;</span><span class="p">,</span> <span class="n">vtn_url</span><span class="o">=</span><span class="s1">&#39;https://localhost:8080/&#39;</span><span class="p">)</span>
     <span class="n">report_description</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;&#39;</span><span class="p">}</span>
     <span class="n">client</span><span class="o">.</span><span class="n">add_report</span><span class="p">({</span><span class="s1">&#39;report&#39;</span><span class="p">})</span>
 </pre></div>
 </div>
-<p>The only thing you need to provide is the current value for the item you are reporting. PyOpenADR will format the complete <span class="xref std std-ref">oadrReport</span> message for you.</p>
-</div>
+<p>The only thing you need to provide is the current value for the item you are reporting. OpenLEADR will format the complete <span class="xref std std-ref">oadrReport</span> message for you.</p>
 </div>
 <div class="section" id="signing-outgoing-messages">
 <span id="client-signing-messages"></span><h2>Signing outgoing messages<a class="headerlink" href="#signing-outgoing-messages" title="Permalink to this headline">¶</a></h2>
@@ -121,7 +117,10 @@
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="index.html">pyOpenADR</a></h1>
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/logo-tall.png" alt="Logo"/>
+            </a></p>
+<h1 class="logo"><a href="index.html">OpenLEADR</a></h1>
 
 
 

@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Message Signing &#8212; pyOpenADR 0.4.0 documentation</title>
+    <title>Message Signing &#8212; OpenLEADR 0.4.0 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/css/custom.css" />
@@ -16,7 +16,7 @@
     <script src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="pyopenadr" href="api/modules.html" />
+    <link rel="next" title="openleadr" href="api/modules.html" />
     <link rel="prev" title="Payload Representations" href="representations.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -60,7 +60,7 @@
 <div class="section" id="replay-protection">
 <h2>Replay Protection<a class="headerlink" href="#replay-protection" title="Permalink to this headline">¶</a></h2>
 <p>To prevent an attacker from simple re-playing a previous message (for instance, an Event), unmodified, each signed message contains a ReplayProtect property. This contains a random string (nonce) and a timestamp. Upon validation of the message, it is verified that the timestamp is not older then some preconfigured value (default: 5 seconds), and that the random string has not already been seen during that time window. A cache of the nonces is kept automatically to verify this.</p>
-<p>pyOpenADR automatically generates and validates these portions of the signature. Signed messages that do not contain a ReplayProtect element are rejected, as required by the OpenADR specification.</p>
+<p>OpenLEADR automatically generates and validates these portions of the signature. Signed messages that do not contain a ReplayProtect element are rejected, as required by the OpenADR specification.</p>
 </div>
 </div>
 
@@ -71,7 +71,10 @@
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="index.html">pyOpenADR</a></h1>
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/logo-tall.png" alt="Logo"/>
+            </a></p>
+<h1 class="logo"><a href="index.html">OpenLEADR</a></h1>
 
 
 
@@ -103,7 +106,7 @@
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
       <li>Previous: <a href="representations.html" title="previous chapter">Payload Representations</a></li>
-      <li>Next: <a href="api/modules.html" title="next chapter">pyopenadr</a></li>
+      <li>Next: <a href="api/modules.html" title="next chapter">openleadr</a></li>
   </ul></li>
 </ul>
 </div>
