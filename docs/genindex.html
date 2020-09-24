@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Index &#8212; OpenLEADR 0.4.0 documentation</title>
+    <title>Index &#8212; OpenLEADR 0.4.2 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/css/custom.css" />
@@ -199,6 +199,12 @@
 </li>
       <li><a href="api/openleadr.html#openleadr.enums.OPT_REASON.EMERGENCY">EMERGENCY (openleadr.enums.OPT_REASON attribute)</a>
 </li>
+      <li><a href="api/openleadr.html#openleadr.enable_default_logging">enable_default_logging() (in module openleadr)</a>
+
+      <ul>
+        <li><a href="api/openleadr.html#openleadr.logging.enable_default_logging">(in module openleadr.logging)</a>
+</li>
+      </ul></li>
       <li><a href="api/openleadr.html#openleadr.objects.Target.end_device_asset">end_device_asset (openleadr.objects.Target attribute)</a>
 </li>
       <li><a href="api/openleadr.html#openleadr.objects.EndDeviceAsset">EndDeviceAsset (class in openleadr.objects)</a>
@@ -209,10 +215,10 @@
 </li>
       <li><a href="api/openleadr.html#openleadr.utils.ensure_str">ensure_str() (in module openleadr.utils)</a>
 </li>
-      <li><a href="api/openleadr.html#openleadr.enums.Enum">Enum (class in openleadr.enums)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/openleadr.html#openleadr.enums.Enum">Enum (class in openleadr.enums)</a>
+</li>
       <li><a href="api/openleadr.html#openleadr.enums.READING_TYPE.ESTIMATED">ESTIMATED (openleadr.enums.READING_TYPE attribute)</a>
 </li>
       <li><a href="api/openleadr.html#openleadr.objects.Event">Event (class in openleadr.objects)</a>
@@ -359,12 +365,10 @@
 </li>
       <li><a href="api/openleadr.html#openleadr.enums.SI_SCALE_CODE.micro">micro (openleadr.enums.SI_SCALE_CODE attribute)</a>
 </li>
-      <li><a href="api/openleadr.html#openleadr.objects.EventDescriptor.modification_date">modification_date (openleadr.objects.EventDescriptor attribute)</a>
+      <li><a href="api/openleadr.html#openleadr.objects.EventDescriptor.modification_date_time">modification_date_time (openleadr.objects.EventDescriptor attribute)</a>
 </li>
       <li><a href="api/openleadr.html#openleadr.objects.EventDescriptor.modification_number">modification_number (openleadr.objects.EventDescriptor attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     module
 
@@ -377,6 +381,10 @@
 </li>
         <li><a href="api/openleadr.html#module-openleadr.errors">openleadr.errors</a>
 </li>
+        <li><a href="api/openleadr.html#module-openleadr.fingerprint">openleadr.fingerprint</a>
+</li>
+        <li><a href="api/openleadr.html#module-openleadr.logging">openleadr.logging</a>
+</li>
         <li><a href="api/openleadr.html#module-openleadr.messaging">openleadr.messaging</a>
 </li>
         <li><a href="api/openleadr.html#module-openleadr.objects">openleadr.objects</a>
@@ -388,6 +396,8 @@
         <li><a href="api/openleadr.html#module-openleadr.utils">openleadr.utils</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/openleadr.html#openleadr.objects.EndDeviceAsset.mrid">mrid (openleadr.objects.EndDeviceAsset attribute)</a>
 
       <ul>
@@ -409,8 +419,6 @@
       <li><a href="api/openleadr.html#openleadr.enums.EVENT_STATUS.NEAR">NEAR (openleadr.enums.EVENT_STATUS attribute)</a>
 </li>
       <li><a href="api/openleadr.html#openleadr.enums.READING_TYPE.NET">NET (openleadr.enums.READING_TYPE attribute)</a>
-</li>
-      <li><a href="api/openleadr.html#openleadr.utils.new_request_id">new_request_id() (in module openleadr.utils)</a>
 </li>
       <li><a href="api/openleadr.html#openleadr.objects.AggregatedPNode.node">node (openleadr.objects.AggregatedPNode attribute)</a>
 
@@ -446,8 +454,6 @@
 <h2 id="O">O</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/openleadr.html#openleadr.objects.objdict">objdict (class in openleadr.objects)</a>
-</li>
       <li><a href="api/openleadr.html#openleadr.client.OpenADRClient">OpenADRClient (class in openleadr.client)</a>
 </li>
       <li><a href="api/openleadr.html#openleadr.errors.OpenADRError">OpenADRError</a>
@@ -483,12 +489,28 @@
 </li>
       </ul></li>
       <li>
+    openleadr.fingerprint
+
+      <ul>
+        <li><a href="api/openleadr.html#module-openleadr.fingerprint">module</a>
+</li>
+      </ul></li>
+      <li>
+    openleadr.logging
+
+      <ul>
+        <li><a href="api/openleadr.html#module-openleadr.logging">module</a>
+</li>
+      </ul></li>
+      <li>
     openleadr.messaging
 
       <ul>
         <li><a href="api/openleadr.html#module-openleadr.messaging">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     openleadr.objects
 
@@ -496,8 +518,6 @@
         <li><a href="api/openleadr.html#module-openleadr.objects">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     openleadr.preflight
 
@@ -582,8 +602,6 @@
       <li><a href="api/openleadr.html#openleadr.enums.REPORT_TYPE.POWER_FACTOR">POWER_FACTOR (openleadr.enums.REPORT_TYPE attribute)</a>
 </li>
       <li><a href="api/openleadr.html#openleadr.preflight.preflight_message">preflight_message() (in module openleadr.preflight)</a>
-</li>
-      <li><a href="api/openleadr.html#openleadr.preflight.preflight_oadrDistributeEvent">preflight_oadrDistributeEvent() (in module openleadr.preflight)</a>
 </li>
       <li><a href="api/openleadr.html#openleadr.enums.REPORT_TYPE.PRICE">PRICE (openleadr.enums.REPORT_TYPE attribute)</a>
 
@@ -675,6 +693,8 @@
 </li>
       <li><a href="api/openleadr.html#openleadr.enums.SIGNAL_TYPE.SETPOINT">SETPOINT (openleadr.enums.SIGNAL_TYPE attribute)</a>
 </li>
+      <li><a href="api/openleadr.html#openleadr.fingerprint.show_fingerprint">show_fingerprint() (in module openleadr.fingerprint)</a>
+</li>
       <li><a href="api/openleadr.html#openleadr.enums.SI_SCALE_CODE">SI_SCALE_CODE (class in openleadr.enums)</a>
 </li>
       <li><a href="api/openleadr.html#openleadr.objects.EventSignal.signal_id">signal_id (openleadr.objects.EventSignal attribute)</a>
@@ -715,16 +735,16 @@
 </li>
       <li><a href="api/openleadr.html#openleadr.objects.Target">Target (class in openleadr.objects)</a>
 </li>
-      <li><a href="api/openleadr.html#openleadr.objects.Event.target">target (openleadr.objects.Event attribute)</a>
-
-      <ul>
-        <li><a href="api/openleadr.html#openleadr.objects.EventSignal.target">(openleadr.objects.EventSignal attribute)</a>
-</li>
-      </ul></li>
       <li><a href="api/openleadr.html#openleadr.enums.REPORT_TYPE.TARGET_ENERGY_STORAGE">TARGET_ENERGY_STORAGE (openleadr.enums.REPORT_TYPE attribute)</a>
 </li>
       <li><a href="api/openleadr.html#openleadr.enums.STATUS_CODES.TARGET_MISMATCH">TARGET_MISMATCH (openleadr.enums.STATUS_CODES attribute)</a>
 </li>
+      <li><a href="api/openleadr.html#openleadr.objects.Event.targets">targets (openleadr.objects.Event attribute)</a>
+
+      <ul>
+        <li><a href="api/openleadr.html#openleadr.objects.EventSignal.targets">(openleadr.objects.EventSignal attribute)</a>
+</li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/openleadr.html#openleadr.enums.REPORT_NAME.TELEMETRY_STATUS">TELEMETRY_STATUS (openleadr.enums.REPORT_NAME attribute)</a>
@@ -763,8 +783,6 @@
 <h2 id="V">V</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/openleadr.html#openleadr.messaging.validate_and_authenticate_message">validate_and_authenticate_message() (in module openleadr.messaging)</a>
-</li>
       <li><a href="api/openleadr.html#openleadr.enums.Enum.values">values() (openleadr.enums.Enum property)</a>
 </li>
   </ul></td>
@@ -827,9 +845,10 @@
 <li class="toctree-l1"><a class="reference internal" href="client.html">Client</a></li>
 <li class="toctree-l1"><a class="reference internal" href="server.html">Server</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Ready-to-Run Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="roadmap.html">Project Status and Roadmap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="logging.html">Logging</a></li>
 <li class="toctree-l1"><a class="reference internal" href="representations.html">Payload Representations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="message_signing.html">Message Signing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="roadmap.html">Project Roadmap</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api/modules.html">API Reference</a></li>
 </ul>
 
@@ -863,7 +882,7 @@
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2020, Stan Janssen.
+      &copy;2020, OpenLEADR Contributors.
       
       |
       Powered by <a href="http://sphinx-doc.org/">Sphinx 3.2.1</a>

@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Welcome to OpenLEADR &#8212; OpenLEADR 0.4.0 documentation</title>
+    <title>Welcome to OpenLEADR &#8212; OpenLEADR 0.4.2 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/css/custom.css" />
@@ -47,8 +47,8 @@
 </div>
 <div class="section" id="project-status">
 <h2>Project Status<a class="headerlink" href="#project-status" title="Permalink to this headline">¶</a></h2>
-<p>The current version is 0.4.0.</p>
-<p>This project is still a work in progress. Please see our <a class="reference internal" href="roadmap.html#roadmap"><span class="std std-ref">Project Status and Roadmap</span></a> for information.</p>
+<p>The current version is 0.4.2.</p>
+<p>This project is still a work in progress. Please see our <a class="reference internal" href="roadmap.html#roadmap"><span class="std std-ref">Project Roadmap</span></a> for information.</p>
 </div>
 <div class="section" id="license">
 <h2>License<a class="headerlink" href="#license" title="Permalink to this headline">¶</a></h2>
@@ -71,7 +71,6 @@
     <span class="n">client</span> <span class="o">=</span> <span class="n">OpenADRClient</span><span class="p">(</span><span class="n">ven_name</span><span class="o">=</span><span class="s2">&quot;Device001&quot;</span><span class="p">,</span>
                            <span class="n">vtn_url</span><span class="o">=</span><span class="s2">&quot;http://localhost:8080/OpenADR2/Simple/2.0b&quot;</span><span class="p">)</span>
     <span class="n">client</span><span class="o">.</span><span class="n">on_event</span> <span class="o">=</span> <span class="n">handle_event</span>
-    <span class="n">client</span><span class="o">.</span><span class="n">on_report</span> <span class="o">=</span> <span class="n">handle_report</span>
     <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 
 <span class="k">async</span> <span class="k">def</span> <span class="nf">handle_event</span><span class="p">(</span><span class="n">event</span><span class="p">):</span>
@@ -83,14 +82,6 @@
     <span class="nb">print</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
     <span class="c1"># Do something to determine whether to Opt In or Opt Out</span>
     <span class="k">return</span> <span class="s1">&#39;optIn&#39;</span>
-
-<span class="k">async</span> <span class="k">def</span> <span class="nf">handle_report</span><span class="p">(</span><span class="n">report</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    This coroutine will be called</span>
-<span class="sd">    when there is a report from the VTN.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;There is a report!&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">report</span><span class="p">)</span>
 
 <span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span>
 <span class="n">loop</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
@@ -142,8 +133,11 @@
 <li class="toctree-l2"><a class="reference internal" href="examples.html#server-with-gui-example">Server with GUI Example</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="roadmap.html">Project Status and Roadmap</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="roadmap.html#upcoming-releases">Upcoming releases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="logging.html">Logging</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="logging.html#log-to-standard-output">Log to standard output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="logging.html#setting-the-logging-level">Setting the logging level</a></li>
+<li class="toctree-l2"><a class="reference internal" href="logging.html#redirecting-logs-to-a-different-file">Redirecting logs to a different file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="logging.html#more-info">More info</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="representations.html">Payload Representations</a><ul>
@@ -174,6 +168,11 @@
 <li class="toctree-l2"><a class="reference internal" href="message_signing.html#overview">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="message_signing.html#generating-certificates">Generating certificates</a></li>
 <li class="toctree-l2"><a class="reference internal" href="message_signing.html#replay-protection">Replay Protection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="message_signing.html#certificate-fingerprints">Certificate Fingerprints</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="roadmap.html">Project Roadmap</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="roadmap.html#upcoming-releases">Upcoming releases</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="api/modules.html">API Reference</a><ul>
@@ -246,9 +245,10 @@
 <li class="toctree-l1"><a class="reference internal" href="client.html">Client</a></li>
 <li class="toctree-l1"><a class="reference internal" href="server.html">Server</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Ready-to-Run Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="roadmap.html">Project Status and Roadmap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="logging.html">Logging</a></li>
 <li class="toctree-l1"><a class="reference internal" href="representations.html">Payload Representations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="message_signing.html">Message Signing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="roadmap.html">Project Roadmap</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api/modules.html">API Reference</a></li>
 </ul>
 
@@ -283,7 +283,7 @@
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2020, Stan Janssen.
+      &copy;2020, OpenLEADR Contributors.
       
       |
       Powered by <a href="http://sphinx-doc.org/">Sphinx 3.2.1</a>

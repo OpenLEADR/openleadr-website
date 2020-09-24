@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>openleadr package &#8212; OpenLEADR 0.4.0 documentation</title>
+    <title>openleadr package &#8212; OpenLEADR 0.4.2 documentation</title>
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
@@ -43,7 +43,7 @@
 <p>OpenADR Client for Python</p>
 <dl class="py class">
 <dt id="openleadr.client.OpenADRClient">
-<em class="property">class </em><code class="sig-prename descclassname">openleadr.client.</code><code class="sig-name descname">OpenADRClient</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ven_name</span></em>, <em class="sig-param"><span class="n">vtn_url</span></em>, <em class="sig-param"><span class="n">debug</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">cert</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">key</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">passphrase</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">vtn_fingerprint</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openleadr.client.OpenADRClient" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">openleadr.client.</code><code class="sig-name descname">OpenADRClient</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ven_name</span></em>, <em class="sig-param"><span class="n">vtn_url</span></em>, <em class="sig-param"><span class="n">debug</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">cert</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">key</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">passphrase</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">vtn_fingerprint</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">show_fingerprint</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openleadr.client.OpenADRClient" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Main client class. Most of these methods will be called automatically, but
 you can always choose to call them manually.</p>
@@ -57,6 +57,7 @@ you can always choose to call them manually.</p>
 <li><p><strong>cert</strong> (<em>str</em>) – The path to a PEM-formatted Certificate file to use for signing messages</p></li>
 <li><p><strong>key</strong> (<em>str</em>) – The path to a PEM-formatted Private Key file to use for signing messages</p></li>
 <li><p><strong>fingerprint</strong> (<em>str</em>) – The fingerprint for the VTN’s certificate to verify incomnig messages</p></li>
+<li><p><strong>show_fingerprint</strong> (<em>str</em>) – Whether to print your own fingerprint on startup. Defaults to True.</p></li>
 </ul>
 </dd>
 </dl>
@@ -785,6 +786,22 @@ interpret OpenADR messages. Can also be useful during testing.</p>
 </dd></dl>
 
 </div>
+<div class="section" id="module-openleadr.fingerprint">
+<span id="openleadr-fingerprint-module"></span><h2>openleadr.fingerprint module<a class="headerlink" href="#module-openleadr.fingerprint" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="openleadr.fingerprint.show_fingerprint">
+<code class="sig-prename descclassname">openleadr.fingerprint.</code><code class="sig-name descname">show_fingerprint</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#openleadr.fingerprint.show_fingerprint" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-openleadr.logging">
+<span id="openleadr-logging-module"></span><h2>openleadr.logging module<a class="headerlink" href="#module-openleadr.logging" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="openleadr.logging.enable_default_logging">
+<code class="sig-prename descclassname">openleadr.logging.</code><code class="sig-name descname">enable_default_logging</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">level</span><span class="o">=</span><span class="default_value">20</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openleadr.logging.enable_default_logging" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
 <div class="section" id="module-openleadr.messaging">
 <span id="openleadr-messaging-module"></span><h2>openleadr.messaging module<a class="headerlink" href="#module-openleadr.messaging" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
@@ -799,18 +816,13 @@ interpret OpenADR messages. Can also be useful during testing.</p>
 <dd><p>Parse a message and distill its usable parts. Returns a message type and payload.</p>
 </dd></dl>
 
-<dl class="py function">
-<dt id="openleadr.messaging.validate_and_authenticate_message">
-<code class="sig-prename descclassname">openleadr.messaging.</code><code class="sig-name descname">validate_and_authenticate_message</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">message_dict</span></em>, <em class="sig-param"><span class="n">fingerprint</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fingerprint_lookup</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openleadr.messaging.validate_and_authenticate_message" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 </div>
 <div class="section" id="module-openleadr.objects">
 <span id="openleadr-objects-module"></span><h2>openleadr.objects module<a class="headerlink" href="#module-openleadr.objects" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt id="openleadr.objects.ActivePeriod">
 <em class="property">class </em><code class="sig-prename descclassname">openleadr.objects.</code><code class="sig-name descname">ActivePeriod</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dtstart</span><span class="p">:</span> <span class="n">datetime.datetime</span></em>, <em class="sig-param"><span class="n">duration</span><span class="p">:</span> <span class="n">datetime.timedelta</span></em>, <em class="sig-param"><span class="n">tolerance</span><span class="p">:</span> <span class="n">dict</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">notification</span><span class="p">:</span> <span class="n">dict</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ramp_up</span><span class="p">:</span> <span class="n">dict</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">recovery</span><span class="p">:</span> <span class="n">dict</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openleadr.objects.ActivePeriod" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#openleadr.objects.objdict" title="openleadr.objects.objdict"><code class="xref py py-class docutils literal notranslate"><span class="pre">openleadr.objects.objdict</span></code></a></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py attribute">
 <dt id="openleadr.objects.ActivePeriod.dtstart">
 <code class="sig-name descname">dtstart</code><em class="property">: datetime.datetime</em><a class="headerlink" href="#openleadr.objects.ActivePeriod.dtstart" title="Permalink to this definition">¶</a></dt>
@@ -846,7 +858,7 @@ interpret OpenADR messages. Can also be useful during testing.</p>
 <dl class="py class">
 <dt id="openleadr.objects.AggregatedPNode">
 <em class="property">class </em><code class="sig-prename descclassname">openleadr.objects.</code><code class="sig-name descname">AggregatedPNode</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openleadr.objects.AggregatedPNode" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#openleadr.objects.objdict" title="openleadr.objects.objdict"><code class="xref py py-class docutils literal notranslate"><span class="pre">openleadr.objects.objdict</span></code></a></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py attribute">
 <dt id="openleadr.objects.AggregatedPNode.node">
 <code class="sig-name descname">node</code><em class="property">: str</em><a class="headerlink" href="#openleadr.objects.AggregatedPNode.node" title="Permalink to this definition">¶</a></dt>
@@ -857,7 +869,7 @@ interpret OpenADR messages. Can also be useful during testing.</p>
 <dl class="py class">
 <dt id="openleadr.objects.EndDeviceAsset">
 <em class="property">class </em><code class="sig-prename descclassname">openleadr.objects.</code><code class="sig-name descname">EndDeviceAsset</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mrid</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openleadr.objects.EndDeviceAsset" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#openleadr.objects.objdict" title="openleadr.objects.objdict"><code class="xref py py-class docutils literal notranslate"><span class="pre">openleadr.objects.objdict</span></code></a></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py attribute">
 <dt id="openleadr.objects.EndDeviceAsset.mrid">
 <code class="sig-name descname">mrid</code><em class="property">: str</em><a class="headerlink" href="#openleadr.objects.EndDeviceAsset.mrid" title="Permalink to this definition">¶</a></dt>
@@ -867,8 +879,8 @@ interpret OpenADR messages. Can also be useful during testing.</p>
 
 <dl class="py class">
 <dt id="openleadr.objects.Event">
-<em class="property">class </em><code class="sig-prename descclassname">openleadr.objects.</code><code class="sig-name descname">Event</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">event_descriptor</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#openleadr.objects.EventDescriptor" title="openleadr.objects.EventDescriptor">openleadr.objects.EventDescriptor</a></span></em>, <em class="sig-param"><span class="n">active_period</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#openleadr.objects.ActivePeriod" title="openleadr.objects.ActivePeriod">openleadr.objects.ActivePeriod</a></span></em>, <em class="sig-param"><span class="n">event_signals</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#openleadr.objects.EventSignal" title="openleadr.objects.EventSignal">openleadr.objects.EventSignal</a></span></em>, <em class="sig-param"><span class="n">target</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#openleadr.objects.Target" title="openleadr.objects.Target">openleadr.objects.Target</a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#openleadr.objects.Event" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#openleadr.objects.objdict" title="openleadr.objects.objdict"><code class="xref py py-class docutils literal notranslate"><span class="pre">openleadr.objects.objdict</span></code></a></p>
+<em class="property">class </em><code class="sig-prename descclassname">openleadr.objects.</code><code class="sig-name descname">Event</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">event_descriptor</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#openleadr.objects.EventDescriptor" title="openleadr.objects.EventDescriptor">openleadr.objects.EventDescriptor</a></span></em>, <em class="sig-param"><span class="n">active_period</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#openleadr.objects.ActivePeriod" title="openleadr.objects.ActivePeriod">openleadr.objects.ActivePeriod</a></span></em>, <em class="sig-param"><span class="n">event_signals</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#openleadr.objects.EventSignal" title="openleadr.objects.EventSignal">openleadr.objects.EventSignal</a></span></em>, <em class="sig-param"><span class="n">targets</span><span class="p">:</span> <span class="n">List<span class="p">[</span><a class="reference internal" href="#openleadr.objects.Target" title="openleadr.objects.Target">openleadr.objects.Target</a><span class="p">]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#openleadr.objects.Event" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py attribute">
 <dt id="openleadr.objects.Event.active_period">
 <code class="sig-name descname">active_period</code><em class="property">: <a class="reference internal" href="#openleadr.objects.ActivePeriod" title="openleadr.objects.ActivePeriod">openleadr.objects.ActivePeriod</a></em><a class="headerlink" href="#openleadr.objects.Event.active_period" title="Permalink to this definition">¶</a></dt>
@@ -885,16 +897,16 @@ interpret OpenADR messages. Can also be useful during testing.</p>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="openleadr.objects.Event.target">
-<code class="sig-name descname">target</code><em class="property">: <a class="reference internal" href="#openleadr.objects.Target" title="openleadr.objects.Target">openleadr.objects.Target</a></em><a class="headerlink" href="#openleadr.objects.Event.target" title="Permalink to this definition">¶</a></dt>
+<dt id="openleadr.objects.Event.targets">
+<code class="sig-name descname">targets</code><em class="property">: List<span class="p">[</span><a class="reference internal" href="#openleadr.objects.Target" title="openleadr.objects.Target">openleadr.objects.Target</a><span class="p">]</span></em><a class="headerlink" href="#openleadr.objects.Event.targets" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt id="openleadr.objects.EventDescriptor">
-<em class="property">class </em><code class="sig-prename descclassname">openleadr.objects.</code><code class="sig-name descname">EventDescriptor</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">event_id</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">modification_number</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">market_context</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">event_status</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">created_date_time</span><span class="p">:</span> <span class="n">datetime.datetime</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">modification_date</span><span class="p">:</span> <span class="n">datetime.datetime</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">priority</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">0</span></em>, <em class="sig-param"><span class="n">test_event</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">vtn_comment</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openleadr.objects.EventDescriptor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#openleadr.objects.objdict" title="openleadr.objects.objdict"><code class="xref py py-class docutils literal notranslate"><span class="pre">openleadr.objects.objdict</span></code></a></p>
+<em class="property">class </em><code class="sig-prename descclassname">openleadr.objects.</code><code class="sig-name descname">EventDescriptor</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">event_id</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">modification_number</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">market_context</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">event_status</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">created_date_time</span><span class="p">:</span> <span class="n">datetime.datetime</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">modification_date_time</span><span class="p">:</span> <span class="n">datetime.datetime</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">priority</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">0</span></em>, <em class="sig-param"><span class="n">test_event</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">vtn_comment</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openleadr.objects.EventDescriptor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py attribute">
 <dt id="openleadr.objects.EventDescriptor.created_date_time">
 <code class="sig-name descname">created_date_time</code><em class="property">: datetime.datetime</em><em class="property"> = None</em><a class="headerlink" href="#openleadr.objects.EventDescriptor.created_date_time" title="Permalink to this definition">¶</a></dt>
@@ -916,8 +928,8 @@ interpret OpenADR messages. Can also be useful during testing.</p>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="openleadr.objects.EventDescriptor.modification_date">
-<code class="sig-name descname">modification_date</code><em class="property">: datetime.datetime</em><em class="property"> = None</em><a class="headerlink" href="#openleadr.objects.EventDescriptor.modification_date" title="Permalink to this definition">¶</a></dt>
+<dt id="openleadr.objects.EventDescriptor.modification_date_time">
+<code class="sig-name descname">modification_date_time</code><em class="property">: datetime.datetime</em><em class="property"> = None</em><a class="headerlink" href="#openleadr.objects.EventDescriptor.modification_date_time" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -944,8 +956,8 @@ interpret OpenADR messages. Can also be useful during testing.</p>
 
 <dl class="py class">
 <dt id="openleadr.objects.EventSignal">
-<em class="property">class </em><code class="sig-prename descclassname">openleadr.objects.</code><code class="sig-name descname">EventSignal</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">intervals</span><span class="p">:</span> <span class="n">List<span class="p">[</span><a class="reference internal" href="#openleadr.objects.Interval" title="openleadr.objects.Interval">openleadr.objects.Interval</a><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">target</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#openleadr.objects.Target" title="openleadr.objects.Target">openleadr.objects.Target</a></span></em>, <em class="sig-param"><span class="n">signal_name</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">signal_type</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">signal_id</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">current_value</span><span class="p">:</span> <span class="n">float</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openleadr.objects.EventSignal" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#openleadr.objects.objdict" title="openleadr.objects.objdict"><code class="xref py py-class docutils literal notranslate"><span class="pre">openleadr.objects.objdict</span></code></a></p>
+<em class="property">class </em><code class="sig-prename descclassname">openleadr.objects.</code><code class="sig-name descname">EventSignal</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">intervals</span><span class="p">:</span> <span class="n">List<span class="p">[</span><a class="reference internal" href="#openleadr.objects.Interval" title="openleadr.objects.Interval">openleadr.objects.Interval</a><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">signal_name</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">signal_type</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">signal_id</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">current_value</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">targets</span><span class="p">:</span> <span class="n">List<span class="p">[</span><a class="reference internal" href="#openleadr.objects.Target" title="openleadr.objects.Target">openleadr.objects.Target</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openleadr.objects.EventSignal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py attribute">
 <dt id="openleadr.objects.EventSignal.current_value">
 <code class="sig-name descname">current_value</code><em class="property">: float</em><a class="headerlink" href="#openleadr.objects.EventSignal.current_value" title="Permalink to this definition">¶</a></dt>
@@ -972,8 +984,8 @@ interpret OpenADR messages. Can also be useful during testing.</p>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="openleadr.objects.EventSignal.target">
-<code class="sig-name descname">target</code><em class="property">: <a class="reference internal" href="#openleadr.objects.Target" title="openleadr.objects.Target">openleadr.objects.Target</a></em><a class="headerlink" href="#openleadr.objects.EventSignal.target" title="Permalink to this definition">¶</a></dt>
+<dt id="openleadr.objects.EventSignal.targets">
+<code class="sig-name descname">targets</code><em class="property">: List<span class="p">[</span><a class="reference internal" href="#openleadr.objects.Target" title="openleadr.objects.Target">openleadr.objects.Target</a><span class="p">]</span></em><em class="property"> = None</em><a class="headerlink" href="#openleadr.objects.EventSignal.targets" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -981,7 +993,7 @@ interpret OpenADR messages. Can also be useful during testing.</p>
 <dl class="py class">
 <dt id="openleadr.objects.FeatureCollection">
 <em class="property">class </em><code class="sig-prename descclassname">openleadr.objects.</code><code class="sig-name descname">FeatureCollection</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">location</span><span class="p">:</span> <span class="n">dict</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openleadr.objects.FeatureCollection" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#openleadr.objects.objdict" title="openleadr.objects.objdict"><code class="xref py py-class docutils literal notranslate"><span class="pre">openleadr.objects.objdict</span></code></a></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py attribute">
 <dt id="openleadr.objects.FeatureCollection.id">
 <code class="sig-name descname">id</code><em class="property">: str</em><a class="headerlink" href="#openleadr.objects.FeatureCollection.id" title="Permalink to this definition">¶</a></dt>
@@ -997,7 +1009,7 @@ interpret OpenADR messages. Can also be useful during testing.</p>
 <dl class="py class">
 <dt id="openleadr.objects.Interval">
 <em class="property">class </em><code class="sig-prename descclassname">openleadr.objects.</code><code class="sig-name descname">Interval</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dtstart</span><span class="p">:</span> <span class="n">datetime.datetime</span></em>, <em class="sig-param"><span class="n">duration</span><span class="p">:</span> <span class="n">datetime.timedelta</span></em>, <em class="sig-param"><span class="n">signal_payload</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">uid</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openleadr.objects.Interval" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#openleadr.objects.objdict" title="openleadr.objects.objdict"><code class="xref py py-class docutils literal notranslate"><span class="pre">openleadr.objects.objdict</span></code></a></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py attribute">
 <dt id="openleadr.objects.Interval.dtstart">
 <code class="sig-name descname">dtstart</code><em class="property">: datetime.datetime</em><a class="headerlink" href="#openleadr.objects.Interval.dtstart" title="Permalink to this definition">¶</a></dt>
@@ -1023,7 +1035,7 @@ interpret OpenADR messages. Can also be useful during testing.</p>
 <dl class="py class">
 <dt id="openleadr.objects.MeterAsset">
 <em class="property">class </em><code class="sig-prename descclassname">openleadr.objects.</code><code class="sig-name descname">MeterAsset</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mrid</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openleadr.objects.MeterAsset" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#openleadr.objects.objdict" title="openleadr.objects.objdict"><code class="xref py py-class docutils literal notranslate"><span class="pre">openleadr.objects.objdict</span></code></a></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py attribute">
 <dt id="openleadr.objects.MeterAsset.mrid">
 <code class="sig-name descname">mrid</code><em class="property">: str</em><a class="headerlink" href="#openleadr.objects.MeterAsset.mrid" title="Permalink to this definition">¶</a></dt>
@@ -1034,7 +1046,7 @@ interpret OpenADR messages. Can also be useful during testing.</p>
 <dl class="py class">
 <dt id="openleadr.objects.PNode">
 <em class="property">class </em><code class="sig-prename descclassname">openleadr.objects.</code><code class="sig-name descname">PNode</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openleadr.objects.PNode" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#openleadr.objects.objdict" title="openleadr.objects.objdict"><code class="xref py py-class docutils literal notranslate"><span class="pre">openleadr.objects.objdict</span></code></a></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py attribute">
 <dt id="openleadr.objects.PNode.node">
 <code class="sig-name descname">node</code><em class="property">: str</em><a class="headerlink" href="#openleadr.objects.PNode.node" title="Permalink to this definition">¶</a></dt>
@@ -1045,7 +1057,7 @@ interpret OpenADR messages. Can also be useful during testing.</p>
 <dl class="py class">
 <dt id="openleadr.objects.Response">
 <em class="property">class </em><code class="sig-prename descclassname">openleadr.objects.</code><code class="sig-name descname">Response</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">response_code</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">response_description</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">request_id</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openleadr.objects.Response" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#openleadr.objects.objdict" title="openleadr.objects.objdict"><code class="xref py py-class docutils literal notranslate"><span class="pre">openleadr.objects.objdict</span></code></a></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py attribute">
 <dt id="openleadr.objects.Response.request_id">
 <code class="sig-name descname">request_id</code><em class="property">: str</em><a class="headerlink" href="#openleadr.objects.Response.request_id" title="Permalink to this definition">¶</a></dt>
@@ -1066,7 +1078,7 @@ interpret OpenADR messages. Can also be useful during testing.</p>
 <dl class="py class">
 <dt id="openleadr.objects.ServiceArea">
 <em class="property">class </em><code class="sig-prename descclassname">openleadr.objects.</code><code class="sig-name descname">ServiceArea</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">feature_collection</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#openleadr.objects.FeatureCollection" title="openleadr.objects.FeatureCollection">openleadr.objects.FeatureCollection</a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#openleadr.objects.ServiceArea" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#openleadr.objects.objdict" title="openleadr.objects.objdict"><code class="xref py py-class docutils literal notranslate"><span class="pre">openleadr.objects.objdict</span></code></a></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py attribute">
 <dt id="openleadr.objects.ServiceArea.feature_collection">
 <code class="sig-name descname">feature_collection</code><em class="property">: <a class="reference internal" href="#openleadr.objects.FeatureCollection" title="openleadr.objects.FeatureCollection">openleadr.objects.FeatureCollection</a></em><a class="headerlink" href="#openleadr.objects.ServiceArea.feature_collection" title="Permalink to this definition">¶</a></dt>
@@ -1077,7 +1089,7 @@ interpret OpenADR messages. Can also be useful during testing.</p>
 <dl class="py class">
 <dt id="openleadr.objects.ServiceDeliveryPoint">
 <em class="property">class </em><code class="sig-prename descclassname">openleadr.objects.</code><code class="sig-name descname">ServiceDeliveryPoint</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openleadr.objects.ServiceDeliveryPoint" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#openleadr.objects.objdict" title="openleadr.objects.objdict"><code class="xref py py-class docutils literal notranslate"><span class="pre">openleadr.objects.objdict</span></code></a></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py attribute">
 <dt id="openleadr.objects.ServiceDeliveryPoint.node">
 <code class="sig-name descname">node</code><em class="property">: str</em><a class="headerlink" href="#openleadr.objects.ServiceDeliveryPoint.node" title="Permalink to this definition">¶</a></dt>
@@ -1088,7 +1100,7 @@ interpret OpenADR messages. Can also be useful during testing.</p>
 <dl class="py class">
 <dt id="openleadr.objects.ServiceLocation">
 <em class="property">class </em><code class="sig-prename descclassname">openleadr.objects.</code><code class="sig-name descname">ServiceLocation</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openleadr.objects.ServiceLocation" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#openleadr.objects.objdict" title="openleadr.objects.objdict"><code class="xref py py-class docutils literal notranslate"><span class="pre">openleadr.objects.objdict</span></code></a></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py attribute">
 <dt id="openleadr.objects.ServiceLocation.node">
 <code class="sig-name descname">node</code><em class="property">: str</em><a class="headerlink" href="#openleadr.objects.ServiceLocation.node" title="Permalink to this definition">¶</a></dt>
@@ -1099,7 +1111,7 @@ interpret OpenADR messages. Can also be useful during testing.</p>
 <dl class="py class">
 <dt id="openleadr.objects.Target">
 <em class="property">class </em><code class="sig-prename descclassname">openleadr.objects.</code><code class="sig-name descname">Target</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">aggregated_p_node</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#openleadr.objects.AggregatedPNode" title="openleadr.objects.AggregatedPNode">openleadr.objects.AggregatedPNode</a></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">end_device_asset</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#openleadr.objects.EndDeviceAsset" title="openleadr.objects.EndDeviceAsset">openleadr.objects.EndDeviceAsset</a></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">meter_asset</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#openleadr.objects.MeterAsset" title="openleadr.objects.MeterAsset">openleadr.objects.MeterAsset</a></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">p_node</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#openleadr.objects.PNode" title="openleadr.objects.PNode">openleadr.objects.PNode</a></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">service_area</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#openleadr.objects.ServiceArea" title="openleadr.objects.ServiceArea">openleadr.objects.ServiceArea</a></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">service_delivery_point</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#openleadr.objects.ServiceDeliveryPoint" title="openleadr.objects.ServiceDeliveryPoint">openleadr.objects.ServiceDeliveryPoint</a></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">service_location</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#openleadr.objects.ServiceLocation" title="openleadr.objects.ServiceLocation">openleadr.objects.ServiceLocation</a></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">transport_interface</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#openleadr.objects.TransportInterface" title="openleadr.objects.TransportInterface">openleadr.objects.TransportInterface</a></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">group_id</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">group_name</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">resource_id</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ven_id</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">party_id</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openleadr.objects.Target" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#openleadr.objects.objdict" title="openleadr.objects.objdict"><code class="xref py py-class docutils literal notranslate"><span class="pre">openleadr.objects.objdict</span></code></a></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py attribute">
 <dt id="openleadr.objects.Target.aggregated_p_node">
 <code class="sig-name descname">aggregated_p_node</code><em class="property">: <a class="reference internal" href="#openleadr.objects.AggregatedPNode" title="openleadr.objects.AggregatedPNode">openleadr.objects.AggregatedPNode</a></em><em class="property"> = None</em><a class="headerlink" href="#openleadr.objects.Target.aggregated_p_node" title="Permalink to this definition">¶</a></dt>
@@ -1170,7 +1182,7 @@ interpret OpenADR messages. Can also be useful during testing.</p>
 <dl class="py class">
 <dt id="openleadr.objects.TransportInterface">
 <em class="property">class </em><code class="sig-prename descclassname">openleadr.objects.</code><code class="sig-name descname">TransportInterface</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">point_of_receipt</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">point_of_delivery</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openleadr.objects.TransportInterface" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#openleadr.objects.objdict" title="openleadr.objects.objdict"><code class="xref py py-class docutils literal notranslate"><span class="pre">openleadr.objects.objdict</span></code></a></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py attribute">
 <dt id="openleadr.objects.TransportInterface.point_of_delivery">
 <code class="sig-name descname">point_of_delivery</code><em class="property">: str</em><a class="headerlink" href="#openleadr.objects.TransportInterface.point_of_delivery" title="Permalink to this definition">¶</a></dt>
@@ -1183,33 +1195,31 @@ interpret OpenADR messages. Can also be useful during testing.</p>
 
 </dd></dl>
 
-<dl class="py class">
-<dt id="openleadr.objects.objdict">
-<em class="property">class </em><code class="sig-prename descclassname">openleadr.objects.</code><code class="sig-name descname">objdict</code><a class="headerlink" href="#openleadr.objects.objdict" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></p>
-</dd></dl>
-
 </div>
 <div class="section" id="module-openleadr.preflight">
 <span id="openleadr-preflight-module"></span><h2>openleadr.preflight module<a class="headerlink" href="#module-openleadr.preflight" title="Permalink to this headline">¶</a></h2>
-<p>Tests message contents before sending them. It will correct benign errors and
-warn you about them. Uncorrectable errors will raise an Exception.</p>
 <dl class="py function">
 <dt id="openleadr.preflight.preflight_message">
 <code class="sig-prename descclassname">openleadr.preflight.</code><code class="sig-name descname">preflight_message</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">message_type</span></em>, <em class="sig-param"><span class="n">message_payload</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openleadr.preflight.preflight_message" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt id="openleadr.preflight.preflight_oadrDistributeEvent">
-<code class="sig-prename descclassname">openleadr.preflight.</code><code class="sig-name descname">preflight_oadrDistributeEvent</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">message_payload</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openleadr.preflight.preflight_oadrDistributeEvent" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Tests message contents before sending them. It will correct benign errors
+and warn you about them. Uncorrectable errors will raise an Exception. It
+changes the message_payload dict in-place.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>string</strong> (<em>message_type</em>) – The type of message you are sending</p></li>
+<li><p><strong>dict</strong> (<em>message_payload</em>) – The contents of the message</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 </div>
 <div class="section" id="module-openleadr.server">
 <span id="openleadr-server-module"></span><h2>openleadr.server module<a class="headerlink" href="#module-openleadr.server" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt id="openleadr.server.OpenADRServer">
-<em class="property">class </em><code class="sig-prename descclassname">openleadr.server.</code><code class="sig-name descname">OpenADRServer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">vtn_id</span></em>, <em class="sig-param"><span class="n">cert</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">key</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">passphrase</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fingerprint_lookup</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openleadr.server.OpenADRServer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">openleadr.server.</code><code class="sig-name descname">OpenADRServer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">vtn_id</span></em>, <em class="sig-param"><span class="n">cert</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">key</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">passphrase</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fingerprint_lookup</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">show_fingerprint</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openleadr.server.OpenADRServer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Create a new OpenADR VTN (Server).</p>
 <dl class="field-list simple">
@@ -1221,6 +1231,7 @@ warn you about them. Uncorrectable errors will raise an Exception.</p>
 <li><p><strong>string</strong> – The passphrase used to decrypt the private key file</p></li>
 <li><p><strong>callable</strong> (<em>fingerprint_lookup</em>) – A callable that receives a ven_id and should return the registered fingerprint for that VEN.
 You should receive these fingerprints outside of OpenADR and configure them manually.</p></li>
+<li><p><strong>boolean</strong> (<em>show_fingerprint</em>) – Whether to print the fingerprint to your stdout on startup. Defaults to True.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1260,37 +1271,52 @@ please refer to the <a class="reference external" href="https://docs.aiohttp.org
 <dl class="py function">
 <dt id="openleadr.utils.certificate_fingerprint">
 <code class="sig-prename descclassname">openleadr.utils.</code><code class="sig-name descname">certificate_fingerprint</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">certificate_str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openleadr.utils.certificate_fingerprint" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Calculate the fingerprint for the given certificate, as defined by OpenADR.</p>
+</dd></dl>
 
 <dl class="py function">
 <dt id="openleadr.utils.datetimeformat">
 <code class="sig-prename descclassname">openleadr.utils.</code><code class="sig-name descname">datetimeformat</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em>, <em class="sig-param"><span class="n">format</span><span class="o">=</span><span class="default_value">'%Y-%m-%dT%H:%M:%S.%fZ'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openleadr.utils.datetimeformat" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Format a given datetime as a UTC ISO3339 string.</p>
+</dd></dl>
 
 <dl class="py function">
 <dt id="openleadr.utils.ensure_bytes">
 <code class="sig-prename descclassname">openleadr.utils.</code><code class="sig-name descname">ensure_bytes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obj</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openleadr.utils.ensure_bytes" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Converts a utf-8 str object to bytes.</p>
+</dd></dl>
 
 <dl class="py function">
 <dt id="openleadr.utils.ensure_str">
 <code class="sig-prename descclassname">openleadr.utils.</code><code class="sig-name descname">ensure_str</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obj</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openleadr.utils.ensure_str" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Converts bytes to a utf-8 string.</p>
+</dd></dl>
 
 <dl class="py function">
 <dt id="openleadr.utils.extract_pem_cert">
 <code class="sig-prename descclassname">openleadr.utils.</code><code class="sig-name descname">extract_pem_cert</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tree</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openleadr.utils.extract_pem_cert" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Extract a given X509 certificate inside an XML tree and return the standard
+form of a PEM-encoded certificate.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>lxml.etree</strong> (<em>tree</em>) – The tree that contains the X509 element. This is
+usually the KeyInfo element from the XMLDsig Signature
+part of the message.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt id="openleadr.utils.flatten_xml">
 <code class="sig-prename descclassname">openleadr.utils.</code><code class="sig-name descname">flatten_xml</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">message</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openleadr.utils.flatten_xml" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Flatten the entire XML structure.</p>
+</dd></dl>
 
 <dl class="py function">
 <dt id="openleadr.utils.generate_id">
 <code class="sig-prename descclassname">openleadr.utils.</code><code class="sig-name descname">generate_id</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openleadr.utils.generate_id" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Generate a string that can be used as an identifier in OpenADR messages.</p>
+</dd></dl>
 
 <dl class="py function">
 <dt id="openleadr.utils.indent_xml">
@@ -1299,14 +1325,15 @@ please refer to the <a class="reference external" href="https://docs.aiohttp.org
 </dd></dl>
 
 <dl class="py function">
-<dt id="openleadr.utils.new_request_id">
-<code class="sig-prename descclassname">openleadr.utils.</code><code class="sig-name descname">new_request_id</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openleadr.utils.new_request_id" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
 <dt id="openleadr.utils.normalize_dict">
 <code class="sig-prename descclassname">openleadr.utils.</code><code class="sig-name descname">normalize_dict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ordered_dict</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openleadr.utils.normalize_dict" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert the OrderedDict to a regular dict, snake_case the key names, and promote uniform lists.</p>
+<dd><p>Main conversion function for the output of xmltodict to the OpenLEADR
+representation of OpenADR contents.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>dict</strong> (<em>ordered_dict</em>) – The OrderedDict, dict or dataclass that you wish to convert.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -1317,7 +1344,7 @@ please refer to the <a class="reference external" href="https://docs.aiohttp.org
 <dl class="py function">
 <dt id="openleadr.utils.parse_datetime">
 <code class="sig-prename descclassname">openleadr.utils.</code><code class="sig-name descname">parse_datetime</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openleadr.utils.parse_datetime" title="Permalink to this definition">¶</a></dt>
-<dd><p>Parse an ISO8601 datetime</p>
+<dd><p>Parse an ISO8601 datetime into a datetime.datetime object.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -1351,6 +1378,13 @@ please refer to the <a class="reference external" href="https://docs.aiohttp.org
 </div>
 <div class="section" id="module-openleadr">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-openleadr" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="openleadr.enable_default_logging">
+<code class="sig-prename descclassname">openleadr.</code><code class="sig-name descname">enable_default_logging</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">level</span><span class="o">=</span><span class="default_value">20</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openleadr.enable_default_logging" title="Permalink to this definition">¶</a></dt>
+<dd><p>Turn on logging to stdout.
+:param level integer: The logging level you wish to use. Defaults to logging.INFO.</p>
+</dd></dl>
+
 </div>
 </div>
 
@@ -1380,9 +1414,10 @@ please refer to the <a class="reference external" href="https://docs.aiohttp.org
 <li class="toctree-l1"><a class="reference internal" href="../client.html">Client</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../server.html">Server</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples.html">Ready-to-Run Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../roadmap.html">Project Status and Roadmap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../logging.html">Logging</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../representations.html">Payload Representations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../message_signing.html">Message Signing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../roadmap.html">Project Roadmap</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">API Reference</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">openleadr package</a></li>
 </ul>
@@ -1422,7 +1457,7 @@ please refer to the <a class="reference external" href="https://docs.aiohttp.org
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2020, Stan Janssen.
+      &copy;2020, OpenLEADR Contributors.
       
       |
       Powered by <a href="http://sphinx-doc.org/">Sphinx 3.2.1</a>

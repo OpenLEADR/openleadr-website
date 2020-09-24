@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Server &#8212; OpenLEADR 0.4.0 documentation</title>
+    <title>Server &#8212; OpenLEADR 0.4.2 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/css/custom.css" />
@@ -165,7 +165,7 @@
                        <span class="n">cert</span><span class="o">=</span><span class="s1">&#39;/path/to/cert.pem&#39;</span><span class="p">,</span>
                        <span class="n">key</span><span class="o">=</span><span class="s1">&#39;/path/to/private/key.pem&#39;</span><span class="p">,</span>
                        <span class="n">passphrase</span><span class="o">=</span><span class="s1">&#39;mypassphrase&#39;</span><span class="p">,</span>
-                       <span class="n">validation_handler</span><span class="o">=</span><span class="n">fingerprint_lookup</span><span class="p">)</span>
+                       <span class="n">fingerprint_lookup</span><span class="o">=</span><span class="n">fingerprint_lookup</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The VEN’s fingerprint should be obtained from the VEN outside of OpenADR.</p>
@@ -275,9 +275,10 @@ If they are allowed to register, return the ven_id (str), otherwise return False
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Ready-to-Run Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="roadmap.html">Project Status and Roadmap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="logging.html">Logging</a></li>
 <li class="toctree-l1"><a class="reference internal" href="representations.html">Payload Representations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="message_signing.html">Message Signing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="roadmap.html">Project Roadmap</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api/modules.html">API Reference</a></li>
 </ul>
 
@@ -313,7 +314,7 @@ If they are allowed to register, return the ven_id (str), otherwise return False
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2020, Stan Janssen.
+      &copy;2020, OpenLEADR Contributors.
       
       |
       Powered by <a href="http://sphinx-doc.org/">Sphinx 3.2.1</a>

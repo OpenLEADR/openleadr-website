@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Message Signing &#8212; OpenLEADR 0.4.0 documentation</title>
+    <title>Message Signing &#8212; OpenLEADR 0.4.2 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/css/custom.css" />
@@ -16,7 +16,7 @@
     <script src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="openleadr" href="api/modules.html" />
+    <link rel="next" title="Project Roadmap" href="roadmap.html" />
     <link rel="prev" title="Payload Representations" href="representations.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -62,6 +62,19 @@
 <p>To prevent an attacker from simple re-playing a previous message (for instance, an Event), unmodified, each signed message contains a ReplayProtect property. This contains a random string (nonce) and a timestamp. Upon validation of the message, it is verified that the timestamp is not older then some preconfigured value (default: 5 seconds), and that the random string has not already been seen during that time window. A cache of the nonces is kept automatically to verify this.</p>
 <p>OpenLEADR automatically generates and validates these portions of the signature. Signed messages that do not contain a ReplayProtect element are rejected, as required by the OpenADR specification.</p>
 </div>
+<div class="section" id="certificate-fingerprints">
+<h2>Certificate Fingerprints<a class="headerlink" href="#certificate-fingerprints" title="Permalink to this headline">¶</a></h2>
+<p>In order for the opposing party to verify that you ar who you say you are, they need the fingerprint of your public key that you are using. You can get this fingerprint in two ways:</p>
+<ol class="arabic simple">
+<li><p>It will be printed to your stdout when you start your client or server. If you don’t want this, your can turn it off by passing <cite>show_fingerprint=False</cite> to the OpenADRClient() or OpenADRServer() constructors.</p></li>
+<li><p>You can use an included commandline tool to show the fingerprint of any PEM certificate:</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip3 install --user openleadr
+fingerprint path/to/cert.pem
+</pre></div>
+</div>
+<p>The fingerprint is not sensitive material; you can distribute it via an unsecured method, or you can publish it as a DNS-record for example.</p>
+</div>
 </div>
 
 
@@ -90,14 +103,16 @@
 <li class="toctree-l1"><a class="reference internal" href="client.html">Client</a></li>
 <li class="toctree-l1"><a class="reference internal" href="server.html">Server</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Ready-to-Run Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="roadmap.html">Project Status and Roadmap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="logging.html">Logging</a></li>
 <li class="toctree-l1"><a class="reference internal" href="representations.html">Payload Representations</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Message Signing</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#generating-certificates">Generating certificates</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#replay-protection">Replay Protection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#certificate-fingerprints">Certificate Fingerprints</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="roadmap.html">Project Roadmap</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api/modules.html">API Reference</a></li>
 </ul>
 
@@ -106,7 +121,7 @@
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
       <li>Previous: <a href="representations.html" title="previous chapter">Payload Representations</a></li>
-      <li>Next: <a href="api/modules.html" title="next chapter">openleadr</a></li>
+      <li>Next: <a href="roadmap.html" title="next chapter">Project Roadmap</a></li>
   </ul></li>
 </ul>
 </div>
@@ -133,7 +148,7 @@
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2020, Stan Janssen.
+      &copy;2020, OpenLEADR Contributors.
       
       |
       Powered by <a href="http://sphinx-doc.org/">Sphinx 3.2.1</a>
