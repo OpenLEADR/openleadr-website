@@ -1,0 +1,44 @@
+=========
+Reporting
+=========
+
+Your VEN can provide periodic reports to the VTN. These reports usually contain metering data or status information.
+
+Offering reports
+----------------
+
+.. code-block:: python3
+
+    import openleadr
+
+    client = openleadr.OpenADRClient()
+    client.add_report(
+
+
+
+Reporting under the hood
+------------------------
+
+There is usually no need to see the specifics of the reporting mechanism. The following properties are important:
+
+- The reportName: usually one of the predefined names
+- The reportSpecifierID: an ID that the VEN assigns to the report
+- One or more rIDs: each rIDs refers to a specific data-type in the report
+- A reportRequestID: the ID that the VEN assigns to the request for a specific report's rID.
+
+A report offering from the VEN contains:
+
+- reportName
+- reportSpecifierID
+- rID (+)
+
+A report request from the VTN contains:
+
+- rID
+- reportRequestID
+
+A report that is delivered to the VTN contains:
+
+- rID
+- reportRequestId
+

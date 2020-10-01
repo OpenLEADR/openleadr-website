@@ -54,27 +54,34 @@ you can always choose to call them manually.</p>
 <li><p><strong>ven_name</strong> (<em>str</em>) – The name for this VEN</p></li>
 <li><p><strong>vtn_url</strong> (<em>str</em>) – The URL of the VTN (Server) to connect to</p></li>
 <li><p><strong>debug</strong> (<em>bool</em>) – Whether or not to print debugging messages</p></li>
-<li><p><strong>cert</strong> (<em>str</em>) – The path to a PEM-formatted Certificate file to use for signing messages</p></li>
-<li><p><strong>key</strong> (<em>str</em>) – The path to a PEM-formatted Private Key file to use for signing messages</p></li>
-<li><p><strong>fingerprint</strong> (<em>str</em>) – The fingerprint for the VTN’s certificate to verify incomnig messages</p></li>
-<li><p><strong>show_fingerprint</strong> (<em>str</em>) – Whether to print your own fingerprint on startup. Defaults to True.</p></li>
+<li><p><strong>cert</strong> (<em>str</em>) – The path to a PEM-formatted Certificate file to use
+for signing messages.</p></li>
+<li><p><strong>key</strong> (<em>str</em>) – The path to a PEM-formatted Private Key file to use
+for signing messages.</p></li>
+<li><p><strong>fingerprint</strong> (<em>str</em>) – The fingerprint for the VTN’s certificate to
+verify incomnig messages</p></li>
+<li><p><strong>show_fingerprint</strong> (<em>str</em>) – Whether to print your own fingerprint
+on startup. Defaults to True.</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py method">
 <dt id="openleadr.client.OpenADRClient.add_report">
-<code class="sig-name descname">add_report</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">callable</span></em>, <em class="sig-param"><span class="n">report_id</span></em>, <em class="sig-param"><span class="n">report_name</span></em>, <em class="sig-param"><span class="n">reading_type</span></em>, <em class="sig-param"><span class="n">report_type</span></em>, <em class="sig-param"><span class="n">sampling_rate</span></em>, <em class="sig-param"><span class="n">resource_id</span></em>, <em class="sig-param"><span class="n">measurand</span></em>, <em class="sig-param"><span class="n">unit</span></em>, <em class="sig-param"><span class="n">scale</span><span class="o">=</span><span class="default_value">'none'</span></em>, <em class="sig-param"><span class="n">power_ac</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">power_hertz</span><span class="o">=</span><span class="default_value">50</span></em>, <em class="sig-param"><span class="n">power_voltage</span><span class="o">=</span><span class="default_value">230</span></em>, <em class="sig-param"><span class="n">market_context</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openleadr.client.OpenADRClient.add_report" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">add_report</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">callable</span></em>, <em class="sig-param"><span class="n">resource_id</span></em>, <em class="sig-param"><span class="n">measurement</span></em>, <em class="sig-param"><span class="n">report_name</span><span class="o">=</span><span class="default_value">'TELEMETRY_USAGE'</span></em>, <em class="sig-param"><span class="n">reading_type</span><span class="o">=</span><span class="default_value">'Direct Read'</span></em>, <em class="sig-param"><span class="n">report_type</span><span class="o">=</span><span class="default_value">'reading'</span></em>, <em class="sig-param"><span class="n">sampling_rate</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">data_source</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">scale</span><span class="o">=</span><span class="default_value">'none'</span></em>, <em class="sig-param"><span class="n">unit</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">power_ac</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">power_hertz</span><span class="o">=</span><span class="default_value">50</span></em>, <em class="sig-param"><span class="n">power_voltage</span><span class="o">=</span><span class="default_value">230</span></em>, <em class="sig-param"><span class="n">market_context</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openleadr.client.OpenADRClient.add_report" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a new reporting capability to the client.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>callable</strong> (<em>callable</em>) – A callable or coroutine that will fetch the value for a specific report. This callable will be passed the report_id and the r_id of the requested value.</p></li>
+<li><p><strong>callable</strong> (<em>callable</em>) – A callable or coroutine that will fetch the value for a specific
+report. This callable will be passed the report_id and the r_id
+of the requested value.</p></li>
+<li><p><strong>resource_id</strong> (<em>str</em>) – A specific name for this resource within this report.</p></li>
+<li><p><strong>measurement</strong> (<em>str</em>) – The quantity that is being measured (openleadr.enums.MEASUREMENTS).</p></li>
 <li><p><strong>report_id</strong> (<em>str</em>) – A unique identifier for this report.</p></li>
 <li><p><strong>report_name</strong> (<em>str</em>) – An OpenADR name for this report (one of openleadr.enums.REPORT_NAME)</p></li>
 <li><p><strong>reading_type</strong> (<em>str</em>) – An OpenADR reading type (found in openleadr.enums.READING_TYPE)</p></li>
 <li><p><strong>report_type</strong> (<em>str</em>) – An OpenADR report type (found in openleadr.enums.REPORT_TYPE)</p></li>
 <li><p><strong>sampling_rate</strong> (<em>datetime.timedelta</em>) – The sampling rate for the measurement.</p></li>
-<li><p><strong>resource_id</strong> – A specific name for this resource within this report.</p></li>
 <li><p><strong>unit</strong> (<em>str</em>) – The unit for this measurement.</p></li>
 </ul>
 </dd>
@@ -95,11 +102,14 @@ you can always choose to call them manually.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>http_pull_model</strong> (<em>bool</em>) – Whether to use the ‘pull’ model for HTTP.</p></li>
 <li><p><strong>xml_signature</strong> (<em>bool</em>) – Whether to sign each XML message.</p></li>
-<li><p><strong>report_only</strong> (<em>bool</em>) – Whether or not this is a reporting-only client which does not deal with Events.</p></li>
+<li><p><strong>report_only</strong> (<em>bool</em>) – Whether or not this is a reporting-only client
+which does not deal with Events.</p></li>
 <li><p><strong>profile_name</strong> (<em>str</em>) – Which OpenADR profile to use.</p></li>
 <li><p><strong>transport_name</strong> (<em>str</em>) – The transport name to use. Either ‘simpleHttp’ or ‘xmpp’.</p></li>
-<li><p><strong>transport_address</strong> (<em>str</em>) – Which public-facing address the server should use to communicate.</p></li>
-<li><p><strong>ven_id</strong> (<em>str</em>) – The ID for this VEN. If you leave this blank, a VEN_ID will be assigned by the VTN.</p></li>
+<li><p><strong>transport_address</strong> (<em>str</em>) – Which public-facing address the server should use
+to communicate.</p></li>
+<li><p><strong>ven_id</strong> (<em>str</em>) – The ID for this VEN. If you leave this blank,
+a VEN_ID will be assigned by the VTN.</p></li>
 </ul>
 </dd>
 </dl>
@@ -113,8 +123,9 @@ you can always choose to call them manually.</p>
 
 <dl class="py method">
 <dt id="openleadr.client.OpenADRClient.created_report">
-<em class="property">async </em><code class="sig-name descname">created_report</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#openleadr.client.OpenADRClient.created_report" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<em class="property">async </em><code class="sig-name descname">created_report</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">create_report_request</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openleadr.client.OpenADRClient.created_report" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set up the automatic reporting to the VTN.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt id="openleadr.client.OpenADRClient.poll">
@@ -129,9 +140,9 @@ you can always choose to call them manually.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="openleadr.client.OpenADRClient.register_report">
-<em class="property">async </em><code class="sig-name descname">register_report</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#openleadr.client.OpenADRClient.register_report" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tell the VTN about our reporting capabilities.</p>
+<dt id="openleadr.client.OpenADRClient.register_reports">
+<em class="property">async </em><code class="sig-name descname">register_reports</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">reports</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openleadr.client.OpenADRClient.register_reports" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register our reports with the VTN.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -148,8 +159,8 @@ you can always choose to call them manually.</p>
 
 <dl class="py method">
 <dt id="openleadr.client.OpenADRClient.update_report">
-<em class="property">async </em><code class="sig-name descname">update_report</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">report_id</span></em>, <em class="sig-param"><span class="n">resource_id</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openleadr.client.OpenADRClient.update_report" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calls the previously registered report callable, and send the result as a message to the VTN.</p>
+<em class="property">async </em><code class="sig-name descname">update_report</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">report_id</span></em>, <em class="sig-param"><span class="n">report_request_id</span></em>, <em class="sig-param"><span class="n">resource_id</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openleadr.client.OpenADRClient.update_report" title="Permalink to this definition">¶</a></dt>
+<dd><p>Call the previously registered report callable and send the result as a message to the VTN.</p>
 </dd></dl>
 
 </dd></dl>
@@ -794,14 +805,6 @@ interpret OpenADR messages. Can also be useful during testing.</p>
 <dd></dd></dl>
 
 </div>
-<div class="section" id="module-openleadr.logging">
-<span id="openleadr-logging-module"></span><h2>openleadr.logging module<a class="headerlink" href="#module-openleadr.logging" title="Permalink to this headline">¶</a></h2>
-<dl class="py function">
-<dt id="openleadr.logging.enable_default_logging">
-<code class="sig-prename descclassname">openleadr.logging.</code><code class="sig-name descname">enable_default_logging</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">level</span><span class="o">=</span><span class="default_value">20</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openleadr.logging.enable_default_logging" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</div>
 <div class="section" id="module-openleadr.messaging">
 <span id="openleadr-messaging-module"></span><h2>openleadr.messaging module<a class="headerlink" href="#module-openleadr.messaging" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
@@ -862,6 +865,70 @@ interpret OpenADR messages. Can also be useful during testing.</p>
 <dl class="py attribute">
 <dt id="openleadr.objects.AggregatedPNode.node">
 <code class="sig-name descname">node</code><em class="property">: str</em><a class="headerlink" href="#openleadr.objects.AggregatedPNode.node" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="openleadr.objects.EmixItem">
+<em class="property">class </em><code class="sig-prename descclassname">openleadr.objects.</code><code class="sig-name descname">EmixItem</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">item_description</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">item_units</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">scale</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openleadr.objects.EmixItem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt id="openleadr.objects.EmixItem.item_description">
+<code class="sig-name descname">item_description</code><em class="property">: str</em><a class="headerlink" href="#openleadr.objects.EmixItem.item_description" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="openleadr.objects.EmixItem.item_units">
+<code class="sig-name descname">item_units</code><em class="property">: str</em><a class="headerlink" href="#openleadr.objects.EmixItem.item_units" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="openleadr.objects.EmixItem.scale">
+<code class="sig-name descname">scale</code><em class="property">: str</em><a class="headerlink" href="#openleadr.objects.EmixItem.scale" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="openleadr.objects.EmixPowerAttributes">
+<em class="property">class </em><code class="sig-prename descclassname">openleadr.objects.</code><code class="sig-name descname">EmixPowerAttributes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">hertz</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">50</span></em>, <em class="sig-param"><span class="n">voltage</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">230</span></em>, <em class="sig-param"><span class="n">ac</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openleadr.objects.EmixPowerAttributes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt id="openleadr.objects.EmixPowerAttributes.ac">
+<code class="sig-name descname">ac</code><em class="property">: bool</em><em class="property"> = True</em><a class="headerlink" href="#openleadr.objects.EmixPowerAttributes.ac" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="openleadr.objects.EmixPowerAttributes.hertz">
+<code class="sig-name descname">hertz</code><em class="property">: int</em><em class="property"> = 50</em><a class="headerlink" href="#openleadr.objects.EmixPowerAttributes.hertz" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="openleadr.objects.EmixPowerAttributes.voltage">
+<code class="sig-name descname">voltage</code><em class="property">: int</em><em class="property"> = 230</em><a class="headerlink" href="#openleadr.objects.EmixPowerAttributes.voltage" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="openleadr.objects.EmixPowerItem">
+<em class="property">class </em><code class="sig-prename descclassname">openleadr.objects.</code><code class="sig-name descname">EmixPowerItem</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">item_description</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">item_units</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">scale</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">power_attributes</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#openleadr.objects.EmixPowerAttributes" title="openleadr.objects.EmixPowerAttributes">openleadr.objects.EmixPowerAttributes</a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#openleadr.objects.EmixPowerItem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#openleadr.objects.EmixItem" title="openleadr.objects.EmixItem"><code class="xref py py-class docutils literal notranslate"><span class="pre">openleadr.objects.EmixItem</span></code></a></p>
+<dl class="py attribute">
+<dt id="openleadr.objects.EmixPowerItem.power_attributes">
+<code class="sig-name descname">power_attributes</code><em class="property">: <a class="reference internal" href="#openleadr.objects.EmixPowerAttributes" title="openleadr.objects.EmixPowerAttributes">openleadr.objects.EmixPowerAttributes</a></em><a class="headerlink" href="#openleadr.objects.EmixPowerItem.power_attributes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="openleadr.objects.EmixQuantityItem">
+<em class="property">class </em><code class="sig-prename descclassname">openleadr.objects.</code><code class="sig-name descname">EmixQuantityItem</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">item_description</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">item_units</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">scale</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">quantity</span><span class="p">:</span> <span class="n">float</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openleadr.objects.EmixQuantityItem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#openleadr.objects.EmixItem" title="openleadr.objects.EmixItem"><code class="xref py py-class docutils literal notranslate"><span class="pre">openleadr.objects.EmixItem</span></code></a></p>
+<dl class="py attribute">
+<dt id="openleadr.objects.EmixQuantityItem.quantity">
+<code class="sig-name descname">quantity</code><em class="property">: float</em><a class="headerlink" href="#openleadr.objects.EmixQuantityItem.quantity" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1055,6 +1122,123 @@ interpret OpenADR messages. Can also be useful during testing.</p>
 </dd></dl>
 
 <dl class="py class">
+<dt id="openleadr.objects.Report">
+<em class="property">class </em><code class="sig-prename descclassname">openleadr.objects.</code><code class="sig-name descname">Report</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">created_date_time</span><span class="p">:</span> <span class="n">datetime.datetime</span></em>, <em class="sig-param"><span class="n">duration</span><span class="p">:</span> <span class="n">datetime.timedelta</span></em>, <em class="sig-param"><span class="n">report_descriptions</span><span class="p">:</span> <span class="n">List<span class="p">[</span><a class="reference internal" href="#openleadr.objects.ReportDescription" title="openleadr.objects.ReportDescription">openleadr.objects.ReportDescription</a><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">report_name</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">report_request_id</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">report_specifier_id</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openleadr.objects.Report" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt id="openleadr.objects.Report.created_date_time">
+<code class="sig-name descname">created_date_time</code><em class="property">: datetime.datetime</em><a class="headerlink" href="#openleadr.objects.Report.created_date_time" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="openleadr.objects.Report.duration">
+<code class="sig-name descname">duration</code><em class="property">: datetime.timedelta</em><a class="headerlink" href="#openleadr.objects.Report.duration" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="openleadr.objects.Report.report_descriptions">
+<code class="sig-name descname">report_descriptions</code><em class="property">: List<span class="p">[</span><a class="reference internal" href="#openleadr.objects.ReportDescription" title="openleadr.objects.ReportDescription">openleadr.objects.ReportDescription</a><span class="p">]</span></em><a class="headerlink" href="#openleadr.objects.Report.report_descriptions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="openleadr.objects.Report.report_name">
+<code class="sig-name descname">report_name</code><em class="property">: str</em><a class="headerlink" href="#openleadr.objects.Report.report_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="openleadr.objects.Report.report_request_id">
+<code class="sig-name descname">report_request_id</code><em class="property">: str</em><em class="property"> = None</em><a class="headerlink" href="#openleadr.objects.Report.report_request_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="openleadr.objects.Report.report_specifier_id">
+<code class="sig-name descname">report_specifier_id</code><em class="property">: str</em><em class="property"> = None</em><a class="headerlink" href="#openleadr.objects.Report.report_specifier_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="openleadr.objects.ReportDescription">
+<em class="property">class </em><code class="sig-prename descclassname">openleadr.objects.</code><code class="sig-name descname">ReportDescription</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">r_id</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">market_context</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">reading_type</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">report_subject</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#openleadr.objects.Target" title="openleadr.objects.Target">openleadr.objects.Target</a></span></em>, <em class="sig-param"><span class="n">report_data_source</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#openleadr.objects.Target" title="openleadr.objects.Target">openleadr.objects.Target</a></span></em>, <em class="sig-param"><span class="n">report_type</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">sampling_rate</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#openleadr.objects.SamplingRate" title="openleadr.objects.SamplingRate">openleadr.objects.SamplingRate</a></span></em>, <em class="sig-param"><span class="n">energy_real</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#openleadr.objects.EmixItem" title="openleadr.objects.EmixItem">openleadr.objects.EmixItem</a></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">energy_apaprent</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#openleadr.objects.EmixItem" title="openleadr.objects.EmixItem">openleadr.objects.EmixItem</a></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">energy_reactive</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#openleadr.objects.EmixItem" title="openleadr.objects.EmixItem">openleadr.objects.EmixItem</a></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">energy_quantity</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#openleadr.objects.EmixQuantityItem" title="openleadr.objects.EmixQuantityItem">openleadr.objects.EmixQuantityItem</a></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">power_real</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#openleadr.objects.EmixPowerItem" title="openleadr.objects.EmixPowerItem">openleadr.objects.EmixPowerItem</a></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">power_apparent</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#openleadr.objects.EmixPowerItem" title="openleadr.objects.EmixPowerItem">openleadr.objects.EmixPowerItem</a></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">power_reactive</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#openleadr.objects.EmixPowerItem" title="openleadr.objects.EmixPowerItem">openleadr.objects.EmixPowerItem</a></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">voltage</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#openleadr.objects.EmixItem" title="openleadr.objects.EmixItem">openleadr.objects.EmixItem</a></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openleadr.objects.ReportDescription" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt id="openleadr.objects.ReportDescription.energy_apaprent">
+<code class="sig-name descname">energy_apaprent</code><em class="property">: <a class="reference internal" href="#openleadr.objects.EmixItem" title="openleadr.objects.EmixItem">openleadr.objects.EmixItem</a></em><em class="property"> = None</em><a class="headerlink" href="#openleadr.objects.ReportDescription.energy_apaprent" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="openleadr.objects.ReportDescription.energy_quantity">
+<code class="sig-name descname">energy_quantity</code><em class="property">: <a class="reference internal" href="#openleadr.objects.EmixQuantityItem" title="openleadr.objects.EmixQuantityItem">openleadr.objects.EmixQuantityItem</a></em><em class="property"> = None</em><a class="headerlink" href="#openleadr.objects.ReportDescription.energy_quantity" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="openleadr.objects.ReportDescription.energy_reactive">
+<code class="sig-name descname">energy_reactive</code><em class="property">: <a class="reference internal" href="#openleadr.objects.EmixItem" title="openleadr.objects.EmixItem">openleadr.objects.EmixItem</a></em><em class="property"> = None</em><a class="headerlink" href="#openleadr.objects.ReportDescription.energy_reactive" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="openleadr.objects.ReportDescription.energy_real">
+<code class="sig-name descname">energy_real</code><em class="property">: <a class="reference internal" href="#openleadr.objects.EmixItem" title="openleadr.objects.EmixItem">openleadr.objects.EmixItem</a></em><em class="property"> = None</em><a class="headerlink" href="#openleadr.objects.ReportDescription.energy_real" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="openleadr.objects.ReportDescription.market_context">
+<code class="sig-name descname">market_context</code><em class="property">: str</em><a class="headerlink" href="#openleadr.objects.ReportDescription.market_context" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="openleadr.objects.ReportDescription.power_apparent">
+<code class="sig-name descname">power_apparent</code><em class="property">: <a class="reference internal" href="#openleadr.objects.EmixPowerItem" title="openleadr.objects.EmixPowerItem">openleadr.objects.EmixPowerItem</a></em><em class="property"> = None</em><a class="headerlink" href="#openleadr.objects.ReportDescription.power_apparent" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="openleadr.objects.ReportDescription.power_reactive">
+<code class="sig-name descname">power_reactive</code><em class="property">: <a class="reference internal" href="#openleadr.objects.EmixPowerItem" title="openleadr.objects.EmixPowerItem">openleadr.objects.EmixPowerItem</a></em><em class="property"> = None</em><a class="headerlink" href="#openleadr.objects.ReportDescription.power_reactive" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="openleadr.objects.ReportDescription.power_real">
+<code class="sig-name descname">power_real</code><em class="property">: <a class="reference internal" href="#openleadr.objects.EmixPowerItem" title="openleadr.objects.EmixPowerItem">openleadr.objects.EmixPowerItem</a></em><em class="property"> = None</em><a class="headerlink" href="#openleadr.objects.ReportDescription.power_real" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="openleadr.objects.ReportDescription.r_id">
+<code class="sig-name descname">r_id</code><em class="property">: str</em><a class="headerlink" href="#openleadr.objects.ReportDescription.r_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="openleadr.objects.ReportDescription.reading_type">
+<code class="sig-name descname">reading_type</code><em class="property">: str</em><a class="headerlink" href="#openleadr.objects.ReportDescription.reading_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="openleadr.objects.ReportDescription.report_data_source">
+<code class="sig-name descname">report_data_source</code><em class="property">: <a class="reference internal" href="#openleadr.objects.Target" title="openleadr.objects.Target">openleadr.objects.Target</a></em><a class="headerlink" href="#openleadr.objects.ReportDescription.report_data_source" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="openleadr.objects.ReportDescription.report_subject">
+<code class="sig-name descname">report_subject</code><em class="property">: <a class="reference internal" href="#openleadr.objects.Target" title="openleadr.objects.Target">openleadr.objects.Target</a></em><a class="headerlink" href="#openleadr.objects.ReportDescription.report_subject" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="openleadr.objects.ReportDescription.report_type">
+<code class="sig-name descname">report_type</code><em class="property">: str</em><a class="headerlink" href="#openleadr.objects.ReportDescription.report_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="openleadr.objects.ReportDescription.sampling_rate">
+<code class="sig-name descname">sampling_rate</code><em class="property">: <a class="reference internal" href="#openleadr.objects.SamplingRate" title="openleadr.objects.SamplingRate">openleadr.objects.SamplingRate</a></em><a class="headerlink" href="#openleadr.objects.ReportDescription.sampling_rate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="openleadr.objects.ReportDescription.voltage">
+<code class="sig-name descname">voltage</code><em class="property">: <a class="reference internal" href="#openleadr.objects.EmixItem" title="openleadr.objects.EmixItem">openleadr.objects.EmixItem</a></em><em class="property"> = None</em><a class="headerlink" href="#openleadr.objects.ReportDescription.voltage" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt id="openleadr.objects.Response">
 <em class="property">class </em><code class="sig-prename descclassname">openleadr.objects.</code><code class="sig-name descname">Response</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">response_code</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">response_description</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">request_id</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openleadr.objects.Response" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
@@ -1071,6 +1255,27 @@ interpret OpenADR messages. Can also be useful during testing.</p>
 <dl class="py attribute">
 <dt id="openleadr.objects.Response.response_description">
 <code class="sig-name descname">response_description</code><em class="property">: str</em><a class="headerlink" href="#openleadr.objects.Response.response_description" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="openleadr.objects.SamplingRate">
+<em class="property">class </em><code class="sig-prename descclassname">openleadr.objects.</code><code class="sig-name descname">SamplingRate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">min_period</span><span class="p">:</span> <span class="n">datetime.timedelta</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">max_period</span><span class="p">:</span> <span class="n">datetime.timedelta</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">on_change</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openleadr.objects.SamplingRate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt id="openleadr.objects.SamplingRate.max_period">
+<code class="sig-name descname">max_period</code><em class="property">: datetime.timedelta</em><em class="property"> = None</em><a class="headerlink" href="#openleadr.objects.SamplingRate.max_period" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="openleadr.objects.SamplingRate.min_period">
+<code class="sig-name descname">min_period</code><em class="property">: datetime.timedelta</em><em class="property"> = None</em><a class="headerlink" href="#openleadr.objects.SamplingRate.min_period" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="openleadr.objects.SamplingRate.on_change">
+<code class="sig-name descname">on_change</code><em class="property">: bool</em><em class="property"> = False</em><a class="headerlink" href="#openleadr.objects.SamplingRate.on_change" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1382,7 +1587,10 @@ representation of OpenADR contents.</p>
 <dt id="openleadr.enable_default_logging">
 <code class="sig-prename descclassname">openleadr.</code><code class="sig-name descname">enable_default_logging</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">level</span><span class="o">=</span><span class="default_value">20</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openleadr.enable_default_logging" title="Permalink to this definition">¶</a></dt>
 <dd><p>Turn on logging to stdout.
-:param level integer: The logging level you wish to use. Defaults to logging.INFO.</p>
+:param level integer: The logging level you wish to use.</p>
+<blockquote>
+<div><p>Defaults to logging.INFO.</p>
+</div></blockquote>
 </dd></dl>
 
 </div>

@@ -1,0 +1,30 @@
+# OpenLEADR Client tutorial
+
+## 1. Set up and registration
+
+To get started, first install openleadr:
+
+.. code-block:: bash
+
+    pip install --upgrade openleadr
+
+If you want to use message signing, you can now create a certificate and key:
+
+
+
+Now create a new python file called myclient.py and
+
+## 2. Receiving Events
+
+## 3. Opting in and out of Events
+
+## 4. Registering Reporting Capabilities
+
+## 5. Providing Reports
+
+## 6. Deregistering
+
+## 7. Controlling multiple devices
+
+
+
