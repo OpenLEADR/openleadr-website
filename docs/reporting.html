@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Reporting &#8212; OpenLEADR 0.4.2 documentation</title>
+    <title>Reporting &#8212; OpenLEADR 0.5.0 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/css/custom.css" />
@@ -16,6 +16,8 @@
     <script src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Logging" href="logging.html" />
+    <link rel="prev" title="Ready-to-Run Examples" href="examples.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -35,40 +37,286 @@
   <div class="section" id="reporting">
 <h1>Reporting<a class="headerlink" href="#reporting" title="Permalink to this headline">¶</a></h1>
 <p>Your VEN can provide periodic reports to the VTN. These reports usually contain metering data or status information.</p>
-<div class="section" id="offering-reports">
-<h2>Offering reports<a class="headerlink" href="#offering-reports" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="a-brief-overview-of-reports-in-openadr">
+<h2>A brief overview of reports in OpenADR<a class="headerlink" href="#a-brief-overview-of-reports-in-openadr" title="Permalink to this headline">¶</a></h2>
+<p>Reports can describe many measurable things. A report description contains:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>A ReportName, of which the following are predefined in OpenADR:</dt><dd><ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">TELEMETRY_USAGE</span></code>: for providing meter reading or other instantanious values</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TELEMETRY_STATUS</span></code>: for providing real-time status updates of availability</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">HISTORY_USAGE</span></code>: for providing a historic metering series</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">HISTORY_GREENBUTTON</span></code>: for providing historic data according to the GreenButton format</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p>A ReportType, which indicates what the data represents. There are many options predefined, like <code class="docutils literal notranslate"><span class="pre">READING</span></code>, <code class="docutils literal notranslate"><span class="pre">USAGE</span></code>, <code class="docutils literal notranslate"><span class="pre">DEMAND</span></code>, <code class="docutils literal notranslate"><span class="pre">STORED_ENERGY</span></code>, et cetera. You can find all of them in the <code class="docutils literal notranslate"><span class="pre">enums.REPORT_TYPE</span></code> enumeration.</p></li>
+<li><p>A ReadingType, which indicates the way in which the data is collected or possibly downsampled. For instance, <code class="docutils literal notranslate"><span class="pre">DIRECT_READ</span></code>, <code class="docutils literal notranslate"><span class="pre">NET</span></code>, <code class="docutils literal notranslate"><span class="pre">ALLOCATED</span></code>, <code class="docutils literal notranslate"><span class="pre">SUMMED</span></code>, <code class="docutils literal notranslate"><span class="pre">MEAN</span></code>, <code class="docutils literal notranslate"><span class="pre">PEAK</span></code>, et cetera.</p></li>
+<li><p>A Sampling Rate, which defines the rate at which data can or should be collected. When configuring / offering reports from the VEN, you can set a minimum and maximum sampling rate if you wish, to let the VTN choose its preferred sampling rate.</p></li>
+<li><p>A so-called ItemBase, which indicates the quantity you are reporting, like Voltage, Current or Energy. In OpenLEADR, this is called <code class="docutils literal notranslate"><span class="pre">measurement</span></code>.</p></li>
+<li><p>A unit of measure, usually linked to the <code class="docutils literal notranslate"><span class="pre">measurement</span></code>, like <code class="docutils literal notranslate"><span class="pre">A</span></code> for ampere, or <code class="docutils literal notranslate"><span class="pre">V</span></code> for volt.</p></li>
+<li><p>A Resource ID, which indicates which of the resources this report applies to. It’s probably one of your controllable devices.</p></li>
+</ul>
+<p>You configure which reports you can deliver, and the VEN offers these to the VTN. The VTN makes a selection and requests reports from the VEN to be sent at regular intervals. The VEN then starts collecting data and sending reports.</p>
+</div>
+<div class="section" id="offering-reports-ven-to-vtn">
+<h2>Offering reports (VEN to VTN)<a class="headerlink" href="#offering-reports-ven-to-vtn" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="basic-telemetry-reports">
+<h3>Basic telemetry reports<a class="headerlink" href="#basic-telemetry-reports" title="Permalink to this headline">¶</a></h3>
+<p>Say you have two devices, ‘Device001’ and ‘Device002’, which can each offer measurments of Voltage and Current at a samplerate of 10 seconds. You would register these reports as follows:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">openleadr</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">openleadr</span><span class="o">.</span><span class="n">OpenADRClient</span><span class="p">()</span>
+    <span class="c1"># Add reports</span>
+    <span class="n">client</span><span class="o">.</span><span class="n">add_report</span><span class="p">(</span><span class="n">callback</span><span class="o">=</span><span class="n">partial</span><span class="p">(</span><span class="n">read_current</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;Device001&#39;</span><span class="p">),</span>
+                      <span class="n">report_specifier_id</span><span class="o">=</span><span class="s1">&#39;AmpereReport&#39;</span><span class="p">,</span>
+                      <span class="n">resource_id</span><span class="o">=</span><span class="s1">&#39;Device001&#39;</span><span class="p">,</span>
+                      <span class="n">measurement</span><span class="o">=</span><span class="s1">&#39;current&#39;</span><span class="p">,</span>
+                      <span class="n">sampling_rate</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">10</span><span class="p">),</span>
+                      <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;A&#39;</span><span class="p">)</span>
+    <span class="n">client</span><span class="o">.</span><span class="n">add_report</span><span class="p">(</span><span class="n">callback</span><span class="o">=</span><span class="n">partial</span><span class="p">(</span><span class="n">read_current</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;Device002&#39;</span><span class="p">),</span>
+                      <span class="n">report_specifier_id</span><span class="o">=</span><span class="s1">&#39;AmpereReport&#39;</span><span class="p">,</span>
+                      <span class="n">resource_id</span><span class="o">=</span><span class="s1">&#39;Device002&#39;</span><span class="p">,</span>
+                      <span class="n">measurement</span><span class="o">=</span><span class="s1">&#39;current&#39;</span><span class="p">,</span>
+                      <span class="n">sampling_rate</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">10</span><span class="p">),</span>
+                      <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;A&#39;</span><span class="p">)</span>
+    <span class="n">client</span><span class="o">.</span><span class="n">add_report</span><span class="p">(</span><span class="n">callback</span><span class="o">=</span><span class="n">partial</span><span class="p">(</span><span class="n">read_voltage</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;Device001&#39;</span><span class="p">),</span>
+                      <span class="n">report_specifier_id</span><span class="o">=</span><span class="s1">&#39;VoltageReport&#39;</span><span class="p">,</span>
+                      <span class="n">resource_id</span><span class="o">=</span><span class="s1">&#39;Device001&#39;</span><span class="p">,</span>
+                      <span class="n">measurement</span><span class="o">=</span><span class="s1">&#39;current&#39;</span><span class="p">,</span>
+                      <span class="n">sampling_rate</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">10</span><span class="p">),</span>
+                      <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;A&#39;</span><span class="p">)</span>
+    <span class="n">client</span><span class="o">.</span><span class="n">add_report</span><span class="p">(</span><span class="n">callback</span><span class="o">=</span><span class="n">partial</span><span class="p">(</span><span class="n">read_voltage</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;Device002&#39;</span><span class="p">),</span>
+                      <span class="n">report_specifier_id</span><span class="o">=</span><span class="s1">&#39;VoltageReport&#39;</span><span class="p">,</span>
+                      <span class="n">resource_id</span><span class="o">=</span><span class="s1">&#39;Device002&#39;</span><span class="p">,</span>
+                      <span class="n">measurement</span><span class="o">=</span><span class="s1">&#39;current&#39;</span><span class="p">,</span>
+                      <span class="n">sampling_rate</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">10</span><span class="p">),</span>
+                      <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;A&#39;</span><span class="p">)</span>
+    <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">read_voltage</span><span class="p">(</span><span class="n">device</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Retrieve the voltage value from the given &#39;device&#39;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="k">await</span> <span class="n">interface</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">device</span><span class="p">,</span> <span class="s1">&#39;voltage&#39;</span><span class="p">)</span> <span class="c1"># Dummy code</span>
+    <span class="k">return</span> <span class="n">v</span>
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">read_current</span><span class="p">(</span><span class="n">device</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Retrieve the current value from the given &#39;device&#39;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="k">await</span> <span class="n">interface</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">device</span><span class="p">,</span> <span class="s1">&#39;current&#39;</span><span class="p">)</span> <span class="c1"># Dummy code</span>
+    <span class="k">return</span> <span class="n">a</span>
+</pre></div>
+</div>
+<p>The VTN can request TELEMETRY_USAGE reports to be delivered at the sampling rate, or it can request them at a lower rate. For instance, it can request 15-minute readings, delivered every 24 hours. By default, openLEADR handles this case by incrementally building up the report during the day, calling your callback every 15 minutes and sending the report once it has 24 hours worth of values.</p>
+<p>If, instead, you already have a system where historic data can be extracted, and prefer to use that method instead, you can configure that as well.</p>
+<p>The two requirements for this kind of data collection are:</p>
+<ol class="arabic simple">
+<li><p>Your callback must accept arguments named <code class="docutils literal notranslate"><span class="pre">date_from</span></code>, <code class="docutils literal notranslate"><span class="pre">date_to</span></code> and <code class="docutils literal notranslate"><span class="pre">sampling_rate</span></code></p></li>
+<li><p>You must specify <code class="docutils literal notranslate"><span class="pre">data_collection_mode</span> <span class="pre">=</span> <span class="pre">'full'</span></code> when adding the report.</p></li>
+</ol>
+<p>Here’s an example:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">openleadr</span>
 
-<span class="n">client</span> <span class="o">=</span> <span class="n">openleadr</span><span class="o">.</span><span class="n">OpenADRClient</span><span class="p">()</span>
-<span class="n">client</span><span class="o">.</span><span class="n">add_report</span><span class="p">(</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">openleadr</span><span class="o">.</span><span class="n">OpenADRClient</span><span class="p">(</span><span class="n">ven_name</span><span class="o">=</span><span class="s1">&#39;myven&#39;</span><span class="p">,</span> <span class="n">vtn_url</span><span class="o">=</span><span class="s1">&#39;http://some-vtn.com&#39;</span><span class="p">)</span>
+    <span class="n">client</span><span class="o">.</span><span class="n">add_report</span><span class="p">(</span><span class="n">callback</span><span class="o">=</span><span class="n">load_data</span><span class="p">,</span>
+                      <span class="n">data_collection_mode</span><span class="o">=</span><span class="s1">&#39;full&#39;</span><span class="p">,</span>
+                      <span class="n">report_specifier_id</span><span class="o">=</span><span class="s1">&#39;AmpereReport&#39;</span><span class="p">,</span>
+                      <span class="n">resource_id</span><span class="o">=</span><span class="s1">&#39;Device001&#39;</span><span class="p">,</span>
+                      <span class="n">measurement</span><span class="o">=</span><span class="s1">&#39;current&#39;</span><span class="p">,</span>
+                      <span class="n">sampling_rate</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">10</span><span class="p">),</span>
+                      <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;A&#39;</span><span class="p">)</span>
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">load_data</span><span class="p">(</span><span class="n">date_from</span><span class="p">,</span> <span class="n">date_to</span><span class="p">,</span> <span class="n">sampling_rate</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function that loads data between date_from and date_to, sampled at sampling_rate.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Load data from a backend system</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">database</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;SELECT time_bucket(&#39;15 minutes&#39;, datetime) as dt, AVG(value)</span>
+<span class="s2">                                     FROM metervalues</span>
+<span class="s2">                                    WHERE datetime BETWEEN </span><span class="si">%s</span><span class="s2"> AND </span><span class="si">%s</span><span class="s2"></span>
+<span class="s2">                                    GROUP BY dt</span>
+<span class="s2">                                    ORDER BY dt&quot;&quot;&quot;</span><span class="p">)</span>
+    <span class="c1"># Pack the data into a list of (datetime, value) tuples</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="n">result</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()]</span>
+    <span class="k">return</span> <span class="n">data</span>
 </pre></div>
 </div>
 </div>
-<div class="section" id="reporting-under-the-hood">
-<h2>Reporting under the hood<a class="headerlink" href="#reporting-under-the-hood" title="Permalink to this headline">¶</a></h2>
-<p>There is usually no need to see the specifics of the reporting mechanism. The following properties are important:</p>
+<div class="section" id="historic-data-reports">
+<h3>Historic data reports<a class="headerlink" href="#historic-data-reports" title="Permalink to this headline">¶</a></h3>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Historic reports are not yet implemented into OpenLEADR. Please follow updates in <a class="reference external" href="https://github.com/OpenLEADR/openleadr-python/issues/18">this issue on GitHub</a>.</p>
+</div>
+<p>You can also configure historic reports, where the VTN can at any time request data from a specified time interval and granularity. For historic reports, you must have your own data collection system and the provided callback must have the signature:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span> <span class="nf">get_historic_data</span><span class="p">(</span><span class="n">date_from</span><span class="p">,</span> <span class="n">date_to</span><span class="p">,</span> <span class="n">sampling_interval</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>An example for configuring historic reports:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">openleadr</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">openleadr</span><span class="o">.</span><span class="n">OpenADRClient</span><span class="p">(</span><span class="n">ven_name</span><span class="o">=</span><span class="s1">&#39;myven&#39;</span><span class="p">,</span> <span class="n">vtn_url</span><span class="o">=</span><span class="s1">&#39;http://some-vtn.com&#39;</span><span class="p">)</span>
+    <span class="n">client</span><span class="o">.</span><span class="n">add_report</span><span class="p">(</span><span class="n">callback</span><span class="o">=</span><span class="n">partial</span><span class="p">(</span><span class="n">get_historic_data</span><span class="p">,</span> <span class="n">device_id</span><span class="o">=</span><span class="s1">&#39;Device001&#39;</span><span class="p">),</span>
+                      <span class="n">report_name</span><span class="o">=</span><span class="s1">&#39;HISTORY_USAGE&#39;</span><span class="p">,</span>
+                      <span class="n">report_specifier_id</span><span class="o">=</span><span class="s1">&#39;AmpereHistory&#39;</span><span class="p">,</span>
+                      <span class="n">resource_id</span><span class="o">=</span><span class="s1">&#39;Device001&#39;</span><span class="p">,</span>
+                      <span class="n">measurement</span><span class="o">=</span><span class="s1">&#39;current&#39;</span>
+                      <span class="n">sampling_rate</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">10</span><span class="p">),</span>
+                      <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;A&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Note that you have to override the default <code class="docutils literal notranslate"><span class="pre">report_name</span></code> compared to the previous examples.</p>
+</div>
+</div>
+<div class="section" id="requesting-reports-vtn-to-ven">
+<h2>Requesting Reports (VTN to VEN)<a class="headerlink" href="#requesting-reports-vtn-to-ven" title="Permalink to this headline">¶</a></h2>
+<p>The VTN will receive an <code class="docutils literal notranslate"><span class="pre">oadrRegisterReport</span></code> message. Your handler <code class="docutils literal notranslate"><span class="pre">on_register_report</span></code> will be called for each report that is offered. You inspect the report description and decide which elements from the report you wish to receive.</p>
+<div class="section" id="using-the-compact-format">
+<h3>Using the compact format<a class="headerlink" href="#using-the-compact-format" title="Permalink to this headline">¶</a></h3>
+<p>The compact format provides an abstraction over the actual encapsulation of reports. If your <code class="docutils literal notranslate"><span class="pre">on_register_report</span></code> handler has the following signature, if will be called using the simple format:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span> <span class="nf">on_register_report</span><span class="p">(</span><span class="n">resource_id</span><span class="p">,</span> <span class="n">measurement</span><span class="p">,</span> <span class="n">unit</span><span class="p">,</span> <span class="n">scale</span><span class="p">,</span>
+                             <span class="n">min_sampling_rate</span><span class="p">,</span> <span class="n">max_sampling_rate</span><span class="p">):</span>
+    <span class="c1"># This</span>
+    <span class="k">if</span> <span class="n">want_report</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">callback</span><span class="p">,</span> <span class="n">sampling_interval</span><span class="p">,</span> <span class="n">report_interval</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">callback</span></code> refers to a function or coroutine that will be called when data is received.
+The <code class="docutils literal notranslate"><span class="pre">sampling_interval</span></code> is a <code class="docutils literal notranslate"><span class="pre">timedelta</span></code> object that contains the interval at which data is sampled by the client.
+The <code class="docutils literal notranslate"><span class="pre">report_interval</span></code> is optional, and contains a <code class="docutils literal notranslate"><span class="pre">timedelta</span></code> object that indicates how often you want to receive a report. If you don’t specify a <code class="docutils literal notranslate"><span class="pre">report_interval</span></code>, you will receive each report immediately after it is sampled.</p>
+<p>This mechanism allows you to specify, for instance, that you want to receive 15-minute sampled values every 24 hours.</p>
+<p>For more information on the design of your callback function, see the <span class="xref std std-ref">receiving_reports</span> section below.</p>
+</div>
+<div class="section" id="using-the-full-format">
+<h3>Using the full format<a class="headerlink" href="#using-the-full-format" title="Permalink to this headline">¶</a></h3>
+<p>If you want full control over the reporting specification, you implement an <code class="docutils literal notranslate"><span class="pre">on_register_report</span></code> handler with the following signature:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span> <span class="nf">on_register_report</span><span class="p">(</span><span class="n">report</span><span class="p">):</span>
+    <span class="c1"># For each report description (identified by their r_id)</span>
+    <span class="c1"># you want to received, return a callback and sampling rate</span>
+
+    <span class="k">return</span> <span class="p">[(</span><span class="n">callback_1</span><span class="p">,</span> <span class="n">r_id_1</span><span class="p">,</span> <span class="n">sampling_rate_1</span><span class="p">),</span>
+            <span class="p">(</span><span class="n">callback_2</span><span class="p">,</span> <span class="n">r_id_2</span><span class="p">,</span> <span class="n">sampling_rate_2</span><span class="p">)]</span>
+</pre></div>
+</div>
+<p>The Report object that you have to inspect looks like this:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;report_specifier_id&#39;</span><span class="p">:</span> <span class="s1">&#39;AmpereHistory&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;report_name&#39;</span><span class="p">:</span> <span class="s1">&#39;METADATA_TELEMETRY_USAGE&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;report_descriptions&#39;</span><span class="p">:</span> <span class="p">[</span>
+
+        <span class="p">{</span><span class="s1">&#39;r_id&#39;</span><span class="p">:</span> <span class="s1">&#39;abc346-de6255-2345&#39;</span><span class="p">,</span>
+         <span class="s1">&#39;report_type&#39;</span><span class="p">:</span> <span class="s1">&#39;READING&#39;</span><span class="p">,</span>
+         <span class="s1">&#39;reading_type&#39;</span><span class="p">:</span> <span class="s1">&#39;DIRECT_READ&#39;</span><span class="p">,</span>
+         <span class="s1">&#39;report_subject&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;resource_ids&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Device001&#39;</span><span class="p">]},</span>
+         <span class="s1">&#39;report_data_source&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;resource_ids&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Device001&#39;</span><span class="p">]},</span>
+         <span class="s1">&#39;sampling_rate&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;min_period&#39;</span><span class="p">:</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">10</span><span class="p">),</span>
+                           <span class="s1">&#39;max_period&#39;</span><span class="p">:</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">15</span><span class="p">),</span>
+                           <span class="s1">&#39;on_change&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">},</span>
+         <span class="s1">&#39;measurement&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;item_name&#39;</span><span class="p">:</span> <span class="s1">&#39;current&#39;</span><span class="p">,</span>
+                         <span class="s1">&#39;item_description&#39;</span><span class="p">:</span> <span class="s1">&#39;Current&#39;</span><span class="p">,</span>
+                         <span class="s1">&#39;item_units&#39;</span><span class="p">:</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span>
+                         <span class="s1">&#39;si_scale_code&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span>
+
+        <span class="p">{</span><span class="s1">&#39;r_id&#39;</span><span class="p">:</span> <span class="s1">&#39;d2e352-126ae2-1723&#39;</span><span class="p">,</span>
+         <span class="s1">&#39;report_type&#39;</span><span class="p">:</span> <span class="s1">&#39;READING&#39;</span><span class="p">,</span>
+         <span class="s1">&#39;reading_type&#39;</span><span class="p">:</span> <span class="s1">&#39;DIRECT_READ&#39;</span><span class="p">,</span>
+         <span class="s1">&#39;report_subject&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;resource_ids&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Device002&#39;</span><span class="p">]},</span>
+         <span class="s1">&#39;report_data_source&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;resource_ids&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Device002&#39;</span><span class="p">]},</span>
+         <span class="s1">&#39;sampling_rate&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;min_period&#39;</span><span class="p">:</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">10</span><span class="p">),</span>
+                           <span class="s1">&#39;max_period&#39;</span><span class="p">:</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">15</span><span class="p">),</span>
+                           <span class="s1">&#39;on_change&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">},</span>
+         <span class="s1">&#39;measurement&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;item_name&#39;</span><span class="p">:</span> <span class="s1">&#39;current&#39;</span><span class="p">,</span>
+                         <span class="s1">&#39;item_description&#39;</span><span class="p">:</span> <span class="s1">&#39;Current&#39;</span><span class="p">,</span>
+                         <span class="s1">&#39;item_units&#39;</span><span class="p">:</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span>
+                         <span class="s1">&#39;si_scale_code&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
+
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">report_name</span></code> property of a report gets prefixed with <code class="docutils literal notranslate"><span class="pre">METADATA_</span></code> during the <code class="docutils literal notranslate"><span class="pre">register_report</span></code> step. This indicates that it is a report without any data. Once you get the actual reports, the <code class="docutils literal notranslate"><span class="pre">METADATA_</span></code> prefix will not be there.</p>
+</div>
+<p>Your handler should read this, and make the following choices:</p>
 <ul class="simple">
-<li><p>The reportName: usually one of the predefined names</p></li>
-<li><p>The reportSpecifierID: an ID that the VEN assigns to the report</p></li>
-<li><p>One or more rIDs: each rIDs refers to a specific data-type in the report</p></li>
-<li><p>A reportRequestID: the ID that the VEN assigns to the request for a specific report’s rID.</p></li>
+<li><p>Which of these reports, specified by their <code class="docutils literal notranslate"><span class="pre">r_id</span></code>, do I want?</p></li>
+<li><p>At which sampling rate? In other words: how often should the data be sampled from the device?</p></li>
+<li><p>At which reporting interval? In other words: how ofter should the collected data be packed up and sent to me?</p></li>
+<li><p>Which callback should be called when I receive a new report?</p></li>
 </ul>
-<p>A report offering from the VEN contains:</p>
+<p>Your <code class="docutils literal notranslate"><span class="pre">on_register_report</span></code> handler thus looks something like this:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">openleadr</span>
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">store_data</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function that stores data from the report.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">on_register_report</span><span class="p">(</span><span class="n">resource_id</span><span class="p">,</span> <span class="n">measurement</span><span class="p">,</span> <span class="n">unit</span><span class="p">,</span> <span class="n">scale</span><span class="p">,</span> <span class="n">min_sampling_period</span><span class="p">,</span> <span class="n">max_sampling_period</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This is called for every measurement that the VEN is offering as a telemetry report.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">measurement</span> <span class="o">==</span> <span class="s1">&#39;Voltage&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">store_data</span><span class="p">,</span> <span class="n">min_sampling_period</span>
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">server</span> <span class="o">=</span> <span class="n">openleadr</span><span class="o">.</span><span class="n">OpenADRServer</span><span class="p">(</span><span class="n">vtn_id</span><span class="o">=</span><span class="s1">&#39;myvtn&#39;</span><span class="p">)</span>
+    <span class="n">server</span><span class="o">.</span><span class="n">add_handler</span><span class="p">(</span><span class="s1">&#39;on_register_report&#39;</span><span class="p">,</span> <span class="n">on_register_report</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Your <code class="docutils literal notranslate"><span class="pre">store_data</span></code> handler will be called with the contents of each report as it comes in.</p>
+<p>You have two options for receiving the data:</p>
+<ol class="arabic simple">
+<li><p>Receive the entire oadrReport dict that contains the values as we receive it.</p></li>
+<li><p>Receive only the r_id and an iterable of <code class="docutils literal notranslate"><span class="pre">(datetime.datetime,</span> <span class="pre">value)</span></code> tuples for you to deal with.</p></li>
+</ol>
+</div>
+</div>
+<div class="section" id="delivering-reports-ven-to-vtn">
+<h2>Delivering Reports (VEN to VTN)<a class="headerlink" href="#delivering-reports-ven-to-vtn" title="Permalink to this headline">¶</a></h2>
+<p>Report values will be automatically collected by running your provided callbacks. They are automatically packed up and sent to the VTN at the requested interval.</p>
+<p>Your callbacks should return either a single value, representing the most up-to-date reading,
+or a list of <code class="docutils literal notranslate"><span class="pre">(datetime.datetime,</span> <span class="pre">value)</span></code> tuples. This last type is useful when providing historic reports.</p>
+<p>This was already described in the previous section on this page.</p>
+</div>
+<div class="section" id="receiving-reports-vtn">
+<h2>Receiving Reports (VTN)<a class="headerlink" href="#receiving-reports-vtn" title="Permalink to this headline">¶</a></h2>
+<p>When the VEN delivers a report that you asked for, your handlers will be called to deal with it.</p>
+<p>Instead of giving you the full Report object, your handler will receive the iterable of <code class="docutils literal notranslate"><span class="pre">(datetime.datetime,</span> <span class="pre">value)</span></code> tuples.</p>
+<p>If your callback needs to know other metadata properties at runtime, you should add those as default arguments during the request report phase. For instance:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">receive_data</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">resource_id</span><span class="p">,</span> <span class="n">measurement</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">timestamp</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+        <span class="k">await</span> <span class="n">database</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;INSERT INTO metervalues (resource_id, measurement, timestamp, value)</span>
+<span class="s2">                                     VALUES (</span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2">)&quot;&quot;&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">resource_id</span><span class="p">,</span> <span class="n">measurement</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span>
+
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">on_register_report</span><span class="p">(</span><span class="n">resource_id</span><span class="p">,</span> <span class="n">measurement</span><span class="p">,</span> <span class="n">unit</span><span class="p">,</span> <span class="n">scale</span><span class="p">,</span> <span class="n">min_sampling_rate</span><span class="p">,</span> <span class="n">max_sampling_rate</span><span class="p">):</span>
+    <span class="n">prepared_callback</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">receive_data</span><span class="p">,</span> <span class="n">resource_id</span><span class="o">=</span><span class="n">resource_id</span><span class="p">,</span> <span class="n">measurement</span><span class="o">=</span><span class="n">measurement</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">callback</span><span class="p">,</span> <span class="n">min_sampling_rate</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">partial</span></code> function creates a version of your callback with default parameters filled in.</p>
+</div>
+<div class="section" id="identifying-a-data-stream">
+<h2>Identifying a data stream<a class="headerlink" href="#identifying-a-data-stream" title="Permalink to this headline">¶</a></h2>
+<p>Reports in OpenADR carry with them the following identifiers:</p>
 <ul class="simple">
-<li><p>reportName</p></li>
-<li><p>reportSpecifierID</p></li>
-<li><p>rID (+)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">reportSpecifierID</span></code>: the id that the VEN assigns to this report</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rID</span></code>: the id that the VEN assigns to a specific data stream in the report</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">reportRequestID</span></code>: the id that the VTN assigns to its request of a report</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">reportID</span></code>: the id that the VEN assigns to a single copy of a report</p></li>
 </ul>
-<p>A report request from the VTN contains:</p>
-<ul class="simple">
-<li><p>rID</p></li>
-<li><p>reportRequestID</p></li>
-</ul>
-<p>A report that is delivered to the VTN contains:</p>
-<ul class="simple">
-<li><p>rID</p></li>
-<li><p>reportRequestId</p></li>
-</ul>
+<p>The <code class="docutils literal notranslate"><span class="pre">rID</span></code> is the most specific identifier of a data stream. The <code class="docutils literal notranslate"><span class="pre">rID</span></code> is part of the <code class="docutils literal notranslate"><span class="pre">oadrReportDescription</span></code>, along with information like the measurement type, unit, and the <code class="docutils literal notranslate"><span class="pre">resourceID</span></code>.</p>
 </div>
 </div>
 
@@ -92,12 +340,21 @@
 
 
 <h3>Navigation</h3>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="features.html">Feature Tour</a></li>
 <li class="toctree-l1"><a class="reference internal" href="openadr.html">OpenADR Basics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="client.html">Client</a></li>
 <li class="toctree-l1"><a class="reference internal" href="server.html">Server</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Ready-to-Run Examples</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Reporting</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#a-brief-overview-of-reports-in-openadr">A brief overview of reports in OpenADR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#offering-reports-ven-to-vtn">Offering reports (VEN to VTN)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#requesting-reports-vtn-to-ven">Requesting Reports (VTN to VEN)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#delivering-reports-ven-to-vtn">Delivering Reports (VEN to VTN)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#receiving-reports-vtn">Receiving Reports (VTN)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#identifying-a-data-stream">Identifying a data stream</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="logging.html">Logging</a></li>
 <li class="toctree-l1"><a class="reference internal" href="representations.html">Payload Representations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="message_signing.html">Message Signing</a></li>
@@ -109,6 +366,8 @@
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="examples.html" title="previous chapter">Ready-to-Run Examples</a></li>
+      <li>Next: <a href="logging.html" title="next chapter">Logging</a></li>
   </ul></li>
 </ul>
 </div>
