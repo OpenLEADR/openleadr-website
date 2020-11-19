@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Project Roadmap &#8212; OpenLEADR 0.5.0 documentation</title>
+    <title>Project Roadmap &#8212; OpenLEADR 0.5.2 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/css/custom.css" />
@@ -36,7 +36,7 @@
             
   <div class="section" id="project-roadmap">
 <span id="roadmap"></span><h1>Project Roadmap<a class="headerlink" href="#project-roadmap" title="Permalink to this headline">¶</a></h1>
-<p>OpenLEADR is under development. The current version is 0.5.0.</p>
+<p>OpenLEADR is under development. The current version is 0.5.2.</p>
 <div class="section" id="upcoming-releases">
 <h2>Upcoming releases<a class="headerlink" href="#upcoming-releases" title="Permalink to this headline">¶</a></h2>
 <table class="docutils align-default">
@@ -48,21 +48,13 @@
 <thead>
 <tr class="row-odd"><th class="head"><p>Version</p></th>
 <th class="head"><p>Main features</p></th>
-<th class="head"><p>Target date</p></th>
+<th class="head"><p>Target timeframe</p></th>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>0.4.0</p></td>
-<td><p>Implement XML message signing</p></td>
-<td><p>September 15th, 2020</p></td>
-</tr>
-<tr class="row-odd"><td><p>0.5.0</p></td>
-<td><p>Implement reporting</p></td>
-<td><p>November 1st, 2020</p></td>
-</tr>
 <tr class="row-even"><td><p>0.6.0</p></td>
 <td><p>Implement XMPP transport</p></td>
-<td><p>December 1st, 2020</p></td>
+<td><p>Januari 2020</p></td>
 </tr>
 <tr class="row-odd"><td><p>1.0.0</p></td>
 <td><p>Certification by OpenADR Alliance</p></td>
@@ -70,6 +62,56 @@
 </tr>
 </tbody>
 </table>
+</div>
+<div class="section" id="changelog">
+<h2>Changelog<a class="headerlink" href="#changelog" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="openleadr-0-5-2">
+<h3>openleadr 0.5.2<a class="headerlink" href="#openleadr-0-5-2" title="Permalink to this headline">¶</a></h3>
+<p>Released: 19 november 2020</p>
+<p>Bug fixes:</p>
+<ul class="simple">
+<li><p>The ‘full’ report data collection mode now works correctly</p></li>
+<li><p>Various codestyle improvements and cleanup</p></li>
+</ul>
+<p>Known issues:</p>
+<ul class="simple">
+<li><p>The support for out-of-schema measurements in repors has been removed, because they would not pass XML validation. We are exploring solutions to this problem. Track the progress here: <a class="reference external" href="https://github.com/OpenLEADR/openleadr-python/issues/20">Issue #20</a></p></li>
+</ul>
+</div>
+<div class="section" id="openleadr-0-5-1">
+<h3>openleadr 0.5.1<a class="headerlink" href="#openleadr-0-5-1" title="Permalink to this headline">¶</a></h3>
+<p>Released: 19 november 2020</p>
+<p>New features:</p>
+<ul class="simple">
+<li><p>When using SSL connections, the client will provide server side SSL certificates. The VTN will verify the fingerprint of these certificates against the known fingerprint for that ven. This should complete the VEN authentication process.</p></li>
+</ul>
+<p>Bug fixes:</p>
+<ul class="simple">
+<li><p>Report messages now validate according to the XML schema. A few corrections were made to the templates from version 0.5.0.</p></li>
+</ul>
+<p>Known issues:</p>
+<ul class="simple">
+<li><p>The support for out-of-schema measurements in repors has been removed, because they would not pass XML validation. We are exploring solutions to this problem. Track the progress here: <a class="reference external" href="https://github.com/OpenLEADR/openleadr-python/issues/20">Issue #20</a></p></li>
+</ul>
+</div>
+<div class="section" id="openleadr-0-5-0">
+<h3>openleadr 0.5.0<a class="headerlink" href="#openleadr-0-5-0" title="Permalink to this headline">¶</a></h3>
+<p>Released: 16 november 2020</p>
+<p>First release to pypi.org.</p>
+<p>New features:</p>
+<ul class="simple">
+<li><p>This release implements reporting functionality into the client and the server. This is a major new area of functionality for OpenLEADR.</p></li>
+</ul>
+</div>
+<div class="section" id="openleadr-0-4-0">
+<h3>openleadr 0.4.0<a class="headerlink" href="#openleadr-0-4-0" title="Permalink to this headline">¶</a></h3>
+<p>Released: 16 november 2020</p>
+<p>Only released to git.</p>
+<p>New features:</p>
+<ul class="simple">
+<li><p>This release implements XML Message Signing for client and servers.</p></li>
+</ul>
+</div>
 </div>
 </div>
 
@@ -105,6 +147,7 @@
 <li class="toctree-l1"><a class="reference internal" href="message_signing.html">Message Signing</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Project Roadmap</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#upcoming-releases">Upcoming releases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#changelog">Changelog</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="api/modules.html">API Reference</a></li>

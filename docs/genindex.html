@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Index &#8212; OpenLEADR 0.5.0 documentation</title>
+    <title>Index &#8212; OpenLEADR 0.5.2 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/css/custom.css" />
@@ -71,6 +71,8 @@
 </li>
       <li><a href="api/openleadr.html#openleadr.enums.EVENT_STATUS.ACTIVE">ACTIVE (openleadr.enums.EVENT_STATUS attribute)</a>
 </li>
+      <li><a href="api/openleadr.html#openleadr.enums.MEASUREMENTS.ACTIVE_ENERGY">ACTIVE_ENERGY (openleadr.enums.MEASUREMENTS attribute)</a>
+</li>
       <li><a href="api/openleadr.html#openleadr.objects.Event.active_period">active_period (openleadr.objects.Event attribute)</a>
 </li>
       <li><a href="api/openleadr.html#openleadr.enums.MEASUREMENTS.ACTIVE_POWER">ACTIVE_POWER (openleadr.enums.MEASUREMENTS attribute)</a>
@@ -97,7 +99,11 @@
 </li>
       <li><a href="api/openleadr.html#openleadr.enums.READING_TYPE.ALLOCATED">ALLOCATED (openleadr.enums.READING_TYPE attribute)</a>
 </li>
+      <li><a href="api/openleadr.html#openleadr.enums.MEASUREMENTS.APPARENT_ENERGY">APPARENT_ENERGY (openleadr.enums.MEASUREMENTS attribute)</a>
+</li>
       <li><a href="api/openleadr.html#openleadr.enums.MEASUREMENTS.APPARENT_POWER">APPARENT_POWER (openleadr.enums.MEASUREMENTS attribute)</a>
+</li>
+      <li><a href="api/openleadr.html#openleadr.messaging.authenticate_message">authenticate_message() (in module openleadr.messaging)</a>
 </li>
       <li><a href="api/openleadr.html#openleadr.enums.REPORT_TYPE.AVAILABLE_ENERGY_STORAGE">AVAILABLE_ENERGY_STORAGE (openleadr.enums.REPORT_TYPE attribute)</a>
 </li>
@@ -139,20 +145,24 @@
 </li>
       <li><a href="api/openleadr.html#openleadr.utils.certificate_fingerprint">certificate_fingerprint() (in module openleadr.utils)</a>
 </li>
+      <li><a href="api/openleadr.html#openleadr.utils.certificate_fingerprint_from_der">certificate_fingerprint_from_der() (in module openleadr.utils)</a>
+</li>
       <li><a href="api/openleadr.html#openleadr.enums.SIGNAL_NAME.CHARGE_STATE">CHARGE_STATE (openleadr.enums.SIGNAL_NAME attribute)</a>
 </li>
       <li><a href="api/openleadr.html#openleadr.enums.EVENT_STATUS.COMPLETED">COMPLETED (openleadr.enums.EVENT_STATUS attribute)</a>
 </li>
       <li><a href="api/openleadr.html#openleadr.enums.STATUS_CODES.COMPLIANCE_ERROR">COMPLIANCE_ERROR (openleadr.enums.STATUS_CODES attribute)</a>
 </li>
+      <li><a href="api/openleadr.html#openleadr.errors.ComplianceError">ComplianceError</a>
+</li>
       <li><a href="api/openleadr.html#openleadr.objects.ReportPayload.confidence">confidence (openleadr.objects.ReportPayload attribute)</a>
 </li>
       <li><a href="api/openleadr.html#openleadr.enums.READING_TYPE.CONTRACT">CONTRACT (openleadr.enums.READING_TYPE attribute)</a>
 </li>
-      <li><a href="api/openleadr.html#openleadr.messaging.create_message">create_message() (in module openleadr.messaging)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/openleadr.html#openleadr.messaging.create_message">create_message() (in module openleadr.messaging)</a>
+</li>
       <li><a href="api/openleadr.html#openleadr.client.OpenADRClient.create_party_registration">create_party_registration() (openleadr.client.OpenADRClient method)</a>
 </li>
       <li><a href="api/openleadr.html#openleadr.client.OpenADRClient.create_report">create_report() (openleadr.client.OpenADRClient method)</a>
@@ -174,8 +184,6 @@
       <li><a href="api/openleadr.html#openleadr.enums.MEASUREMENTS.CURRENCY_PER_KWH">CURRENCY_PER_KWH (openleadr.enums.MEASUREMENTS attribute)</a>
 </li>
       <li><a href="api/openleadr.html#openleadr.enums.MEASUREMENTS.CURRENCY_PER_THERM">CURRENCY_PER_THERM (openleadr.enums.MEASUREMENTS attribute)</a>
-</li>
-      <li><a href="api/openleadr.html#openleadr.enums.MEASUREMENTS.CURRENT">CURRENT (openleadr.enums.MEASUREMENTS attribute)</a>
 </li>
       <li><a href="api/openleadr.html#openleadr.objects.EventSignal.current_value">current_value (openleadr.objects.EventSignal attribute)</a>
 </li>
@@ -205,10 +213,12 @@
 </li>
       <li><a href="api/openleadr.html#openleadr.enums.STATUS_CODES.DEPLOYMENT_ERROR_OTHER">DEPLOYMENT_ERROR_OTHER (openleadr.enums.STATUS_CODES attribute)</a>
 </li>
-      <li><a href="api/openleadr.html#openleadr.enums.READING_TYPE.DERIVED">DERIVED (openleadr.enums.READING_TYPE attribute)</a>
+      <li><a href="api/openleadr.html#openleadr.errors.DeploymentError">DeploymentError</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/openleadr.html#openleadr.enums.READING_TYPE.DERIVED">DERIVED (openleadr.enums.READING_TYPE attribute)</a>
+</li>
       <li><a href="api/openleadr.html#openleadr.enums.REPORT_TYPE.DEVIATION">DEVIATION (openleadr.enums.REPORT_TYPE attribute)</a>
 </li>
       <li><a href="api/openleadr.html#openleadr.enums.READING_TYPE.DIRECT_READ">DIRECT_READ (openleadr.enums.READING_TYPE attribute)</a>
@@ -319,10 +329,14 @@
 </li>
       <li><a href="api/openleadr.html#openleadr.utils.generate_id">generate_id() (in module openleadr.utils)</a>
 </li>
-      <li><a href="api/openleadr.html#openleadr.objects.ReportSpecifier.granularity">granularity (openleadr.objects.ReportSpecifier attribute)</a>
+      <li><a href="api/openleadr.html#openleadr.utils.get_cert_fingerprint_from_request">get_cert_fingerprint_from_request() (in module openleadr.utils)</a>
+</li>
+      <li><a href="api/openleadr.html#openleadr.utils.get_certificate_common_name">get_certificate_common_name() (in module openleadr.utils)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/openleadr.html#openleadr.objects.ReportSpecifier.granularity">granularity (openleadr.objects.ReportSpecifier attribute)</a>
+</li>
       <li><a href="api/openleadr.html#openleadr.utils.group_by">group_by() (in module openleadr.utils)</a>
 </li>
       <li><a href="api/openleadr.html#openleadr.objects.Target.group_id">group_id (openleadr.objects.Target attribute)</a>
@@ -339,11 +353,13 @@
 </li>
       <li><a href="api/openleadr.html#openleadr.enums.SECURITY_LEVEL.HIGH">HIGH (openleadr.enums.SECURITY_LEVEL attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/openleadr.html#openleadr.enums.REPORT_NAME.HISTORY_GREENBUTTON">HISTORY_GREENBUTTON (openleadr.enums.REPORT_NAME attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/openleadr.html#openleadr.enums.REPORT_NAME.HISTORY_USAGE">HISTORY_USAGE (openleadr.enums.REPORT_NAME attribute)</a>
+</li>
+      <li><a href="api/openleadr.html#openleadr.errors.HTTPError">HTTPError</a>
 </li>
       <li><a href="api/openleadr.html#openleadr.enums.READING_TYPE.HYBRID">HYBRID (openleadr.enums.READING_TYPE attribute)</a>
 </li>
@@ -365,11 +381,15 @@
         <li><a href="api/openleadr.html#openleadr.objects.Report.intervals">(openleadr.objects.Report attribute)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/openleadr.html#openleadr.enums.STATUS_CODES.INVALID_DATA">INVALID_DATA (openleadr.enums.STATUS_CODES attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/openleadr.html#openleadr.enums.STATUS_CODES.INVALID_ID">INVALID_ID (openleadr.enums.STATUS_CODES attribute)</a>
+</li>
+      <li><a href="api/openleadr.html#openleadr.errors.InvalidDataError">InvalidDataError</a>
+</li>
+      <li><a href="api/openleadr.html#openleadr.errors.InvalidIdError">InvalidIdError</a>
 </li>
       <li><a href="api/openleadr.html#openleadr.objects.Measurement.item_description">item_description (openleadr.objects.Measurement attribute)</a>
 </li>
@@ -516,12 +536,12 @@
         <li><a href="api/openleadr.html#openleadr.objects.ServiceLocation.node">(openleadr.objects.ServiceLocation attribute)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/openleadr.html#openleadr.enums.EVENT_STATUS.NONE">NONE (openleadr.enums.EVENT_STATUS attribute)</a>
 </li>
       <li><a href="api/openleadr.html#openleadr.enums.SI_SCALE_CODE.none">none (openleadr.enums.SI_SCALE_CODE attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/openleadr.html#openleadr.utils.normalize_dict">normalize_dict() (in module openleadr.utils)</a>
 </li>
       <li><a href="api/openleadr.html#openleadr.enums.STATUS_CODES.NOT_ALLOWED">NOT_ALLOWED (openleadr.enums.STATUS_CODES attribute)</a>
@@ -532,7 +552,13 @@
 </li>
       <li><a href="api/openleadr.html#openleadr.enums.STATUS_CODES.NOT_REGISTERED_OR_AUTHORIZED">NOT_REGISTERED_OR_AUTHORIZED (openleadr.enums.STATUS_CODES attribute)</a>
 </li>
+      <li><a href="api/openleadr.html#openleadr.errors.NotAllowedError">NotAllowedError</a>
+</li>
       <li><a href="api/openleadr.html#openleadr.objects.ActivePeriod.notification">notification (openleadr.objects.ActivePeriod attribute)</a>
+</li>
+      <li><a href="api/openleadr.html#openleadr.errors.NotRecognizedError">NotRecognizedError</a>
+</li>
+      <li><a href="api/openleadr.html#openleadr.errors.NotRegisteredOrAuthorizedError">NotRegisteredOrAuthorizedError</a>
 </li>
   </ul></td>
 </tr></table>
@@ -545,8 +571,6 @@
       <li><a href="api/openleadr.html#openleadr.client.OpenADRClient.on_event">on_event() (openleadr.client.OpenADRClient method)</a>
 </li>
       <li><a href="api/openleadr.html#openleadr.client.OpenADRClient">OpenADRClient (class in openleadr.client)</a>
-</li>
-      <li><a href="api/openleadr.html#openleadr.errors.OpenADRError">OpenADRError</a>
 </li>
       <li><a href="api/openleadr.html#openleadr.server.OpenADRServer">OpenADRServer (class in openleadr.server)</a>
 </li>
@@ -636,6 +660,8 @@
 </li>
       <li><a href="api/openleadr.html#openleadr.enums.OPT_REASON.OUTAGE_RUN_STATUS">OUTAGE_RUN_STATUS (openleadr.enums.OPT_REASON attribute)</a>
 </li>
+      <li><a href="api/openleadr.html#openleadr.errors.OutOfSequenceError">OutOfSequenceError</a>
+</li>
       <li><a href="api/openleadr.html#openleadr.enums.OPT_REASON.OVERRIDE_STATUS">OVERRIDE_STATUS (openleadr.enums.OPT_REASON attribute)</a>
 </li>
   </ul></td>
@@ -672,19 +698,25 @@
 </li>
       <li><a href="api/openleadr.html#openleadr.enums.REPORT_TYPE.PERCENT_USAGE">PERCENT_USAGE (openleadr.enums.REPORT_TYPE attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/openleadr.html#openleadr.objects.PNode">PNode (class in openleadr.objects)</a>
 </li>
       <li><a href="api/openleadr.html#openleadr.objects.TransportInterface.point_of_delivery">point_of_delivery (openleadr.objects.TransportInterface attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/openleadr.html#openleadr.objects.TransportInterface.point_of_receipt">point_of_receipt (openleadr.objects.TransportInterface attribute)</a>
 </li>
       <li><a href="api/openleadr.html#openleadr.client.OpenADRClient.poll">poll() (openleadr.client.OpenADRClient method)</a>
 </li>
+      <li><a href="api/openleadr.html#openleadr.enums.MEASUREMENTS.POWER_APPARENT">POWER_APPARENT (openleadr.enums.MEASUREMENTS attribute)</a>
+</li>
       <li><a href="api/openleadr.html#openleadr.objects.Measurement.power_attributes">power_attributes (openleadr.objects.Measurement attribute)</a>
 </li>
       <li><a href="api/openleadr.html#openleadr.enums.REPORT_TYPE.POWER_FACTOR">POWER_FACTOR (openleadr.enums.REPORT_TYPE attribute)</a>
+</li>
+      <li><a href="api/openleadr.html#openleadr.enums.MEASUREMENTS.POWER_REACTIVE">POWER_REACTIVE (openleadr.enums.MEASUREMENTS attribute)</a>
+</li>
+      <li><a href="api/openleadr.html#openleadr.enums.MEASUREMENTS.POWER_REAL">POWER_REAL (openleadr.enums.MEASUREMENTS attribute)</a>
 </li>
       <li><a href="api/openleadr.html#openleadr.objects.PowerAttributes">PowerAttributes (class in openleadr.objects)</a>
 </li>
@@ -703,6 +735,8 @@
       <li><a href="api/openleadr.html#openleadr.objects.EventDescriptor.priority">priority (openleadr.objects.EventDescriptor attribute)</a>
 </li>
       <li><a href="api/openleadr.html#openleadr.enums.READING_TYPE.PROJECTED">PROJECTED (openleadr.enums.READING_TYPE attribute)</a>
+</li>
+      <li><a href="api/openleadr.html#openleadr.errors.ProtocolError">ProtocolError</a>
 </li>
       <li><a href="api/openleadr.html#openleadr.enums.MEASUREMENTS.PULSE_COUNT">PULSE_COUNT (openleadr.enums.MEASUREMENTS attribute)</a>
 </li>
@@ -730,6 +764,8 @@
       </ul></li>
       <li><a href="api/openleadr.html#openleadr.objects.ActivePeriod.ramp_up">ramp_up (openleadr.objects.ActivePeriod attribute)</a>
 </li>
+      <li><a href="api/openleadr.html#openleadr.enums.MEASUREMENTS.REACTIVE_ENERGY">REACTIVE_ENERGY (openleadr.enums.MEASUREMENTS attribute)</a>
+</li>
       <li><a href="api/openleadr.html#openleadr.enums.MEASUREMENTS.REACTIVE_POWER">REACTIVE_POWER (openleadr.enums.MEASUREMENTS attribute)</a>
 </li>
       <li><a href="api/openleadr.html#openleadr.enums.REPORT_TYPE.READING">READING (openleadr.enums.REPORT_TYPE attribute)</a>
@@ -742,6 +778,10 @@
         <li><a href="api/openleadr.html#openleadr.objects.SpecifierPayload.reading_type">(openleadr.objects.SpecifierPayload attribute)</a>
 </li>
       </ul></li>
+      <li><a href="api/openleadr.html#openleadr.enums.MEASUREMENTS.REAL_ENERGY">REAL_ENERGY (openleadr.enums.MEASUREMENTS attribute)</a>
+</li>
+      <li><a href="api/openleadr.html#openleadr.enums.MEASUREMENTS.REAL_POWER">REAL_POWER (openleadr.enums.MEASUREMENTS attribute)</a>
+</li>
       <li><a href="api/openleadr.html#openleadr.objects.ActivePeriod.recovery">recovery (openleadr.objects.ActivePeriod attribute)</a>
 </li>
       <li><a href="api/openleadr.html#openleadr.client.OpenADRClient.register_reports">register_reports() (openleadr.client.OpenADRClient method)</a>
@@ -766,14 +806,14 @@
 </li>
       <li><a href="api/openleadr.html#openleadr.objects.ReportInterval.report_payload">report_payload (openleadr.objects.ReportInterval attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/openleadr.html#openleadr.objects.Report.report_request_id">report_request_id (openleadr.objects.Report attribute)</a>
 
       <ul>
         <li><a href="api/openleadr.html#openleadr.objects.ReportRequest.report_request_id">(openleadr.objects.ReportRequest attribute)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/openleadr.html#openleadr.objects.ReportRequest.report_specifier">report_specifier (openleadr.objects.ReportRequest attribute)</a>
 </li>
       <li><a href="api/openleadr.html#openleadr.objects.Report.report_specifier_id">report_specifier_id (openleadr.objects.Report attribute)</a>
@@ -791,6 +831,8 @@
       <li><a href="api/openleadr.html#openleadr.objects.ReportDescription">ReportDescription (class in openleadr.objects)</a>
 </li>
       <li><a href="api/openleadr.html#openleadr.objects.ReportInterval">ReportInterval (class in openleadr.objects)</a>
+</li>
+      <li><a href="api/openleadr.html#openleadr.errors.ReportNotSupportedError">ReportNotSupportedError</a>
 </li>
       <li><a href="api/openleadr.html#openleadr.objects.ReportPayload">ReportPayload (class in openleadr.objects)</a>
 </li>
@@ -856,10 +898,10 @@
 </li>
       <li><a href="api/openleadr.html#openleadr.objects.EventSignal.signal_id">signal_id (openleadr.objects.EventSignal attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/openleadr.html#openleadr.enums.SIGNAL_NAME">SIGNAL_NAME (class in openleadr.enums)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/openleadr.html#openleadr.objects.EventSignal.signal_name">signal_name (openleadr.objects.EventSignal attribute)</a>
 </li>
       <li><a href="api/openleadr.html#openleadr.enums.STATUS_CODES.SIGNAL_NOT_SUPPORTED">SIGNAL_NOT_SUPPORTED (openleadr.enums.STATUS_CODES attribute)</a>
@@ -869,6 +911,8 @@
       <li><a href="api/openleadr.html#openleadr.enums.SIGNAL_TYPE">SIGNAL_TYPE (class in openleadr.enums)</a>
 </li>
       <li><a href="api/openleadr.html#openleadr.objects.EventSignal.signal_type">signal_type (openleadr.objects.EventSignal attribute)</a>
+</li>
+      <li><a href="api/openleadr.html#openleadr.errors.SignalNotSupportedError">SignalNotSupportedError</a>
 </li>
       <li><a href="api/openleadr.html#openleadr.enums.SIGNAL_NAME.SIMPLE">SIMPLE (openleadr.enums.SIGNAL_NAME attribute)</a>
 </li>
@@ -905,6 +949,8 @@
       <li><a href="api/openleadr.html#openleadr.enums.REPORT_TYPE.TARGET_ENERGY_STORAGE">TARGET_ENERGY_STORAGE (openleadr.enums.REPORT_TYPE attribute)</a>
 </li>
       <li><a href="api/openleadr.html#openleadr.enums.STATUS_CODES.TARGET_MISMATCH">TARGET_MISMATCH (openleadr.enums.STATUS_CODES attribute)</a>
+</li>
+      <li><a href="api/openleadr.html#openleadr.errors.TargetMismatchError">TargetMismatchError</a>
 </li>
       <li><a href="api/openleadr.html#openleadr.objects.Event.targets">targets (openleadr.objects.Event attribute)</a>
 
@@ -954,14 +1000,18 @@
 <h2 id="V">V</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/openleadr.html#openleadr.messaging.validate_xml_schema">validate_xml_schema() (in module openleadr.messaging)</a>
+</li>
+      <li><a href="api/openleadr.html#openleadr.messaging.validate_xml_signature">validate_xml_signature() (in module openleadr.messaging)</a>
+</li>
       <li><a href="api/openleadr.html#openleadr.objects.ReportPayload.value">value (openleadr.objects.ReportPayload attribute)</a>
 </li>
       <li><a href="api/openleadr.html#openleadr.enums.Enum.values">values() (openleadr.enums.Enum property)</a>
 </li>
-      <li><a href="api/openleadr.html#openleadr.objects.Target.ven_id">ven_id (openleadr.objects.Target attribute)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/openleadr.html#openleadr.objects.Target.ven_id">ven_id (openleadr.objects.Target attribute)</a>
+</li>
       <li><a href="api/openleadr.html#openleadr.enums.MEASUREMENTS.VOLTAGE">VOLTAGE (openleadr.enums.MEASUREMENTS attribute)</a>
 </li>
       <li><a href="api/openleadr.html#openleadr.objects.PowerAttributes.voltage">voltage (openleadr.objects.PowerAttributes attribute)</a>
