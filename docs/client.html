@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Client &#8212; OpenLEADR 0.5.2 documentation</title>
+    <title>Client &#8212; OpenLEADR 0.5.11 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/css/custom.css" />
@@ -17,7 +17,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Server" href="server.html" />
-    <link rel="prev" title="OpenADR Basics" href="openadr.html" />
+    <link rel="prev" title="Feature Tour" href="features.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -49,38 +49,64 @@
 </ol>
 <p>After you evaluate all these properties, you have only one decision to make: Opt In or Opt Out. Your handler must return either the string <code class="docutils literal notranslate"><span class="pre">optIn</span></code> or <code class="docutils literal notranslate"><span class="pre">optOut</span></code>, and OpenLEADR will see to it that your response is correctly formatted for the server.</p>
 <p>Example implementation:</p>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">openadr</span> <span class="kn">import</span> <span class="n">OpenADRClient</span>
-
-<span class="k">async</span> <span class="k">def</span> <span class="nf">on_event</span><span class="p">(</span><span class="n">payload</span><span class="p">):</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span> <span class="nf">on_event</span><span class="p">(</span><span class="n">event</span><span class="p">):</span>
     <span class="c1"># Check if we can opt in to this event</span>
-    <span class="n">start_time</span> <span class="o">=</span> <span class="n">payload</span><span class="p">[</span><span class="s1">&#39;events&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;active_period&#39;</span><span class="p">][</span><span class="s1">&#39;dtstart&#39;</span><span class="p">]</span>
-    <span class="n">duration</span> <span class="o">=</span> <span class="n">payload</span><span class="p">[</span><span class="s1">&#39;events&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;active_period&#39;</span><span class="p">][</span><span class="s1">&#39;duration&#39;</span><span class="p">]</span>
-
-    <span class="k">await</span> <span class="n">can_we_do_this</span><span class="p">(</span><span class="n">from_time</span><span class="o">=</span><span class="n">payload</span><span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">])</span>
+    <span class="n">first_signal</span> <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="s1">&#39;event_signals&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">intervals</span> <span class="o">=</span> <span class="n">first_signal</span><span class="p">[</span><span class="s1">&#39;intervals&#39;</span><span class="p">]</span>
+    <span class="n">target</span> <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">]</span>
+    <span class="o">...</span>
     <span class="k">return</span> <span class="s1">&#39;optIn&#39;</span>
 </pre></div>
 </div>
+<p>An example event dict might look like this:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s1">&#39;event_id&#39;</span><span class="p">:</span> <span class="s1">&#39;123786-129831&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;active_period&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;dtstart&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2020</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">tzinfo</span><span class="o">=</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">),</span>
+                      <span class="s1">&#39;duration&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">30</span><span class="p">)}</span>
+    <span class="s1">&#39;event_signals&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;signal_name&#39;</span><span class="p">:</span> <span class="s1">&#39;simple&#39;</span><span class="p">,</span>
+                       <span class="s1">&#39;signal_type&#39;</span><span class="p">:</span> <span class="s1">&#39;level&#39;</span><span class="p">,</span>
+                       <span class="s1">&#39;intervals&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;dtstart&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2020</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">tzinfo</span><span class="o">=</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">),</span>
+                                      <span class="s1">&#39;duration&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">10</span><span class="p">),</span>
+                                      <span class="s1">&#39;signal_payload&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
+                                      <span class="p">{</span><span class="s1">&#39;dtstart&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2020</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">tzinfo</span><span class="o">=</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">),</span>
+                                      <span class="s1">&#39;duration&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">10</span><span class="p">),</span>
+                                      <span class="s1">&#39;signal_payload&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">},</span>
+                                      <span class="p">{</span><span class="s1">&#39;dtstart&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2020</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">tzinfo</span><span class="o">=</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">),</span>
+                                      <span class="s1">&#39;duration&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">10</span><span class="p">),</span>
+                                      <span class="s1">&#39;signal_payload&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}],</span>
+   <span class="s1">&#39;targets&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;resource_id&#39;</span><span class="p">:</span> <span class="s1">&#39;Device001&#39;</span><span class="p">}],</span>
+   <span class="s1">&#39;targets_by_type&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;resource_id&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Device001&#39;</span><span class="p">]}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Please note that you can access the targets in two ways, which may be useful if there are more than one target:</p>
+<ol class="arabic simple">
+<li><p>As a list of Target dicts</p></li>
+<li><p>As a dictionary of targets, grouped by target type.</p></li>
+</ol>
+<p>For example:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s1">&#39;event_id&#39;</span><span class="p">:</span> <span class="s1">&#39;event123&#39;</span><span class="p">,</span>
+    <span class="c1"># ...</span>
+    <span class="c1"># As a list of Target dicts</span>
+    <span class="s1">&#39;targets&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;resource_id&#39;</span><span class="p">:</span> <span class="s1">&#39;resource01&#39;</span><span class="p">},</span>
+                <span class="p">{</span><span class="s1">&#39;resource_id&#39;</span><span class="p">:</span> <span class="s1">&#39;resource02&#39;</span><span class="p">},</span>
+                <span class="p">{</span><span class="s1">&#39;group_id&#39;</span><span class="p">:</span> <span class="s1">&#39;group01&#39;</span><span class="p">},</span>
+                <span class="p">{</span><span class="s1">&#39;group_id&#39;</span><span class="p">:</span> <span class="s1">&#39;group02&#39;</span><span class="p">}],</span>
+    <span class="c1"># Grouped by target type</span>
+    <span class="s1">&#39;targets_by_type&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;resource_id&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;resource01&#39;</span><span class="p">,</span> <span class="s1">&#39;resource02&#39;</span><span class="p">],</span>
+                        <span class="s1">&#39;group_id&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;group01&#39;</span><span class="p">,</span> <span class="s1">&#39;group02&#39;</span><span class="p">]}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>It is up to you which you want to use.</p>
 </div>
 <div class="section" id="dealing-with-reports">
 <span id="client-reports"></span><h2>Dealing with Reports<a class="headerlink" href="#dealing-with-reports" title="Permalink to this headline">¶</a></h2>
-<p>The VTN Server will most like want to receive some reports like metering values or availability status from you.
-Providing reports
-—————–</p>
-<p>If you tell OpenLEADR what reports you are able to provide, and give it a handler that will retrieve those reports from your own systems, OpenLEADR will make sure that the server receives the reports it asks for and at the requested interval.</p>
-<p>For example: you can provide 15-minute meter readings for an energy meter at your site. You have a coroutine set up like this:</p>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span> <span class="nf">get_metervalue</span><span class="p">():</span>
-    <span class="n">current_value</span> <span class="o">=</span> <span class="k">await</span> <span class="n">meter</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-    <span class="k">return</span> <span class="n">current_value</span>
-</pre></div>
-</div>
-<p>And you configure this report in OpenLEADR using an <span class="xref std std-ref">oadrReportDescription</span> dict:</p>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
-    <span class="n">client</span> <span class="o">=</span> <span class="n">OpenADRClient</span><span class="p">(</span><span class="n">ven_name</span><span class="o">=</span><span class="s1">&#39;MyVEN&#39;</span><span class="p">,</span> <span class="n">vtn_url</span><span class="o">=</span><span class="s1">&#39;https://localhost:8080/&#39;</span><span class="p">)</span>
-    <span class="n">report_description</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;&#39;</span><span class="p">}</span>
-    <span class="n">client</span><span class="o">.</span><span class="n">add_report</span><span class="p">({</span><span class="s1">&#39;report&#39;</span><span class="p">})</span>
-</pre></div>
-</div>
-<p>The only thing you need to provide is the current value for the item you are reporting. OpenLEADR will format the complete <span class="xref std std-ref">oadrReport</span> message for you.</p>
+<p>The VTN Server will most likely want to receive some reports like metering values or availability status from you.</p>
+<p>You can easily add reporting capabilities to your OpenADRClient object using the <code class="docutils literal notranslate"><span class="pre">client.add_report</span></code> method. In this method, you supply a callback function that will retrieve the current value for that measurement, as well as the resource_id, the measurement (like ‘voltage’, ‘power’, ‘temperature’, et cetera), optionally a unit and scale, and a sampling rate at which you can support this metervalue.</p>
+<p>OpenLEADR will then offer this report to the VTN, and if they request this report from you, your callback function will automatically be called when needed.</p>
+<p>Please see the <a class="reference internal" href="reporting.html#reporting"><span class="std std-ref">Reporting</span></a> section for detailed information.</p>
 </div>
 <div class="section" id="signing-outgoing-messages">
 <span id="client-signing-messages"></span><h2>Signing outgoing messages<a class="headerlink" href="#signing-outgoing-messages" title="Permalink to this headline">¶</a></h2>
@@ -132,7 +158,6 @@ Providing reports
 <h3>Navigation</h3>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="features.html">Feature Tour</a></li>
-<li class="toctree-l1"><a class="reference internal" href="openadr.html">OpenADR Basics</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Client</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#dealing-with-events">Dealing with Events</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#dealing-with-reports">Dealing with Reports</a></li>
@@ -141,20 +166,19 @@ Providing reports
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="server.html">Server</a></li>
-<li class="toctree-l1"><a class="reference internal" href="examples.html">Ready-to-Run Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="reporting.html">Reporting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="logging.html">Logging</a></li>
-<li class="toctree-l1"><a class="reference internal" href="representations.html">Payload Representations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="message_signing.html">Message Signing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="roadmap.html">Project Roadmap</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api/modules.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="representations.html">Payload Representations</a></li>
 </ul>
 
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="openadr.html" title="previous chapter">OpenADR Basics</a></li>
+      <li>Previous: <a href="features.html" title="previous chapter">Feature Tour</a></li>
       <li>Next: <a href="server.html" title="next chapter">Server</a></li>
   </ul></li>
 </ul>

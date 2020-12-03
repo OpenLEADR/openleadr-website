@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Reporting &#8212; OpenLEADR 0.5.2 documentation</title>
+    <title>Reporting &#8212; OpenLEADR 0.5.11 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/css/custom.css" />
@@ -17,7 +17,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Logging" href="logging.html" />
-    <link rel="prev" title="Ready-to-Run Examples" href="examples.html" />
+    <link rel="prev" title="Server" href="server.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -35,7 +35,7 @@
           <div class="body" role="main">
             
   <div class="section" id="reporting">
-<h1>Reporting<a class="headerlink" href="#reporting" title="Permalink to this headline">¶</a></h1>
+<span id="id1"></span><h1>Reporting<a class="headerlink" href="#reporting" title="Permalink to this headline">¶</a></h1>
 <p>Your VEN can provide periodic reports to the VTN. These reports usually contain metering data or status information.</p>
 <div class="section" id="a-brief-overview-of-reports-in-openadr">
 <h2>A brief overview of reports in OpenADR<a class="headerlink" href="#a-brief-overview-of-reports-in-openadr" title="Permalink to this headline">¶</a></h2>
@@ -74,27 +74,27 @@
     <span class="n">client</span><span class="o">.</span><span class="n">add_report</span><span class="p">(</span><span class="n">callback</span><span class="o">=</span><span class="n">partial</span><span class="p">(</span><span class="n">read_current</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;Device001&#39;</span><span class="p">),</span>
                       <span class="n">report_specifier_id</span><span class="o">=</span><span class="s1">&#39;AmpereReport&#39;</span><span class="p">,</span>
                       <span class="n">resource_id</span><span class="o">=</span><span class="s1">&#39;Device001&#39;</span><span class="p">,</span>
-                      <span class="n">measurement</span><span class="o">=</span><span class="s1">&#39;current&#39;</span><span class="p">,</span>
+                      <span class="n">measurement</span><span class="o">=</span><span class="s1">&#39;Current&#39;</span><span class="p">,</span>
                       <span class="n">sampling_rate</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">10</span><span class="p">),</span>
                       <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;A&#39;</span><span class="p">)</span>
     <span class="n">client</span><span class="o">.</span><span class="n">add_report</span><span class="p">(</span><span class="n">callback</span><span class="o">=</span><span class="n">partial</span><span class="p">(</span><span class="n">read_current</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;Device002&#39;</span><span class="p">),</span>
                       <span class="n">report_specifier_id</span><span class="o">=</span><span class="s1">&#39;AmpereReport&#39;</span><span class="p">,</span>
                       <span class="n">resource_id</span><span class="o">=</span><span class="s1">&#39;Device002&#39;</span><span class="p">,</span>
-                      <span class="n">measurement</span><span class="o">=</span><span class="s1">&#39;current&#39;</span><span class="p">,</span>
+                      <span class="n">measurement</span><span class="o">=</span><span class="s1">&#39;Current&#39;</span><span class="p">,</span>
                       <span class="n">sampling_rate</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">10</span><span class="p">),</span>
                       <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;A&#39;</span><span class="p">)</span>
     <span class="n">client</span><span class="o">.</span><span class="n">add_report</span><span class="p">(</span><span class="n">callback</span><span class="o">=</span><span class="n">partial</span><span class="p">(</span><span class="n">read_voltage</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;Device001&#39;</span><span class="p">),</span>
                       <span class="n">report_specifier_id</span><span class="o">=</span><span class="s1">&#39;VoltageReport&#39;</span><span class="p">,</span>
                       <span class="n">resource_id</span><span class="o">=</span><span class="s1">&#39;Device001&#39;</span><span class="p">,</span>
-                      <span class="n">measurement</span><span class="o">=</span><span class="s1">&#39;current&#39;</span><span class="p">,</span>
+                      <span class="n">measurement</span><span class="o">=</span><span class="s1">&#39;Voltage&#39;</span><span class="p">,</span>
                       <span class="n">sampling_rate</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">10</span><span class="p">),</span>
-                      <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;A&#39;</span><span class="p">)</span>
+                      <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;V&#39;</span><span class="p">)</span>
     <span class="n">client</span><span class="o">.</span><span class="n">add_report</span><span class="p">(</span><span class="n">callback</span><span class="o">=</span><span class="n">partial</span><span class="p">(</span><span class="n">read_voltage</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;Device002&#39;</span><span class="p">),</span>
                       <span class="n">report_specifier_id</span><span class="o">=</span><span class="s1">&#39;VoltageReport&#39;</span><span class="p">,</span>
                       <span class="n">resource_id</span><span class="o">=</span><span class="s1">&#39;Device002&#39;</span><span class="p">,</span>
-                      <span class="n">measurement</span><span class="o">=</span><span class="s1">&#39;current&#39;</span><span class="p">,</span>
+                      <span class="n">measurement</span><span class="o">=</span><span class="s1">&#39;Voltage&#39;</span><span class="p">,</span>
                       <span class="n">sampling_rate</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">10</span><span class="p">),</span>
-                      <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;A&#39;</span><span class="p">)</span>
+                      <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;V&#39;</span><span class="p">)</span>
     <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 
 <span class="k">async</span> <span class="k">def</span> <span class="nf">read_voltage</span><span class="p">(</span><span class="n">device</span><span class="p">):</span>
@@ -116,8 +116,8 @@
 <p>If, instead, you already have a system where historic data can be extracted, and prefer to use that method instead, you can configure that as well.</p>
 <p>The two requirements for this kind of data collection are:</p>
 <ol class="arabic simple">
-<li><p>Your callback must accept arguments named <code class="docutils literal notranslate"><span class="pre">date_from</span></code>, <code class="docutils literal notranslate"><span class="pre">date_to</span></code> and <code class="docutils literal notranslate"><span class="pre">sampling_rate</span></code></p></li>
-<li><p>You must specify <code class="docutils literal notranslate"><span class="pre">data_collection_mode</span> <span class="pre">=</span> <span class="pre">'full'</span></code> when adding the report.</p></li>
+<li><p>Your callback must accept arguments named <code class="docutils literal notranslate"><span class="pre">date_from</span></code>, <code class="docutils literal notranslate"><span class="pre">date_to</span></code> and <code class="docutils literal notranslate"><span class="pre">sampling_interval</span></code></p></li>
+<li><p>You must specify <code class="docutils literal notranslate"><span class="pre">data_collection_mode='full'</span></code> when adding the report.</p></li>
 </ol>
 <p>Here’s an example:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">openleadr</span>
@@ -143,7 +143,13 @@
 <span class="s2">                                    GROUP BY dt</span>
 <span class="s2">                                    ORDER BY dt&quot;&quot;&quot;</span><span class="p">)</span>
     <span class="c1"># Pack the data into a list of (datetime, value) tuples</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="n">result</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()]</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+
+    <span class="c1"># data should look like:</span>
+    <span class="c1"># [(datetime.datetime(2020, 1, 1, 12, 0, 0), 10.0),</span>
+    <span class="c1">#  (datetime.datetime(2020, 1, 1, 12, 15, 0), 9.0),</span>
+    <span class="c1">#  (datetime.datetime(2020, 1, 1, 12, 30, 0), 11.0),</span>
+    <span class="c1">#  (datetime.datetime(2020, 1, 1, 12, 45, 0), 12.0)]</span>
     <span class="k">return</span> <span class="n">data</span>
 </pre></div>
 </div>
@@ -182,11 +188,12 @@
 <div class="section" id="using-the-compact-format">
 <h3>Using the compact format<a class="headerlink" href="#using-the-compact-format" title="Permalink to this headline">¶</a></h3>
 <p>The compact format provides an abstraction over the actual encapsulation of reports. If your <code class="docutils literal notranslate"><span class="pre">on_register_report</span></code> handler has the following signature, if will be called using the simple format:</p>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span> <span class="nf">on_register_report</span><span class="p">(</span><span class="n">resource_id</span><span class="p">,</span> <span class="n">measurement</span><span class="p">,</span> <span class="n">unit</span><span class="p">,</span> <span class="n">scale</span><span class="p">,</span>
-                             <span class="n">min_sampling_rate</span><span class="p">,</span> <span class="n">max_sampling_rate</span><span class="p">):</span>
-    <span class="c1"># This</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span> <span class="nf">on_register_report</span><span class="p">(</span><span class="n">ven_id</span><span class="p">,</span> <span class="n">resource_id</span><span class="p">,</span> <span class="n">measurement</span><span class="p">,</span> <span class="n">unit</span><span class="p">,</span> <span class="n">scale</span><span class="p">,</span>
+                             <span class="n">min_sampling_interval</span><span class="p">,</span> <span class="n">max_sampling_interval</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">want_report</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">(</span><span class="n">callback</span><span class="p">,</span> <span class="n">sampling_interval</span><span class="p">,</span> <span class="n">report_interval</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
 </pre></div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">callback</span></code> refers to a function or coroutine that will be called when data is received.
@@ -342,10 +349,8 @@ or a list of <code class="docutils literal notranslate"><span class="pre">(datet
 <h3>Navigation</h3>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="features.html">Feature Tour</a></li>
-<li class="toctree-l1"><a class="reference internal" href="openadr.html">OpenADR Basics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="client.html">Client</a></li>
 <li class="toctree-l1"><a class="reference internal" href="server.html">Server</a></li>
-<li class="toctree-l1"><a class="reference internal" href="examples.html">Ready-to-Run Examples</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Reporting</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#a-brief-overview-of-reports-in-openadr">A brief overview of reports in OpenADR</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#offering-reports-ven-to-vtn">Offering reports (VEN to VTN)</a></li>
@@ -356,17 +361,17 @@ or a list of <code class="docutils literal notranslate"><span class="pre">(datet
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="logging.html">Logging</a></li>
-<li class="toctree-l1"><a class="reference internal" href="representations.html">Payload Representations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="message_signing.html">Message Signing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="roadmap.html">Project Roadmap</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api/modules.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="representations.html">Payload Representations</a></li>
 </ul>
 
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="examples.html" title="previous chapter">Ready-to-Run Examples</a></li>
+      <li>Previous: <a href="server.html" title="previous chapter">Server</a></li>
       <li>Next: <a href="logging.html" title="next chapter">Logging</a></li>
   </ul></li>
 </ul>

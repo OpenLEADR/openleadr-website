@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Server &#8212; OpenLEADR 0.5.2 documentation</title>
+    <title>Server &#8212; OpenLEADR 0.5.11 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/css/custom.css" />
@@ -16,7 +16,7 @@
     <script src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Ready-to-Run Examples" href="examples.html" />
+    <link rel="next" title="Reporting" href="reporting.html" />
     <link rel="prev" title="Client" href="client.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -43,112 +43,117 @@
 <div class="admonition-implementation-checklist admonition">
 <p class="admonition-title">Implementation Checklist</p>
 <ol class="arabic simple">
-<li><p>Create a handler that decides what to do with new registrations, based on their <code class="docutils literal notranslate"><span class="pre">venID</span></code>.</p></li>
+<li><p>Create a handler that decides what to do with new registrations, based on their registration info.</p></li>
 </ol>
 </div>
 <p>The client will send a <a class="reference internal" href="representations.html#oadrqueryregistration"><span class="std std-ref">oadrQueryRegistration</span></a> message. The server will respond with a <a class="reference internal" href="representations.html#oadrcreatedpartyregistration"><span class="std std-ref">oadrCreatedPartyRegistration</span></a> message containing a list of its capabilities, notably the implemented OpenADR protocol versions and the available Transport Mechanisms (HTTP and/or XMPP).</p>
 <p>The client will then usually send a <a class="reference internal" href="representations.html#oadrcreatepartyregistration"><span class="std std-ref">oadrCreatePartyRegistration</span></a> message, in which it registers to a specific OpenADR version and Transport Method. The server must then decide what it wants to do with this registration.</p>
-<p>In the case that the registration is accepted, the VTN will generate a RegistrationID for this VEN and respond with a <a class="reference internal" href="representations.html#oadrcreatedpartyregistration"><span class="std std-ref">oadrCreatedPartyRegistration</span></a> message.</p>
-<p>In your application, when a VEN sends a <a class="reference internal" href="representations.html#oadrcreatepartyregistration"><span class="std std-ref">oadrCreatePartyRegistration</span></a> request, it will call your <code class="docutils literal notranslate"><span class="pre">on_register_party</span></code> handler. This handler must somehow look up what to do with this request, and respond with a <code class="docutils literal notranslate"><span class="pre">registration_id</span></code>.</p>
+<p>In the case that the registration is accepted, the VTN will generate a venID and a RegistrationID for this VEN and respond with a <a class="reference internal" href="representations.html#oadrcreatedpartyregistration"><span class="std std-ref">oadrCreatedPartyRegistration</span></a> message.</p>
+<p>In your application, when a VEN sends a <a class="reference internal" href="representations.html#oadrcreatepartyregistration"><span class="std std-ref">oadrCreatePartyRegistration</span></a> request, it will call your <code class="docutils literal notranslate"><span class="pre">on_create_party_registration</span></code> handler. This handler must somehow look up what to do with this request, and respond with a <code class="docutils literal notranslate"><span class="pre">ven_id,</span> <span class="pre">registration_id</span></code> tuple.</p>
 <p>Example implementation:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">openleadr.utils</span> <span class="kn">import</span> <span class="n">generate_id</span>
 
 <span class="k">async</span> <span class="k">def</span> <span class="nf">on_create_party_registration</span><span class="p">(</span><span class="n">payload</span><span class="p">):</span>
-    <span class="n">ven_id</span> <span class="o">=</span> <span class="n">payload</span><span class="p">[</span><span class="s1">&#39;ven_id&#39;</span><span class="p">]</span>
+    <span class="n">ven_name</span> <span class="o">=</span> <span class="n">payload</span><span class="p">[</span><span class="s1">&#39;ven_name&#39;</span><span class="p">]</span>
     <span class="c1"># Check whether or not this VEN is allowed to register</span>
     <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">database</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;SELECT COUNT(*)</span>
 <span class="s2">                                       FROM vens</span>
-<span class="s2">                                      WHERE ven_id = ?&quot;&quot;&quot;</span><span class="p">,</span>
-                                  <span class="p">(</span><span class="n">payload</span><span class="p">[</span><span class="s1">&#39;ven_id&#39;</span><span class="p">],))</span>
+<span class="s2">                                      WHERE ven_name = ?&quot;&quot;&quot;</span><span class="p">,</span>
+                                  <span class="p">(</span><span class="n">payload</span><span class="p">[</span><span class="s1">&#39;ven_name&#39;</span><span class="p">],))</span>
     <span class="k">if</span> <span class="n">result</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
         <span class="c1"># Generate an ID for this registration</span>
+        <span class="n">ven_id</span> <span class="o">=</span> <span class="n">generate_id</span><span class="p">()</span>
         <span class="n">registration_id</span> <span class="o">=</span> <span class="n">generate_id</span><span class="p">()</span>
 
         <span class="c1"># Store the registration in a database (pseudo-code)</span>
         <span class="k">await</span> <span class="n">database</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;UPDATE vens</span>
-<span class="s2">                                   SET registration_id = ?</span>
-<span class="s2">                                 WHERE ven_id = ?&quot;&quot;&quot;</span><span class="p">,</span>
-                             <span class="p">(</span><span class="n">registration_id</span><span class="p">,</span> <span class="n">ven_id</span><span class="p">))</span>
+<span class="s2">                                   SET ven_id = ?</span>
+<span class="s2">                                   registration_id = ?</span>
+<span class="s2">                                 WHERE ven_name = ?&quot;&quot;&quot;</span><span class="p">,</span>
+                             <span class="p">(</span><span class="n">ven_id</span><span class="p">,</span> <span class="n">registration_id</span><span class="p">,</span> <span class="n">ven_name</span><span class="p">))</span>
 
         <span class="c1"># Return the registration ID.</span>
         <span class="c1"># This will be put into the correct form by the OpenADRServer.</span>
-        <span class="k">return</span> <span class="n">registration_id</span>
+        <span class="k">return</span> <span class="n">ven_id</span><span class="p">,</span> <span class="n">registration_id</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="events">
 <span id="server-events"></span><h2>Events<a class="headerlink" href="#events" title="Permalink to this headline">¶</a></h2>
 <p>The server (VTN) is expected to know when it needs to inform the clients (VENs) of certain events that they must respond to. This could be a predicted shortage or overage of available power in a certain electricity grid area, for example.</p>
-<p>The VTN must determine when VENs are relevant and which Events to send to them. The next time the VEN polls for new messages (using a <a class="reference internal" href="representations.html#oadrpoll"><span class="std std-ref">oadrPoll</span></a> or <a class="reference internal" href="representations.html#oadrrequestevent"><span class="std std-ref">oadrRequestEvent</span></a> message), it will send the Event in a <a class="reference internal" href="representations.html#oadrdistributeevent"><span class="std std-ref">oadrDistributeEvent</span></a> message to the client. The client will then evaluate whether or not it indends to comply with the request, and respond with an <a class="reference internal" href="representations.html#oadrcreatedevent"><span class="std std-ref">oadrCreatedEvent</span></a> message containing an optStatus of <code class="docutils literal notranslate"><span class="pre">'optIn'</span></code> or <code class="docutils literal notranslate"><span class="pre">'optOut'</span></code>.</p>
-<div class="admonition-implementation-checklist admonition">
-<p class="admonition-title">Implementation Checklist</p>
-<p>In your application, the creation of Events is completely up to you. OpenLEADR will only call your <code class="docutils literal notranslate"><span class="pre">on_poll</span></code> handler with a <code class="docutils literal notranslate"><span class="pre">ven_id</span></code>. This handler must be able to either retrieve the next event for this VEN out of some storage or queue, or make up the Event in real time.</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">on_created_event(payload)</span></code> handler is called whenever the VEN sends an <a class="reference internal" href="representations.html#oadrcreatedevent"><span class="std std-ref">oadrCreatedEvent</span></a> message, probably informing you of what they intend to do with the event you gave them.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">on_request_event(ven_id)</span></code>: this should return the next event (if any) that you have for the VEN. If you return <code class="docutils literal notranslate"><span class="pre">None</span></code>, a blank <a class="reference internal" href="representations.html#oadrresponse"><span class="std std-ref">oadrResponse</span></a> will be returned to the VEN.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">on_request_report(ven_id)</span></code>: this should return then next report (if any) that you have for the VEN. If you return None, a blank <a class="reference internal" href="representations.html#oadrresponse"><span class="std std-ref">oadrResponse</span></a> will be returned to the VEN.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">on_poll(ven_id)</span></code>: this should return the next message in line, which is usually either a new <a class="reference internal" href="representations.html#oadrupdatedreport"><span class="std std-ref">oadrUpdatedReport</span></a> or a <a class="reference internal" href="representations.html#oadrdistributeevent"><span class="std std-ref">oadrDistributeEvent</span></a> message.</p></li>
-</ul>
+<p>The easiest way to supply events to a VEN is by using OpenLEADR’s built-in message queing system. You simply add an event for a ven using the <code class="docutils literal notranslate"><span class="pre">server.add_event</span></code> method. You supply the ven_id for which the event is required, as well as the <code class="docutils literal notranslate"><span class="pre">signal_name</span></code>, <code class="docutils literal notranslate"><span class="pre">signal_type</span></code>, <code class="docutils literal notranslate"><span class="pre">intervals</span></code> and <code class="docutils literal notranslate"><span class="pre">targets</span></code>. This will build an event object with a single signal for a VEN. If you need more flexibility, you can alternatively construct the event dictionary yourself and supply it directly to the <code class="docutils literal notranslate"><span class="pre">add_raw_event</span></code> method.</p>
+<p>The VEN can decide whether to opt in or opt out of the event. To be notified of their opt status, you supply a callback handler which will be called when the VEN has responded to the event request.</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">openleadr</span> <span class="kn">import</span> <span class="n">OpenADRServer</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timezzone</span>
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">event_callback</span><span class="p">(</span><span class="n">ven_id</span><span class="p">,</span> <span class="n">event_id</span><span class="p">,</span> <span class="n">opt_status</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;VEN </span><span class="si">{</span><span class="n">ven_id</span><span class="si">}</span><span class="s2"> responded </span><span class="si">{</span><span class="n">opt_status</span><span class="si">}</span><span class="s2"> to event </span><span class="si">{</span><span class="n">event_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">server</span> <span class="o">=</span> <span class="n">OpenADRServer</span><span class="p">(</span><span class="n">vtn_id</span><span class="o">=</span><span class="s1">&#39;myvtn&#39;</span><span class="p">)</span>
+<span class="n">server</span><span class="o">.</span><span class="n">add_event</span><span class="p">(</span><span class="n">ven_id</span><span class="o">=</span><span class="s1">&#39;ven123&#39;</span><span class="p">,</span>
+                 <span class="n">event_id</span><span class="o">=</span><span class="s1">&#39;event123&#39;</span><span class="p">,</span>
+                 <span class="n">signal_name</span><span class="o">=</span><span class="s1">&#39;simple&#39;</span><span class="p">,</span>
+                 <span class="n">signal_type</span><span class="o">=</span><span class="s1">&#39;level&#39;</span><span class="p">,</span>
+                 <span class="n">intervals</span><span class="o">=</span><span class="p">[{</span><span class="s1">&#39;dtstart&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="p">(</span><span class="mf">2020.</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">tzinfo</span><span class="o">=</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">),</span>
+                             <span class="s1">&#39;signal_payload&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
+                             <span class="p">{</span><span class="s1">&#39;dtstart&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="p">(</span><span class="mf">2020.</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">tzinfo</span><span class="o">=</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">),</span>
+                             <span class="s1">&#39;signal_payload&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}],</span>
+                 <span class="n">target</span><span class="o">=</span><span class="p">[{</span><span class="s1">&#39;resource_id&#39;</span><span class="p">:</span> <span class="s1">&#39;Device001&#39;</span><span class="p">}],</span>
+                 <span class="n">callback</span><span class="o">=</span><span class="n">partial</span><span class="p">(</span><span class="n">event_callback</span><span class="p">,</span> <span class="n">ven_id</span><span class="o">=</span><span class="s1">&#39;ven123&#39;</span><span class="p">,</span> <span class="n">event_id</span><span class="o">=</span><span class="s1">&#39;event123&#39;</span><span class="p">))</span>
+</pre></div>
 </div>
-<p>The Event consists of three main sections:</p>
-<ol class="arabic simple">
-<li><p>A time period for when this event is supposed to be active</p></li>
-<li><p>A list of Targets to which the Event applies. This can be the VEN as a whole, or specific groups, assets, geographic areas, et cetera that this VEN represents.</p></li>
-<li><p>A list of Signals, which form the content of the Event. This can be price signals, load reduction signals, et cetera. Each signal has a name, a type, multiple Intervals that contain the relative start times, and some payload value for the client to interpret.</p></li>
-</ol>
+<p>Alternatively, you can use the handy constructors in <code class="docutils literal notranslate"><span class="pre">openleadr.objects</span></code> to format parts of the event:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">openleadr</span> <span class="kn">import</span> <span class="n">OpenADRServer</span>
+<span class="kn">from</span> <span class="nn">openleadr.objects</span> <span class="kn">import</span> <span class="n">Target</span><span class="p">,</span> <span class="n">Interval</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timezone</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+
+<span class="n">server</span> <span class="o">=</span> <span class="n">OpenADRServer</span><span class="p">(</span><span class="n">vtn_id</span><span class="o">=</span><span class="s1">&#39;myvtn&#39;</span><span class="p">)</span>
+<span class="n">server</span><span class="o">.</span><span class="n">add_event</span><span class="p">(</span><span class="n">ven_id</span><span class="o">=</span><span class="s1">&#39;ven123&#39;</span><span class="p">,</span>
+                 <span class="n">event_id</span><span class="o">=</span><span class="s1">&#39;event123&#39;</span><span class="p">,</span>
+                 <span class="n">signal_name</span><span class="o">=</span><span class="s1">&#39;simple&#39;</span><span class="p">,</span>
+                 <span class="n">signal_type</span><span class="o">=</span><span class="s1">&#39;level&#39;</span><span class="p">,</span>
+                 <span class="n">intervals</span><span class="o">=</span><span class="p">[</span><span class="n">Interval</span><span class="p">(</span><span class="n">dtstart</span><span class="o">=</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2020</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">tzinfo</span><span class="o">=</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">),</span>
+                                     <span class="n">signal_payload</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
+                            <span class="n">Interval</span><span class="p">(</span><span class="n">dtstart</span><span class="o">=</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2020</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">tzinfo</span><span class="o">=</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">),</span>
+                                     <span class="n">signal_payload</span><span class="o">=</span><span class="mi">1</span><span class="p">)]</span>
+                 <span class="n">target</span><span class="o">=</span><span class="p">[</span><span class="n">Target</span><span class="p">(</span><span class="n">resource_id</span><span class="o">=</span><span class="s1">&#39;Device001&#39;</span><span class="p">)],</span>
+                 <span class="n">callback</span><span class="o">=</span><span class="n">partial</span><span class="p">(</span><span class="n">event_callback</span><span class="p">,</span> <span class="n">ven_id</span><span class="o">=</span><span class="s1">&#39;ven123&#39;</span><span class="p">,</span> <span class="n">event_id</span><span class="o">=</span><span class="s1">&#39;event123&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="section" id="a-word-on-event-targets">
+<h3>A word on event targets<a class="headerlink" href="#a-word-on-event-targets" title="Permalink to this headline">¶</a></h3>
+<p>The Target of your Event is an indication for the VEN which resources or devices should be affected. You can supply the target of the event in serveral ways:</p>
+<ul class="simple">
+<li><p>Assigning the <code class="docutils literal notranslate"><span class="pre">target</span></code> parameter with a single <code class="docutils literal notranslate"><span class="pre">objects.Target</span></code> object.</p></li>
+<li><p>Assigning the <code class="docutils literal notranslate"><span class="pre">targets</span></code> parameter with a list of <code class="docutils literal notranslate"><span class="pre">objects.Target</span></code> objects.</p></li>
+<li><p>Assigning the <code class="docutils literal notranslate"><span class="pre">targets_by_type</span></code> parameters with a dict, that lists targets grouped by their type, like this:</p></li>
+</ul>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">server</span><span class="o">.</span><span class="n">add_event</span><span class="p">(</span><span class="o">...</span>
+                 <span class="n">targets_by_type</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;resource_id&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;resource01&#39;</span><span class="p">,</span> <span class="s1">&#39;resource02&#39;</span><span class="p">],</span>
+                                  <span class="s1">&#39;group_id&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;group01&#39;</span><span class="p">,</span> <span class="s1">&#39;group02&#39;</span><span class="p">]}</span>
+                 <span class="p">)</span>
+</pre></div>
+</div>
+<p>If you dont assign any Target, the target will be set to the <code class="docutils literal notranslate"><span class="pre">ven_id</span></code> that you specified.</p>
+</div>
 </div>
 <div class="section" id="reports">
 <span id="server-reports"></span><h2>Reports<a class="headerlink" href="#reports" title="Permalink to this headline">¶</a></h2>
-<p>Reporting is probably the most complicated of interactions within OpenADR. It involves the following steps:</p>
-<ol class="arabic simple">
-<li><p>Party A makes its reporting capabilities known to party B using a <span class="xref std std-ref">oadrRegisterReport</span> message.</p></li>
-<li><p>Party B responds with an <a class="reference internal" href="representations.html#oadrregisteredreport"><span class="std std-ref">oadrRegisteredReport</span></a> message, optionally including an <span class="xref std std-ref">oadrReportRequest</span> section that tells party A which party B is interested in.</p></li>
-<li><p>Party A reponds with an oadrCreatedReport message telling party B that it will periodically generate the reports.</p></li>
-</ol>
-<p>This ceremony is performed once with the VTN as party A and once with the VEN as party A.</p>
-<p>The VEN party can collect the reports it requested from the VTN using either the <a class="reference internal" href="representations.html#oadrpoll"><span class="std std-ref">oadrPoll</span></a> or <span class="xref std std-ref">oadrRequestReport</span> messages. The VTN will respond with an <a class="reference internal" href="representations.html#oadrupdatereport"><span class="std std-ref">oadrUpdateReport</span></a> message containing the actual report. The VEN should then respond with a <a class="reference internal" href="representations.html#oadrupdatedreport"><span class="std std-ref">oadrUpdatedReport</span></a> message.</p>
-<p>The VEN should actively supply the reports to the VTN using <a class="reference internal" href="representations.html#oadrupdatereport"><span class="std std-ref">oadrUpdateReport</span></a> messages, to which the VTN will respond with <a class="reference internal" href="representations.html#oadrupdatedreport"><span class="std std-ref">oadrUpdatedReport</span></a> messages.</p>
-<div class="admonition-implementation-checklist admonition">
-<p class="admonition-title">Implementation Checklist</p>
-<p>To benefit from the automatic reporting engine in OpenLEADR, you should implement the following items yourself:</p>
-<ol class="arabic simple">
-<li><p>Configure the OpenADRServer() instance with your reporting capabilities and requirements</p></li>
-<li><p>Implement a handlers that can retrieve the reports from your backend system</p></li>
-<li><p>Implement a handler that deal with reports that come in from the clients</p></li>
-</ol>
-</div>
+<p>Please see the <a class="reference internal" href="reporting.html#reporting"><span class="std std-ref">Reporting</span></a> section.</p>
 </div>
 <div class="section" id="things-you-should-implement">
 <span id="server-implement"></span><h2>Things you should implement<a class="headerlink" href="#things-you-should-implement" title="Permalink to this headline">¶</a></h2>
 <p>You should implement the following handlers:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">on_poll(ven_id)</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">on_request_event(ven_id)</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">on_request_report(payload)</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">on_create_party_registration(payload)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">on_create_party_registration(registration_info)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">on_register_report(ven_id,</span> <span class="pre">resource_id,</span> <span class="pre">measurement,</span> <span class="pre">unit,</span> <span class="pre">scale,</span> <span class="pre">min_sampling_interval,</span> <span class="pre">max_sampling_interval)</span></code></p></li>
 </ul>
-</div>
-<div class="section" id="non-openadr-signals-from-the-server">
-<span id="server-meta"></span><h2>Non-OpenADR signals from the server<a class="headerlink" href="#non-openadr-signals-from-the-server" title="Permalink to this headline">¶</a></h2>
-<p>The OpenLEADR Server can call the following handlers, which are not part of the regular openADR communication flow, but can help you develop a more robust event-driven system:</p>
+<p>Optionally:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">on_ven_online(ven_id)</span></code>: called when a VEN sends an <a class="reference internal" href="representations.html#oadrpoll"><span class="std std-ref">oadrPoll</span></a>, <a class="reference internal" href="representations.html#oadrrequestevent"><span class="std std-ref">oadrRequestEvent</span></a> or <span class="xref std std-ref">oadrRequestReport</span> message after it had been offline before.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">on_ven_offline(ven_id)</span></code>: called when a VEN misses 3 consecutive poll intervals (configurable).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">on_poll(ven_id)</span></code>; only if you don’t want to use the internal message queue.</p></li>
 </ul>
-<p>Example implementation:</p>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">openleadr</span> <span class="kn">import</span> <span class="n">OpenADRServer</span>
-
-<span class="n">server</span> <span class="o">=</span> <span class="n">OpenADRServer</span><span class="p">(</span><span class="n">vtn_id</span><span class="o">=</span><span class="s1">&#39;MyVTN&#39;</span><span class="p">)</span>
-<span class="n">server</span><span class="o">.</span><span class="n">add_handler</span><span class="p">(</span><span class="s1">&#39;on_ven_online&#39;</span><span class="p">,</span> <span class="n">on_ven_online</span><span class="p">)</span>
-<span class="n">server</span><span class="o">.</span><span class="n">add_handler</span><span class="p">(</span><span class="s1">&#39;on_ven_offline&#39;</span><span class="p">,</span> <span class="n">on_ven_offline</span><span class="p">)</span>
-
-<span class="k">async</span> <span class="k">def</span> <span class="nf">on_ven_online</span><span class="p">(</span><span class="n">ven_id</span><span class="p">):</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;VEN </span><span class="si">{</span><span class="n">ven_id</span><span class="si">}</span><span class="s2"> is now online again!&quot;</span><span class="p">)</span>
-
-<span class="k">async</span> <span class="k">def</span> <span class="nf">on_ven_offline</span><span class="p">(</span><span class="n">ven_id</span><span class="p">):</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;VEN </span><span class="si">{</span><span class="n">ven_id</span><span class="si">}</span><span class="s2"> has gone AWOL&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
 </div>
 <div class="section" id="signing-messages">
 <span id="server-signing-messages"></span><h2>Signing Messages<a class="headerlink" href="#signing-messages" title="Permalink to this headline">¶</a></h2>
@@ -173,40 +178,32 @@
 <div class="section" id="message-handlers">
 <span id="server-message-handlers"></span><h2>Message Handlers<a class="headerlink" href="#message-handlers" title="Permalink to this headline">¶</a></h2>
 <p>Your server has to deal with the different OpenADR messages. The way this works is that OpenLEADR will expose certain modules at the appropriate endpoints (like /oadrPoll and /EiRegister), and figure out what type of message is being sent. It will then call your handler with the contents of the message that are relevant for you to handle. This section provides an overview with examples for the different kinds of messages that you can expect and what should be returned.</p>
-<div class="section" id="on-created-event">
-<span id="server-on-created-event"></span><h3>on_created_event<a class="headerlink" href="#on-created-event" title="Permalink to this headline">¶</a></h3>
-<p>The VEN informs you that they created an Event that you sent to them. You don’t have to return anything.</p>
-<p>Return: <cite>None</cite></p>
-</div>
-<div class="section" id="on-request-event">
-<span id="server-on-request-event"></span><h3>on_request_event<a class="headerlink" href="#on-request-event" title="Permalink to this headline">¶</a></h3>
-<p>The VEN is requesting the next Event that you have for it. You should return an Event. If you have no Events for this VEN, you should return <cite>None</cite>.</p>
-</div>
-<div class="section" id="on-register-report">
-<span id="server-on-register-report"></span><h3>on_register_report<a class="headerlink" href="#on-register-report" title="Permalink to this headline">¶</a></h3>
 <p>The VEN informs you which reports it has available. If you want to periodically receive any of these reports, you should return a list of the r_ids that you want to receive.</p>
 <p>Signature:</p>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span> <span class="nf">on_register_report</span><span class="p">(</span><span class="n">ven_id</span><span class="p">,</span> <span class="n">reports</span><span class="p">):</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="on-created-report">
-<span id="server-on-created-report"></span><h3>on_created_report<a class="headerlink" href="#on-created-report" title="Permalink to this headline">¶</a></h3>
-<p>The VEN informs you that it created the automatic reporting that you requested. You don’t have to return anything.</p>
-<p>Return: <cite>None</cite></p>
-</div>
-<div class="section" id="on-update-report">
-<span id="server-on-update-report"></span><h3>on_update_report<a class="headerlink" href="#on-update-report" title="Permalink to this headline">¶</a></h3>
-<p>The VEN is sending you a fresh report with data. You don’t have to return anything.</p>
-<p>Signature:</p>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span> <span class="nf">on_update_report</span><span class="p">(</span><span class="n">ven_id</span><span class="p">,</span> <span class="n">report</span><span class="p">):</span>
-    <span class="o">...</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span> <span class="nf">on_register_report</span><span class="p">(</span><span class="n">ven_id</span><span class="p">,</span> <span class="n">resource_id</span><span class="p">,</span> <span class="n">measurement</span><span class="p">,</span> <span class="n">unit</span><span class="p">,</span> <span class="n">scale</span><span class="p">,</span>
+                             <span class="n">min_sampling_interval</span><span class="p">,</span> <span class="n">max_sampling_interval</span><span class="p">):</span>
+    <span class="c1"># If we want this report:</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">callback</span><span class="p">,</span> <span class="n">requested_sampling_interval</span><span class="p">)</span>
+    <span class="c1"># or</span>
     <span class="k">return</span> <span class="kc">None</span>
 </pre></div>
 </div>
+<p>A prospective VEN is requesting information about your VTN, like the versions and transports you support. You should not implement this handler and let OpenLEADR handle this response.</p>
+<p>The VEN tries to register with you. You will receive a registration_info dict that contains, among other things, a field <cite>ven_name</cite> which is how the VEN identifies itself. If the VEN is accepted, you return a <code class="docutils literal notranslate"><span class="pre">ven_id,</span> <span class="pre">registration_id</span></code> tuple. If not, return <code class="docutils literal notranslate"><span class="pre">False</span></code>:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span> <span class="nf">on_create_party_registration</span><span class="p">(</span><span class="n">registration_info</span><span class="p">):</span>
+    <span class="n">ven_name</span> <span class="o">=</span> <span class="n">registration_info</span><span class="p">[</span><span class="s1">&#39;ven_name&#39;</span><span class="p">]</span>
+    <span class="o">...</span>
+    <span class="k">if</span> <span class="n">ven_is_known</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">ven_id</span><span class="p">,</span> <span class="n">registration_id</span>
+    <span class="k">else</span>
+        <span class="k">return</span> <span class="kc">None</span>
+</pre></div>
 </div>
-<div class="section" id="on-poll">
-<span id="server-on-poll"></span><h3>on_poll<a class="headerlink" href="#on-poll" title="Permalink to this headline">¶</a></h3>
+<p>During this step, the VEN probably does not have a <code class="docutils literal notranslate"><span class="pre">venID</span></code> yet. If they connected using a secure TLS connection, the <code class="docutils literal notranslate"><span class="pre">registration_info</span></code> dict will contain the fingerprint of the public key that was used for this connection (<code class="docutils literal notranslate"><span class="pre">registration_info['fingerprint']</span></code>). Your <code class="docutils literal notranslate"><span class="pre">on_create_party_registration</span></code> handler should check this fingerprint value against a value that you received offline, to be sure that the ven with this venName is the correct VEN.</p>
+<p>The VEN informs you that they are cancelling their registration and no longer wish to be contacted by you.</p>
+<p>You should deregister the VEN internally, and return <cite>None</cite>.</p>
+<p>Return: <code class="docutils literal notranslate"><span class="pre">None</span></code></p>
+<p>You only need to implement this if you don’t want to use the automatic internal message queue. If you add this handler to the server, the internal message queue will be automatically disabled.</p>
 <p>The VEN is requesting the next message that you have for it. You should return a tuple of message_type and message_payload as a dict. If there is no message for the VEN, you should return <cite>None</cite>.</p>
 <p>Signature:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span> <span class="nf">on_poll</span><span class="p">(</span><span class="n">ven_id</span><span class="p">):</span>
@@ -214,28 +211,13 @@
     <span class="k">return</span> <span class="n">message_type</span><span class="p">,</span> <span class="n">message_payload</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="on-query-registration">
-<span id="server-on-query-registration"></span><h3>on_query_registration<a class="headerlink" href="#on-query-registration" title="Permalink to this headline">¶</a></h3>
-<p>A prospective VEN is requesting information about your VTN, like the versions and transports you support. You should not implement this handler and let OpenLEADR handle this response.</p>
-</div>
-<div class="section" id="on-create-party-registration">
-<span id="server-on-create-party-registration"></span><h3>on_create_party_registration<a class="headerlink" href="#on-create-party-registration" title="Permalink to this headline">¶</a></h3>
-<p>The VEN tries to register with you. You will probably have manually configured the VEN beforehand, so you should look them up by their ven_name. You should have a ven_id that you generated ready.
-If they are allowed to register, return the ven_id (str), otherwise return False.</p>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span> <span class="nf">on_create_party_registration</span><span class="p">(</span><span class="n">ven_name</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">ven_is_known</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">ven_id</span>
-    <span class="k">else</span>
-        <span class="k">return</span> <span class="kc">None</span>
+<p>If you implement your own on_poll handler, you should also include your own <code class="docutils literal notranslate"><span class="pre">on_created_event</span></code> handler that retrieves the opt status for a distributed event.</p>
+<p>You only need to implement this if you don’t want to use the automatic internal message queue. Otherwise, you supply a per-event callback function when you add the event to the internal queue.</p>
+<p>Signature:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span> <span class="nf">on_created_event</span><span class="p">(</span><span class="n">ven_id</span><span class="p">,</span> <span class="n">event_id</span><span class="p">,</span> <span class="n">opt_status</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Ven </span><span class="si">{ven_id}</span><span class="s2"> returned </span><span class="si">{opt_status}</span><span class="s2"> for event </span><span class="si">{event_id}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="c1"># return None</span>
 </pre></div>
-</div>
-</div>
-<div class="section" id="on-cancel-party-registration">
-<span id="server-on-cancel-party-registration"></span><h3>on_cancel_party_registration<a class="headerlink" href="#on-cancel-party-registration" title="Permalink to this headline">¶</a></h3>
-<p>The VEN informs you that they are cancelling their registration and no longer wish to be contacted by you.</p>
-<p>You should deregister the VEN internally, and return <cite>None</cite>.</p>
-<p>Return: <cite>None</cite></p>
 </div>
 </div>
 </div>
@@ -262,25 +244,22 @@ If they are allowed to register, return the ven_id (str), otherwise return False
 <h3>Navigation</h3>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="features.html">Feature Tour</a></li>
-<li class="toctree-l1"><a class="reference internal" href="openadr.html">OpenADR Basics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="client.html">Client</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Server</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#registration">Registration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#events">Events</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#reports">Reports</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#things-you-should-implement">Things you should implement</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#non-openadr-signals-from-the-server">Non-OpenADR signals from the server</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#signing-messages">Signing Messages</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#message-handlers">Message Handlers</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="examples.html">Ready-to-Run Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="reporting.html">Reporting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="logging.html">Logging</a></li>
-<li class="toctree-l1"><a class="reference internal" href="representations.html">Payload Representations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="message_signing.html">Message Signing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="roadmap.html">Project Roadmap</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api/modules.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="representations.html">Payload Representations</a></li>
 </ul>
 
 <div class="relations">
@@ -288,7 +267,7 @@ If they are allowed to register, return the ven_id (str), otherwise return False
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
       <li>Previous: <a href="client.html" title="previous chapter">Client</a></li>
-      <li>Next: <a href="examples.html" title="next chapter">Ready-to-Run Examples</a></li>
+      <li>Next: <a href="reporting.html" title="next chapter">Reporting</a></li>
   </ul></li>
 </ul>
 </div>

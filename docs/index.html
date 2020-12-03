@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Welcome to OpenLEADR &#8212; OpenLEADR 0.5.2 documentation</title>
+    <title>Welcome to OpenLEADR &#8212; OpenLEADR 0.5.11 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/css/custom.css" />
@@ -47,7 +47,7 @@
 </div>
 <div class="section" id="project-status">
 <h2>Project Status<a class="headerlink" href="#project-status" title="Permalink to this headline">¶</a></h2>
-<p>The current version is 0.5.2.</p>
+<p>The current version is 0.5.11.</p>
 <p>This project is still a work in progress. Please see our <a class="reference internal" href="roadmap.html#roadmap"><span class="std std-ref">Project Roadmap</span></a> for information.</p>
 </div>
 <div class="section" id="license">
@@ -74,7 +74,7 @@
 <span class="k">async</span> <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
     <span class="n">client</span> <span class="o">=</span> <span class="n">OpenADRClient</span><span class="p">(</span><span class="n">ven_name</span><span class="o">=</span><span class="s2">&quot;Device001&quot;</span><span class="p">,</span>
                            <span class="n">vtn_url</span><span class="o">=</span><span class="s2">&quot;http://localhost:8080/OpenADR2/Simple/2.0b&quot;</span><span class="p">)</span>
-    <span class="n">client</span><span class="o">.</span><span class="n">on_event</span> <span class="o">=</span> <span class="n">handle_event</span>
+    <span class="n">client</span><span class="o">.</span><span class="n">add_handler</span><span class="p">(</span><span class="s1">&#39;on_event&#39;</span><span class="p">,</span> <span class="n">handle_event</span><span class="p">)</span>
     <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 
 <span class="k">async</span> <span class="k">def</span> <span class="nf">handle_event</span><span class="p">(</span><span class="n">event</span><span class="p">):</span>
@@ -93,7 +93,6 @@
 </pre></div>
 </div>
 <p>This will connect to an OpenADR server (indicated by the vtn_url parameter), handle registration, start polling for events and reports, and will call your coroutines whenever an event or report is created for you.</p>
-<p>We have more examples available over at the <a class="reference internal" href="examples.html#examples"><span class="std std-ref">Ready-to-Run Examples</span></a> page.</p>
 </div>
 <div class="section" id="table-of-contents">
 <h2>Table of Contents<a class="headerlink" href="#table-of-contents" title="Permalink to this headline">¶</a></h2>
@@ -105,13 +104,6 @@
 <li class="toctree-l2"><a class="reference internal" href="features.html#event-driven">Event-driven</a></li>
 <li class="toctree-l2"><a class="reference internal" href="features.html#dict-style-representations">Dict-style representations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="features.html#message-signing-for-secure-communications">Message Signing for secure communications</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="openadr.html">OpenADR Basics</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="openadr.html#high-level-overview">High-level overview</a></li>
-<li class="toctree-l2"><a class="reference internal" href="openadr.html#registration">Registration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="openadr.html#events">Events</a></li>
-<li class="toctree-l2"><a class="reference internal" href="openadr.html#reports">Reports</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="client.html">Client</a><ul>
@@ -126,15 +118,8 @@
 <li class="toctree-l2"><a class="reference internal" href="server.html#events">Events</a></li>
 <li class="toctree-l2"><a class="reference internal" href="server.html#reports">Reports</a></li>
 <li class="toctree-l2"><a class="reference internal" href="server.html#things-you-should-implement">Things you should implement</a></li>
-<li class="toctree-l2"><a class="reference internal" href="server.html#non-openadr-signals-from-the-server">Non-OpenADR signals from the server</a></li>
 <li class="toctree-l2"><a class="reference internal" href="server.html#signing-messages">Signing Messages</a></li>
 <li class="toctree-l2"><a class="reference internal" href="server.html#message-handlers">Message Handlers</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="examples.html">Ready-to-Run Examples</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="examples.html#client-example">Client Example</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples.html#server-example">Server Example</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples.html#server-with-gui-example">Server with GUI Example</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="reporting.html">Reporting</a><ul>
@@ -153,30 +138,6 @@
 <li class="toctree-l2"><a class="reference internal" href="logging.html#more-info">More info</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="representations.html">Payload Representations</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="representations.html#oadrcanceledopt">oadrCanceledOpt</a></li>
-<li class="toctree-l2"><a class="reference internal" href="representations.html#oadrcanceledpartyregistration">oadrCanceledPartyRegistration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="representations.html#oadrcanceledreport">oadrCanceledReport</a></li>
-<li class="toctree-l2"><a class="reference internal" href="representations.html#oadrcancelopt">oadrCancelOpt</a></li>
-<li class="toctree-l2"><a class="reference internal" href="representations.html#oadrcancelpartyregistration">oadrCancelPartyRegistration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="representations.html#oadrcancelreport">oadrCancelReport</a></li>
-<li class="toctree-l2"><a class="reference internal" href="representations.html#oadrcreatedevent">oadrCreatedEvent</a></li>
-<li class="toctree-l2"><a class="reference internal" href="representations.html#oadrcreatedreport">oadrCreatedReport</a></li>
-<li class="toctree-l2"><a class="reference internal" href="representations.html#oadrcreatedpartyregistration">oadrCreatedPartyRegistration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="representations.html#oadrcreateopt">oadrCreateOpt</a></li>
-<li class="toctree-l2"><a class="reference internal" href="representations.html#oadrcreatepartyregistration">oadrCreatePartyRegistration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="representations.html#oadrcreatereport">oadrCreateReport</a></li>
-<li class="toctree-l2"><a class="reference internal" href="representations.html#oadrdistributeevent">oadrDistributeEvent</a></li>
-<li class="toctree-l2"><a class="reference internal" href="representations.html#oadrpoll">oadrPoll</a></li>
-<li class="toctree-l2"><a class="reference internal" href="representations.html#oadrqueryregistration">oadrQueryRegistration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="representations.html#oadrregisteredreport">oadrRegisteredReport</a></li>
-<li class="toctree-l2"><a class="reference internal" href="representations.html#oadrrequestevent">oadrRequestEvent</a></li>
-<li class="toctree-l2"><a class="reference internal" href="representations.html#oadrrequestreregistration">oadrRequestReregistration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="representations.html#oadrresponse">oadrResponse</a></li>
-<li class="toctree-l2"><a class="reference internal" href="representations.html#oadrupdatedreport">oadrUpdatedReport</a></li>
-<li class="toctree-l2"><a class="reference internal" href="representations.html#oadrupdatereport">oadrUpdateReport</a></li>
-</ul>
-</li>
 <li class="toctree-l1"><a class="reference internal" href="message_signing.html">Message Signing</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="message_signing.html#overview">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="message_signing.html#generating-certificates">Generating certificates</a></li>
@@ -191,6 +152,36 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="api/modules.html">API Reference</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="api/openleadr.html">openleadr package</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="representations.html">Payload Representations</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="representations.html#oadrcanceledopt">oadrCanceledOpt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="representations.html#oadrcanceledpartyregistration">oadrCanceledPartyRegistration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="representations.html#oadrcanceledreport">oadrCanceledReport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="representations.html#id4">oadrCanceledReport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="representations.html#oadrcancelopt">oadrCancelOpt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="representations.html#oadrcancelpartyregistration">oadrCancelPartyRegistration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="representations.html#oadrcancelreport">oadrCancelReport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="representations.html#oadrcreatedevent">oadrCreatedEvent</a></li>
+<li class="toctree-l2"><a class="reference internal" href="representations.html#oadrcreatedreport">oadrCreatedReport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="representations.html#id11">oadrCreatedEvent</a></li>
+<li class="toctree-l2"><a class="reference internal" href="representations.html#oadrcreatedpartyregistration">oadrCreatedPartyRegistration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="representations.html#id14">oadrCreatedReport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="representations.html#oadrcreateopt">oadrCreateOpt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="representations.html#oadrcreatepartyregistration">oadrCreatePartyRegistration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="representations.html#oadrcreatereport">oadrCreateReport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="representations.html#oadrdistributeevent">oadrDistributeEvent</a></li>
+<li class="toctree-l2"><a class="reference internal" href="representations.html#oadrpoll">oadrPoll</a></li>
+<li class="toctree-l2"><a class="reference internal" href="representations.html#oadrqueryregistration">oadrQueryRegistration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="representations.html#oadrregisteredreport">oadrRegisteredReport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="representations.html#oadrrequestevent">oadrRequestEvent</a></li>
+<li class="toctree-l2"><a class="reference internal" href="representations.html#oadrrequestreregistration">oadrRequestReregistration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="representations.html#oadrregisterreport">oadrRegisterReport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="representations.html#id26">oadrRegisterReport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="representations.html#oadrresponse">oadrResponse</a></li>
+<li class="toctree-l2"><a class="reference internal" href="representations.html#id29">oadrResponse</a></li>
+<li class="toctree-l2"><a class="reference internal" href="representations.html#oadrupdatedreport">oadrUpdatedReport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="representations.html#oadrupdatereport">oadrUpdateReport</a></li>
 </ul>
 </li>
 </ul>
@@ -255,16 +246,14 @@
 <h3>Navigation</h3>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="features.html">Feature Tour</a></li>
-<li class="toctree-l1"><a class="reference internal" href="openadr.html">OpenADR Basics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="client.html">Client</a></li>
 <li class="toctree-l1"><a class="reference internal" href="server.html">Server</a></li>
-<li class="toctree-l1"><a class="reference internal" href="examples.html">Ready-to-Run Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="reporting.html">Reporting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="logging.html">Logging</a></li>
-<li class="toctree-l1"><a class="reference internal" href="representations.html">Payload Representations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="message_signing.html">Message Signing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="roadmap.html">Project Roadmap</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api/modules.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="representations.html">Payload Representations</a></li>
 </ul>
 
 <div class="relations">

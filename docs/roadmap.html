@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Project Roadmap &#8212; OpenLEADR 0.5.2 documentation</title>
+    <title>Project Roadmap &#8212; OpenLEADR 0.5.11 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/css/custom.css" />
@@ -36,7 +36,7 @@
             
   <div class="section" id="project-roadmap">
 <span id="roadmap"></span><h1>Project Roadmap<a class="headerlink" href="#project-roadmap" title="Permalink to this headline">¶</a></h1>
-<p>OpenLEADR is under development. The current version is 0.5.2.</p>
+<p>OpenLEADR is under development. The current version is 0.5.11.</p>
 <div class="section" id="upcoming-releases">
 <h2>Upcoming releases<a class="headerlink" href="#upcoming-releases" title="Permalink to this headline">¶</a></h2>
 <table class="docutils align-default">
@@ -65,6 +65,94 @@
 </div>
 <div class="section" id="changelog">
 <h2>Changelog<a class="headerlink" href="#changelog" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="openleadr-0-5-11">
+<h3>openleadr 0.5.11<a class="headerlink" href="#openleadr-0-5-11" title="Permalink to this headline">¶</a></h3>
+<p>Released: 3 december 2020</p>
+<p>New features:</p>
+<ul class="simple">
+<li><p>This update makes the list of Targets available as a dictionary of targets grouped by their type.</p></li>
+<li><p>You can now add Targets to events in multiple ways (<code class="docutils literal notranslate"><span class="pre">target</span></code>, <code class="docutils literal notranslate"><span class="pre">targets</span></code>, and <code class="docutils literal notranslate"><span class="pre">targets_by_type</span></code>).</p></li>
+</ul>
+<p>Changes:</p>
+<ul>
+<li><dl>
+<dt>The member names of the ‘measurement’ objects or dicts have been changed to be consistent everywhere:</dt><dd><ul class="simple">
+<li><p>item_name -&gt; name</p></li>
+<li><p>item_description -&gt; description</p></li>
+<li><p>item_units -&gt; unit</p></li>
+<li><p>si_scale_code -&gt; scale</p></li>
+</ul>
+<p>This way, the parameters to client.add_report() are consistent with the Measurement object and the dicts that are passed around.
+Additionally, there is extra validation to prevent sending invalid measurements, and hints to correct any mistakes.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="section" id="openleadr-0-5-10">
+<h3>openleadr 0.5.10<a class="headerlink" href="#openleadr-0-5-10" title="Permalink to this headline">¶</a></h3>
+<p>Released: 1 december 2020</p>
+<p>Bug fixes:</p>
+<ul class="simple">
+<li><p>The on_created_event handler is now expected to receive the parameters (ven_id, event_id, opt_type). This was already in the docs, but not yet in the actual implementation. This has now been fixed.</p></li>
+</ul>
+</div>
+<div class="section" id="openleadr-0-5-9">
+<h3>openleadr 0.5.9<a class="headerlink" href="#openleadr-0-5-9" title="Permalink to this headline">¶</a></h3>
+<p>Released: 1 december 2020</p>
+<p>New features:</p>
+<ul class="simple">
+<li><p>Added the ven fingerprint to the registration_info dict for the <code class="docutils literal notranslate"><span class="pre">on_create_party_registration</span></code> handler. This allows the VTN to verify the fingerprint upon registration, even when the VEN does not have a venID yet.</p></li>
+</ul>
+<p>Changes:
+- Converted the OpenADRServer.add_raw_event method to a normal (synchronous) method.</p>
+<p>Bug fixes:
+- The EiResponse.response_code would not always show up correctly, this is now fixed.</p>
+</div>
+<div class="section" id="openleadr-0-5-8">
+<h3>openleadr 0.5.8<a class="headerlink" href="#openleadr-0-5-8" title="Permalink to this headline">¶</a></h3>
+<p>Released: 30 november 2020</p>
+<p>New features:</p>
+<ul class="simple">
+<li><p>Added the <code class="docutils literal notranslate"><span class="pre">ven_id</span></code> to the list of parameters for the <code class="docutils literal notranslate"><span class="pre">on_register_report</span></code> handler, so that this handler can know which VEN is registering reports</p></li>
+<li><p>Updated documentation to reflect the current API of OpenLEADR</p></li>
+</ul>
+</div>
+<div class="section" id="openleadr-0-5-7">
+<h3>openleadr 0.5.7<a class="headerlink" href="#openleadr-0-5-7" title="Permalink to this headline">¶</a></h3>
+<p>Released: 27 november 2020</p>
+<p>Bugs fixed:</p>
+<ul class="simple">
+<li><p>Fixed a typo in the EventService.on_created_event placeholder function</p></li>
+</ul>
+</div>
+<div class="section" id="openleadr-0-5-5">
+<h3>openleadr 0.5.5<a class="headerlink" href="#openleadr-0-5-5" title="Permalink to this headline">¶</a></h3>
+<p>Released: 23 november 2020</p>
+<p>New features:</p>
+<ul class="simple">
+<li><p>Message signing now uses the correct C14n algorithm, as required by OpenADR</p></li>
+<li><p>Preliminary VEN support for multiple events in one DistributeEvent message</p></li>
+</ul>
+</div>
+<div class="section" id="openleadr-0-5-4">
+<h3>openleadr 0.5.4<a class="headerlink" href="#openleadr-0-5-4" title="Permalink to this headline">¶</a></h3>
+<p>Released: 23 november 2020</p>
+<p>New features:</p>
+<ul class="simple">
+<li><p>Preliminary support for TELEMETRY_STATUS reports</p></li>
+<li><p>Changed the server.add_event to be a normal function (not a coroutine), which allows you to call it from a synchronous function if needed.</p></li>
+</ul>
+</div>
+<div class="section" id="openleadr-0-5-3">
+<h3>openleadr 0.5.3<a class="headerlink" href="#openleadr-0-5-3" title="Permalink to this headline">¶</a></h3>
+<p>Released: 20 november 2020</p>
+<p>New features:</p>
+<ul class="simple">
+<li><p>Support for custom units in Reports is back, and is now compliant with the XML Schema.</p></li>
+<li><p>Support for specifying the measurement (unit) in an EventSignal is added, and builds on the work of the report units.</p></li>
+</ul>
+</div>
 <div class="section" id="openleadr-0-5-2">
 <h3>openleadr 0.5.2<a class="headerlink" href="#openleadr-0-5-2" title="Permalink to this headline">¶</a></h3>
 <p>Released: 19 november 2020</p>
@@ -137,13 +225,10 @@
 <h3>Navigation</h3>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="features.html">Feature Tour</a></li>
-<li class="toctree-l1"><a class="reference internal" href="openadr.html">OpenADR Basics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="client.html">Client</a></li>
 <li class="toctree-l1"><a class="reference internal" href="server.html">Server</a></li>
-<li class="toctree-l1"><a class="reference internal" href="examples.html">Ready-to-Run Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="reporting.html">Reporting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="logging.html">Logging</a></li>
-<li class="toctree-l1"><a class="reference internal" href="representations.html">Payload Representations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="message_signing.html">Message Signing</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Project Roadmap</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#upcoming-releases">Upcoming releases</a></li>
@@ -151,6 +236,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="api/modules.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="representations.html">Payload Representations</a></li>
 </ul>
 
 <div class="relations">
