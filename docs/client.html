@@ -4,16 +4,15 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Client &#8212; OpenLEADR 0.5.11 documentation</title>
-    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="_static/css/custom.css" />
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Client &#8212; OpenLEADR 0.5.26 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
-    <script src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Server" href="server.html" />
@@ -34,17 +33,55 @@
 
           <div class="body" role="main">
             
-  <div class="section" id="client">
+  <section id="client">
 <h1>Client<a class="headerlink" href="#client" title="Permalink to this headline">¶</a></h1>
 <p>An OpenADR Client (Virtual End Node or VEN) usually represents an entity that owns controllable devices. This can be electric vehicles, generators, wind turbines, refrigerated warehouses, et cetera. The client connects to a server, usualy representing a utility company, to discuss possible cooperation on energy usage throughout the day.</p>
-<p>In your application, you mostly only have to deal with two things: Events and Reports.</p>
-<div class="section" id="dealing-with-events">
+<section id="example-ven">
+<span id="client-example"></span><h2>Example VEN<a class="headerlink" href="#example-ven" title="Permalink to this headline">¶</a></h2>
+<p>A straightforward example of an OpenADR VEN, which has one report and an event handler, would look like this:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">asyncio</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">timedelta</span>
+<span class="kn">from</span> <span class="nn">openleadr</span> <span class="kn">import</span> <span class="n">OpenADRClient</span><span class="p">,</span> <span class="n">enable_default_logging</span>
+
+<span class="n">enable_default_logging</span><span class="p">()</span>
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">collect_report_value</span><span class="p">():</span>
+    <span class="c1"># This callback is called when you need to collect a value for your Report</span>
+    <span class="k">return</span> <span class="mf">1.23</span>
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">handle_event</span><span class="p">(</span><span class="n">event</span><span class="p">):</span>
+    <span class="c1"># This callback receives an Event dict.</span>
+    <span class="c1"># You should include code here that sends control signals to your resources.</span>
+    <span class="k">return</span> <span class="s1">&#39;optIn&#39;</span>
+
+<span class="c1"># Create the client object</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">OpenADRClient</span><span class="p">(</span><span class="n">ven_name</span><span class="o">=</span><span class="s1">&#39;ven123&#39;</span><span class="p">,</span>
+                       <span class="n">vtn_url</span><span class="o">=</span><span class="s1">&#39;http://localhost:8080/OpenADR2/Simple/2.0b&#39;</span><span class="p">)</span>
+
+<span class="c1"># Add the report capability to the client</span>
+<span class="n">client</span><span class="o">.</span><span class="n">add_report</span><span class="p">(</span><span class="n">callback</span><span class="o">=</span><span class="n">collect_report_value</span><span class="p">,</span>
+                  <span class="n">resource_id</span><span class="o">=</span><span class="s1">&#39;device001&#39;</span><span class="p">,</span>
+                  <span class="n">measurement</span><span class="o">=</span><span class="s1">&#39;voltage&#39;</span><span class="p">,</span>
+                  <span class="n">sampling_rate</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">10</span><span class="p">))</span>
+
+<span class="c1"># Add event handling capability to the client</span>
+<span class="n">client</span><span class="o">.</span><span class="n">add_handler</span><span class="p">(</span><span class="s1">&#39;on_event&#39;</span><span class="p">,</span> <span class="n">handle_event</span><span class="p">)</span>
+
+<span class="c1"># Run the client in the Python AsyncIO Event Loop</span>
+<span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span>
+<span class="n">loop</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="n">client</span><span class="o">.</span><span class="n">run</span><span class="p">())</span>
+<span class="n">loop</span><span class="o">.</span><span class="n">run_forever</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>In the sections below, we’ll go into more detail.</p>
+</section>
+<section id="dealing-with-events">
 <span id="client-events"></span><h2>Dealing with Events<a class="headerlink" href="#dealing-with-events" title="Permalink to this headline">¶</a></h2>
-<p>Events are informational or instructional messages from the server (VTN) which inform you of price changes, request load reduction, et cetera. Whenever there is an Event for your VEN, your <code class="docutils literal notranslate"><span class="pre">on_event</span></code> handler will be called with the event as its <code class="docutils literal notranslate"><span class="pre">payload</span></code> parameter.</p>
+<p>Events are informational or instructional messages from the server (VTN) which inform you of price changes, request load reduction, et cetera. Whenever there is an Event for your VEN, your <code class="docutils literal notranslate"><span class="pre">on_event</span></code> handler will be called with the event is dict-form as its first parameter.</p>
 <p>The Event consists of three main sections:</p>
 <ol class="arabic simple">
 <li><p>A time period for when this event is supposed to be active (<code class="docutils literal notranslate"><span class="pre">active_period</span></code>)</p></li>
-<li><p>A list of Targets to which the Event applies (<code class="docutils literal notranslate"><span class="pre">target</span></code>). This can be the VEN as a whole, or specific groups, assets, geographic areas, et cetera that this VEN represents.</p></li>
+<li><p>A list of Targets to which the Event applies (<code class="docutils literal notranslate"><span class="pre">targets</span></code>). This can be the VEN as a whole, or specific groups, assets, geographic areas, et cetera that this VEN represents.</p></li>
 <li><p>A list of Signals (<code class="docutils literal notranslate"><span class="pre">signals</span></code>), which form the content of the Event. This can be price signals, load reduction signals, et cetera. Each signal has a name, a type, multiple Intervals that contain the relative start times, and some payload value for the client to interpret.</p></li>
 </ol>
 <p>After you evaluate all these properties, you have only one decision to make: Opt In or Opt Out. Your handler must return either the string <code class="docutils literal notranslate"><span class="pre">optIn</span></code> or <code class="docutils literal notranslate"><span class="pre">optOut</span></code>, and OpenLEADR will see to it that your response is correctly formatted for the server.</p>
@@ -100,18 +137,18 @@
 </pre></div>
 </div>
 <p>It is up to you which you want to use.</p>
-</div>
-<div class="section" id="dealing-with-reports">
+</section>
+<section id="dealing-with-reports">
 <span id="client-reports"></span><h2>Dealing with Reports<a class="headerlink" href="#dealing-with-reports" title="Permalink to this headline">¶</a></h2>
 <p>The VTN Server will most likely want to receive some reports like metering values or availability status from you.</p>
 <p>You can easily add reporting capabilities to your OpenADRClient object using the <code class="docutils literal notranslate"><span class="pre">client.add_report</span></code> method. In this method, you supply a callback function that will retrieve the current value for that measurement, as well as the resource_id, the measurement (like ‘voltage’, ‘power’, ‘temperature’, et cetera), optionally a unit and scale, and a sampling rate at which you can support this metervalue.</p>
 <p>OpenLEADR will then offer this report to the VTN, and if they request this report from you, your callback function will automatically be called when needed.</p>
 <p>Please see the <a class="reference internal" href="reporting.html#reporting"><span class="std std-ref">Reporting</span></a> section for detailed information.</p>
-</div>
-<div class="section" id="signing-outgoing-messages">
+</section>
+<section id="signing-outgoing-messages">
 <span id="client-signing-messages"></span><h2>Signing outgoing messages<a class="headerlink" href="#signing-outgoing-messages" title="Permalink to this headline">¶</a></h2>
 <p>You can sign your outgoing messages using a public-private key pair in PEM format. This allows the receiving party to verify that the messages are actually coming from you.</p>
-<p>If you want you client to automatically sign your outgoing messages, use the following configuration:</p>
+<p>If you want your client to automatically sign your outgoing messages, use the following configuration:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
     <span class="n">client</span> <span class="o">=</span> <span class="n">OpenADRClient</span><span class="p">(</span><span class="n">ven_name</span><span class="o">=</span><span class="s1">&#39;MyVEN&#39;</span><span class="p">,</span>
                            <span class="n">vtn_url</span><span class="o">=</span><span class="s1">&#39;https://localhost:8080/&#39;</span><span class="p">,</span>
@@ -121,8 +158,21 @@
     <span class="o">...</span>
 </pre></div>
 </div>
+<p>In some odd cases in which the VTN that you are connecting to does not support signatures
+(e.g. legacy VTN’s that have not been updated to the latest OpenADR protocol),
+you can disable the automatic signing of outgoing message with the following configuration:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">OpenADRClient</span><span class="p">(</span><span class="n">ven_name</span><span class="o">=</span><span class="s1">&#39;MyVEN&#39;</span><span class="p">,</span>
+                           <span class="n">vtn_url</span><span class="o">=</span><span class="s1">&#39;https://localhost:8080/&#39;</span><span class="p">,</span>
+                           <span class="n">cert</span><span class="o">=</span><span class="s1">&#39;/path/to/cert.pem&#39;</span><span class="p">,</span>
+                           <span class="n">key</span><span class="o">=</span><span class="s1">&#39;/path/to/key.pem&#39;</span><span class="p">,</span>
+                           <span class="n">passphrase</span><span class="o">=</span><span class="s1">&#39;my-key-password&#39;</span><span class="p">,</span>
+                           <span class="n">disable_signature</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="o">...</span>
+</pre></div>
 </div>
-<div class="section" id="validating-incoming-messages">
+</section>
+<section id="validating-incoming-messages">
 <span id="client-validating-messages"></span><h2>Validating incoming messages<a class="headerlink" href="#validating-incoming-messages" title="Permalink to this headline">¶</a></h2>
 <p>You can validate incoming messages against a public key.</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
@@ -133,8 +183,14 @@
 </div>
 <p>This will automatically validate check that incoming messages are signed by the private key that belongs to the provided (public) certificate. If validation fails, you will see a Warning emitted, but the message will not be delivered to your handlers, protecting you from malicious messages being processed by your system. The sending party will see an error message returned.</p>
 <p>You should use both of the previous examples combined to secure both the incoming and the outgoing messages.</p>
-</div>
-</div>
+</section>
+<section id="a-word-on-polling">
+<span id="client-polling-jitter"></span><h2>A word on polling<a class="headerlink" href="#a-word-on-polling" title="Permalink to this headline">¶</a></h2>
+<p>The OpenADR polling mechanism is very robust; there is very little chance that the client misses an important message. The downside is that there is some wasted bandwith (from polling when no relevant message is available from the VTN), and there is the risk of unnecessary VTN overload if all VENs poll synchronously.</p>
+<p>To mitigate the last point, the OpenLEADR VEN will, by default, ‘jitter’ the pollings by up to +/- 10% or +/- 5 minutes (whichever is smallest). The same goes for delivering the reports (the data collection will still happen on synchronized moments).</p>
+<p>If you don’t want to jitter the polling requests on your VEN, you can disable this by passing <code class="docutils literal notranslate"><span class="pre">allow_jitter=False</span></code> to your <code class="docutils literal notranslate"><span class="pre">OpenADRClient</span></code> constructor.</p>
+</section>
+</section>
 
 
           </div>
@@ -143,13 +199,22 @@
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-            <p class="logo"><a href="index.html">
-              <img class="logo" src="_static/logo-tall.png" alt="Logo"/>
-            </a></p>
-<h1 class="logo"><a href="index.html">OpenLEADR</a></h1>
+<p class="logo">
+  <a href="index.html">
+    <img class="logo" src="_static/logo-tall.png" alt="Logo"/>
+    
+  </a>
+</p>
 
 
 
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=openleadr&repo=openleadr-python&type=star&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
 
 
 
@@ -159,10 +224,12 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="features.html">Feature Tour</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Client</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#example-ven">Example VEN</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#dealing-with-events">Dealing with Events</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#dealing-with-reports">Dealing with Reports</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#signing-outgoing-messages">Signing outgoing messages</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#validating-incoming-messages">Validating incoming messages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#a-word-on-polling">A word on polling</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="server.html">Server</a></li>
@@ -187,7 +254,7 @@
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -209,7 +276,7 @@
       &copy;2020, OpenLEADR Contributors.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.2.1</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.3.0</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

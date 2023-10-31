@@ -4,16 +4,15 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Server &#8212; OpenLEADR 0.5.11 documentation</title>
-    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="_static/css/custom.css" />
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Server &#8212; OpenLEADR 0.5.26 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
-    <script src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Reporting" href="reporting.html" />
@@ -34,10 +33,81 @@
 
           <div class="body" role="main">
             
-  <div class="section" id="server">
+  <section id="server">
 <span id="id1"></span><h1>Server<a class="headerlink" href="#server" title="Permalink to this headline">¶</a></h1>
 <p>If you are implementing an OpenADR Server (“Virtual Top Node”) using OpenLEADR, read this page.</p>
-<div class="section" id="registration">
+<section id="minute-vtn-example">
+<span id="server-example"></span><h2>1-minute VTN example<a class="headerlink" href="#minute-vtn-example" title="Permalink to this headline">¶</a></h2>
+<p>Here’s an example of a server that accepts registrations from a VEN named
+‘ven_123’, requests all reports that it offers, and creates an Event for this
+VEN.</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">asyncio</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timezone</span><span class="p">,</span> <span class="n">timedelta</span>
+<span class="kn">from</span> <span class="nn">openleadr</span> <span class="kn">import</span> <span class="n">OpenADRServer</span><span class="p">,</span> <span class="n">enable_default_logging</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+
+<span class="n">enable_default_logging</span><span class="p">()</span>
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">on_create_party_registration</span><span class="p">(</span><span class="n">registration_info</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Inspect the registration info and return a ven_id and registration_id.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">registration_info</span><span class="p">[</span><span class="s1">&#39;ven_name&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;ven123&#39;</span><span class="p">:</span>
+        <span class="n">ven_id</span> <span class="o">=</span> <span class="s1">&#39;ven_id_123&#39;</span>
+        <span class="n">registration_id</span> <span class="o">=</span> <span class="s1">&#39;reg_id_123&#39;</span>
+        <span class="k">return</span> <span class="n">ven_id</span><span class="p">,</span> <span class="n">registration_id</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">on_register_report</span><span class="p">(</span><span class="n">ven_id</span><span class="p">,</span> <span class="n">resource_id</span><span class="p">,</span> <span class="n">measurement</span><span class="p">,</span> <span class="n">unit</span><span class="p">,</span> <span class="n">scale</span><span class="p">,</span>
+                             <span class="n">min_sampling_interval</span><span class="p">,</span> <span class="n">max_sampling_interval</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Inspect a report offering from the VEN and return a callback and sampling interval for receiving the reports.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">callback</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">on_update_report</span><span class="p">,</span> <span class="n">ven_id</span><span class="o">=</span><span class="n">ven_id</span><span class="p">,</span> <span class="n">resource_id</span><span class="o">=</span><span class="n">resource_id</span><span class="p">,</span> <span class="n">measurement</span><span class="o">=</span><span class="n">measurement</span><span class="p">)</span>
+    <span class="n">sampling_interval</span> <span class="o">=</span> <span class="n">min_sampling_interval</span>
+    <span class="k">return</span> <span class="n">callback</span><span class="p">,</span> <span class="n">sampling_interval</span>
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">on_update_report</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">ven_id</span><span class="p">,</span> <span class="n">resource_id</span><span class="p">,</span> <span class="n">measurement</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Callback that receives report data from the VEN and handles it.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">time</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Ven </span><span class="si">{</span><span class="n">ven_id</span><span class="si">}</span><span class="s2"> reported </span><span class="si">{</span><span class="n">measurement</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2"> at time </span><span class="si">{</span><span class="n">time</span><span class="si">}</span><span class="s2"> for resource </span><span class="si">{</span><span class="n">resource_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">event_response_callback</span><span class="p">(</span><span class="n">ven_id</span><span class="p">,</span> <span class="n">event_id</span><span class="p">,</span> <span class="n">opt_type</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Callback that receives the response from a VEN to an Event.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;VEN </span><span class="si">{</span><span class="n">ven_id</span><span class="si">}</span><span class="s2"> responded to Event </span><span class="si">{</span><span class="n">event_id</span><span class="si">}</span><span class="s2"> with: </span><span class="si">{</span><span class="n">opt_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Create the server object</span>
+<span class="n">server</span> <span class="o">=</span> <span class="n">OpenADRServer</span><span class="p">(</span><span class="n">vtn_id</span><span class="o">=</span><span class="s1">&#39;myvtn&#39;</span><span class="p">)</span>
+
+<span class="c1"># Add the handler for client (VEN) registrations</span>
+<span class="n">server</span><span class="o">.</span><span class="n">add_handler</span><span class="p">(</span><span class="s1">&#39;on_create_party_registration&#39;</span><span class="p">,</span> <span class="n">on_create_party_registration</span><span class="p">)</span>
+
+<span class="c1"># Add the handler for report registrations from the VEN</span>
+<span class="n">server</span><span class="o">.</span><span class="n">add_handler</span><span class="p">(</span><span class="s1">&#39;on_register_report&#39;</span><span class="p">,</span> <span class="n">on_register_report</span><span class="p">)</span>
+
+<span class="c1"># Add a prepared event for a VEN that will be picked up when it polls for new messages.</span>
+<span class="n">server</span><span class="o">.</span><span class="n">add_event</span><span class="p">(</span><span class="n">ven_id</span><span class="o">=</span><span class="s1">&#39;ven_id_123&#39;</span><span class="p">,</span>
+                 <span class="n">signal_name</span><span class="o">=</span><span class="s1">&#39;simple&#39;</span><span class="p">,</span>
+                 <span class="n">signal_type</span><span class="o">=</span><span class="s1">&#39;level&#39;</span><span class="p">,</span>
+                 <span class="n">intervals</span><span class="o">=</span><span class="p">[{</span><span class="s1">&#39;dtstart&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="p">(</span><span class="mi">2021</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">tzinfo</span><span class="o">=</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">),</span>
+                             <span class="s1">&#39;duration&#39;</span><span class="p">:</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">10</span><span class="p">),</span>
+                             <span class="s1">&#39;signal_payload&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}],</span>
+                 <span class="n">callback</span><span class="o">=</span><span class="n">event_response_callback</span><span class="p">)</span>
+
+<span class="c1"># Run the server on the asyncio event loop</span>
+<span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span>
+<span class="n">loop</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="n">server</span><span class="o">.</span><span class="n">run</span><span class="p">())</span>
+<span class="n">loop</span><span class="o">.</span><span class="n">run_forever</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Read on for more details!</p>
+</section>
+<section id="registration">
 <span id="server-registration"></span><h2>Registration<a class="headerlink" href="#registration" title="Permalink to this headline">¶</a></h2>
 <p>If a client (VEN) wants to register for the first time, it will go through a Registration procedure.</p>
 <div class="admonition-implementation-checklist admonition">
@@ -77,8 +147,8 @@
         <span class="k">return</span> <span class="n">ven_id</span><span class="p">,</span> <span class="n">registration_id</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="events">
+</section>
+<section id="events">
 <span id="server-events"></span><h2>Events<a class="headerlink" href="#events" title="Permalink to this headline">¶</a></h2>
 <p>The server (VTN) is expected to know when it needs to inform the clients (VENs) of certain events that they must respond to. This could be a predicted shortage or overage of available power in a certain electricity grid area, for example.</p>
 <p>The easiest way to supply events to a VEN is by using OpenLEADR’s built-in message queing system. You simply add an event for a ven using the <code class="docutils literal notranslate"><span class="pre">server.add_event</span></code> method. You supply the ven_id for which the event is required, as well as the <code class="docutils literal notranslate"><span class="pre">signal_name</span></code>, <code class="docutils literal notranslate"><span class="pre">signal_type</span></code>, <code class="docutils literal notranslate"><span class="pre">intervals</span></code> and <code class="docutils literal notranslate"><span class="pre">targets</span></code>. This will build an event object with a single signal for a VEN. If you need more flexibility, you can alternatively construct the event dictionary yourself and supply it directly to the <code class="docutils literal notranslate"><span class="pre">add_raw_event</span></code> method.</p>
@@ -91,16 +161,15 @@
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;VEN </span><span class="si">{</span><span class="n">ven_id</span><span class="si">}</span><span class="s2"> responded </span><span class="si">{</span><span class="n">opt_status</span><span class="si">}</span><span class="s2"> to event </span><span class="si">{</span><span class="n">event_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
 <span class="n">server</span> <span class="o">=</span> <span class="n">OpenADRServer</span><span class="p">(</span><span class="n">vtn_id</span><span class="o">=</span><span class="s1">&#39;myvtn&#39;</span><span class="p">)</span>
-<span class="n">server</span><span class="o">.</span><span class="n">add_event</span><span class="p">(</span><span class="n">ven_id</span><span class="o">=</span><span class="s1">&#39;ven123&#39;</span><span class="p">,</span>
-                 <span class="n">event_id</span><span class="o">=</span><span class="s1">&#39;event123&#39;</span><span class="p">,</span>
-                 <span class="n">signal_name</span><span class="o">=</span><span class="s1">&#39;simple&#39;</span><span class="p">,</span>
-                 <span class="n">signal_type</span><span class="o">=</span><span class="s1">&#39;level&#39;</span><span class="p">,</span>
-                 <span class="n">intervals</span><span class="o">=</span><span class="p">[{</span><span class="s1">&#39;dtstart&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="p">(</span><span class="mf">2020.</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">tzinfo</span><span class="o">=</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">),</span>
-                             <span class="s1">&#39;signal_payload&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
-                             <span class="p">{</span><span class="s1">&#39;dtstart&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="p">(</span><span class="mf">2020.</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">tzinfo</span><span class="o">=</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">),</span>
-                             <span class="s1">&#39;signal_payload&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}],</span>
-                 <span class="n">target</span><span class="o">=</span><span class="p">[{</span><span class="s1">&#39;resource_id&#39;</span><span class="p">:</span> <span class="s1">&#39;Device001&#39;</span><span class="p">}],</span>
-                 <span class="n">callback</span><span class="o">=</span><span class="n">partial</span><span class="p">(</span><span class="n">event_callback</span><span class="p">,</span> <span class="n">ven_id</span><span class="o">=</span><span class="s1">&#39;ven123&#39;</span><span class="p">,</span> <span class="n">event_id</span><span class="o">=</span><span class="s1">&#39;event123&#39;</span><span class="p">))</span>
+<span class="n">event_id</span> <span class="o">=</span> <span class="n">server</span><span class="o">.</span><span class="n">add_event</span><span class="p">(</span><span class="n">ven_id</span><span class="o">=</span><span class="s1">&#39;ven123&#39;</span><span class="p">,</span>
+                            <span class="n">signal_name</span><span class="o">=</span><span class="s1">&#39;simple&#39;</span><span class="p">,</span>
+                            <span class="n">signal_type</span><span class="o">=</span><span class="s1">&#39;level&#39;</span><span class="p">,</span>
+                            <span class="n">intervals</span><span class="o">=</span><span class="p">[{</span><span class="s1">&#39;dtstart&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="p">(</span><span class="mf">2020.</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">tzinfo</span><span class="o">=</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">),</span>
+                                        <span class="s1">&#39;signal_payload&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
+                                        <span class="p">{</span><span class="s1">&#39;dtstart&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="p">(</span><span class="mf">2020.</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">tzinfo</span><span class="o">=</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">),</span>
+                                        <span class="s1">&#39;signal_payload&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}],</span>
+                            <span class="n">target</span><span class="o">=</span><span class="p">[{</span><span class="s1">&#39;resource_id&#39;</span><span class="p">:</span> <span class="s1">&#39;Device001&#39;</span><span class="p">}],</span>
+                            <span class="n">callback</span><span class="o">=</span><span class="n">event_callback</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Alternatively, you can use the handy constructors in <code class="docutils literal notranslate"><span class="pre">openleadr.objects</span></code> to format parts of the event:</p>
@@ -109,20 +178,67 @@
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timezone</span>
 <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
 
+<span class="k">async</span> <span class="k">def</span> <span class="nf">event_callback</span><span class="p">(</span><span class="n">ven_id</span><span class="p">,</span> <span class="n">event_id</span><span class="p">,</span> <span class="n">opt_status</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;VEN </span><span class="si">{</span><span class="n">ven_id</span><span class="si">}</span><span class="s2"> responded </span><span class="si">{</span><span class="n">opt_status</span><span class="si">}</span><span class="s2"> to event </span><span class="si">{</span><span class="n">event_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
 <span class="n">server</span> <span class="o">=</span> <span class="n">OpenADRServer</span><span class="p">(</span><span class="n">vtn_id</span><span class="o">=</span><span class="s1">&#39;myvtn&#39;</span><span class="p">)</span>
-<span class="n">server</span><span class="o">.</span><span class="n">add_event</span><span class="p">(</span><span class="n">ven_id</span><span class="o">=</span><span class="s1">&#39;ven123&#39;</span><span class="p">,</span>
-                 <span class="n">event_id</span><span class="o">=</span><span class="s1">&#39;event123&#39;</span><span class="p">,</span>
-                 <span class="n">signal_name</span><span class="o">=</span><span class="s1">&#39;simple&#39;</span><span class="p">,</span>
-                 <span class="n">signal_type</span><span class="o">=</span><span class="s1">&#39;level&#39;</span><span class="p">,</span>
-                 <span class="n">intervals</span><span class="o">=</span><span class="p">[</span><span class="n">Interval</span><span class="p">(</span><span class="n">dtstart</span><span class="o">=</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2020</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">tzinfo</span><span class="o">=</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">),</span>
-                                     <span class="n">signal_payload</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
-                            <span class="n">Interval</span><span class="p">(</span><span class="n">dtstart</span><span class="o">=</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2020</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">tzinfo</span><span class="o">=</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">),</span>
-                                     <span class="n">signal_payload</span><span class="o">=</span><span class="mi">1</span><span class="p">)]</span>
-                 <span class="n">target</span><span class="o">=</span><span class="p">[</span><span class="n">Target</span><span class="p">(</span><span class="n">resource_id</span><span class="o">=</span><span class="s1">&#39;Device001&#39;</span><span class="p">)],</span>
-                 <span class="n">callback</span><span class="o">=</span><span class="n">partial</span><span class="p">(</span><span class="n">event_callback</span><span class="p">,</span> <span class="n">ven_id</span><span class="o">=</span><span class="s1">&#39;ven123&#39;</span><span class="p">,</span> <span class="n">event_id</span><span class="o">=</span><span class="s1">&#39;event123&#39;</span><span class="p">))</span>
+<span class="n">event_id</span> <span class="o">=</span> <span class="n">server</span><span class="o">.</span><span class="n">add_event</span><span class="p">(</span><span class="n">ven_id</span><span class="o">=</span><span class="s1">&#39;ven123&#39;</span><span class="p">,</span>
+                            <span class="n">signal_name</span><span class="o">=</span><span class="s1">&#39;simple&#39;</span><span class="p">,</span>
+                            <span class="n">signal_type</span><span class="o">=</span><span class="s1">&#39;level&#39;</span><span class="p">,</span>
+                            <span class="n">intervals</span><span class="o">=</span><span class="p">[</span><span class="n">Interval</span><span class="p">(</span><span class="n">dtstart</span><span class="o">=</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2020</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">tzinfo</span><span class="o">=</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">),</span>
+                                                <span class="n">signal_payload</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
+                                       <span class="n">Interval</span><span class="p">(</span><span class="n">dtstart</span><span class="o">=</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2020</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">tzinfo</span><span class="o">=</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">),</span>
+                                                <span class="n">signal_payload</span><span class="o">=</span><span class="mi">1</span><span class="p">)]</span>
+                            <span class="n">target</span><span class="o">=</span><span class="p">[</span><span class="n">Target</span><span class="p">(</span><span class="n">resource_id</span><span class="o">=</span><span class="s1">&#39;Device001&#39;</span><span class="p">)],</span>
+                            <span class="n">callback</span><span class="o">=</span><span class="n">event_callback</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="section" id="a-word-on-event-targets">
+<p>If you want to add a “raw” event directly, you can use this example as a guid:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">openleadr</span> <span class="kn">import</span> <span class="n">OpenADRServer</span>
+<span class="kn">from</span> <span class="nn">openleadr.objects</span> <span class="kn">import</span> <span class="n">Event</span><span class="p">,</span> <span class="n">EventDescriptor</span><span class="p">,</span> <span class="n">EventSignal</span><span class="p">,</span> <span class="n">Target</span><span class="p">,</span> <span class="n">Interval</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timezone</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">event_callback</span><span class="p">(</span><span class="n">ven_id</span><span class="p">,</span> <span class="n">event_id</span><span class="p">,</span> <span class="n">opt_status</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;VEN </span><span class="si">{</span><span class="n">ven_id</span><span class="si">}</span><span class="s2"> responded </span><span class="si">{</span><span class="n">opt_status</span><span class="si">}</span><span class="s2"> to event </span><span class="si">{</span><span class="n">event_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">server</span> <span class="o">=</span> <span class="n">OpenADRServer</span><span class="p">(</span><span class="n">vtn_id</span><span class="o">=</span><span class="s1">&#39;myvtn&#39;</span><span class="p">)</span>
+<span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+<span class="n">event</span> <span class="o">=</span> <span class="n">Event</span><span class="p">(</span><span class="n">event_descriptor</span><span class="o">=</span><span class="n">EventDescriptor</span><span class="p">(</span><span class="n">event_id</span><span class="o">=</span><span class="s1">&#39;event001&#39;</span><span class="p">,</span>
+                                               <span class="n">modification_number</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                                               <span class="n">event_status</span><span class="o">=</span><span class="s1">&#39;far&#39;</span><span class="p">,</span>
+                                               <span class="n">market_context</span><span class="o">=</span><span class="s1">&#39;http://marketcontext01&#39;</span><span class="p">),</span>
+              <span class="n">event_signals</span><span class="o">=</span><span class="p">[</span><span class="n">EventSignal</span><span class="p">(</span><span class="n">signal_id</span><span class="o">=</span><span class="s1">&#39;signal001&#39;</span><span class="p">,</span>
+                                         <span class="n">signal_type</span><span class="o">=</span><span class="s1">&#39;level&#39;</span><span class="p">,</span>
+                                         <span class="n">signal_name</span><span class="o">=</span><span class="s1">&#39;simple&#39;</span><span class="p">,</span>
+                                         <span class="n">intervals</span><span class="o">=</span><span class="p">[</span><span class="n">Interval</span><span class="p">(</span><span class="n">dtstart</span><span class="o">=</span><span class="n">now</span><span class="p">,</span>
+                                                             <span class="n">duration</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">10</span><span class="p">),</span>
+                                                             <span class="n">signal_payload</span><span class="o">=</span><span class="mi">1</span><span class="p">)]),</span>
+                             <span class="n">EventSignal</span><span class="p">(</span><span class="n">signal_id</span><span class="o">=</span><span class="s1">&#39;signal002&#39;</span><span class="p">,</span>
+                                         <span class="n">signal_type</span><span class="o">=</span><span class="s1">&#39;price&#39;</span><span class="p">,</span>
+                                         <span class="n">signal_name</span><span class="o">=</span><span class="s1">&#39;ELECTRICITY_PRICE&#39;</span><span class="p">,</span>
+                                         <span class="n">intervals</span><span class="o">=</span><span class="p">[</span><span class="n">Interval</span><span class="p">(</span><span class="n">dtstart</span><span class="o">=</span><span class="n">now</span><span class="p">,</span>
+                                                             <span class="n">duration</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">10</span><span class="p">),</span>
+                                                             <span class="n">signal_payload</span><span class="o">=</span><span class="mi">1</span><span class="p">)])],</span>
+              <span class="n">targets</span><span class="o">=</span><span class="p">[</span><span class="n">Target</span><span class="p">(</span><span class="n">ven_id</span><span class="o">=</span><span class="s1">&#39;ven123&#39;</span><span class="p">)])</span>
+
+<span class="n">server</span><span class="o">.</span><span class="n">add_raw_event</span><span class="p">(</span><span class="n">ven_id</span><span class="o">=</span><span class="s1">&#39;ven123&#39;</span><span class="p">,</span> <span class="n">event</span><span class="o">=</span><span class="n">event</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">event_callback</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If you want to add an event and wait for the response in a single coroutine, you can pass an asyncio Future instead of a function or coroutine as the callback argument:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">asyncio</span>
+
+<span class="o">...</span>
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">generate_event</span><span class="p">():</span>
+    <span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span>
+    <span class="n">opt_status_future</span> <span class="o">=</span> <span class="n">loop</span><span class="o">.</span><span class="n">create_future</span><span class="p">()</span>
+    <span class="n">server</span><span class="o">.</span><span class="n">add_event</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">opt_status_future</span><span class="p">)</span>
+    <span class="n">opt_status</span> <span class="o">=</span> <span class="k">await</span> <span class="n">opt_status_future</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The opt status for this event is </span><span class="si">{</span><span class="n">opt_status</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<section id="a-word-on-event-targets">
 <h3>A word on event targets<a class="headerlink" href="#a-word-on-event-targets" title="Permalink to this headline">¶</a></h3>
 <p>The Target of your Event is an indication for the VEN which resources or devices should be affected. You can supply the target of the event in serveral ways:</p>
 <ul class="simple">
@@ -137,34 +253,42 @@
 </pre></div>
 </div>
 <p>If you dont assign any Target, the target will be set to the <code class="docutils literal notranslate"><span class="pre">ven_id</span></code> that you specified.</p>
-</div>
-</div>
-<div class="section" id="reports">
+</section>
+</section>
+<section id="reports">
 <span id="server-reports"></span><h2>Reports<a class="headerlink" href="#reports" title="Permalink to this headline">¶</a></h2>
 <p>Please see the <a class="reference internal" href="reporting.html#reporting"><span class="std std-ref">Reporting</span></a> section.</p>
-</div>
-<div class="section" id="things-you-should-implement">
+</section>
+<section id="things-you-should-implement">
 <span id="server-implement"></span><h2>Things you should implement<a class="headerlink" href="#things-you-should-implement" title="Permalink to this headline">¶</a></h2>
 <p>You should implement the following handlers:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">on_create_party_registration(registration_info)</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">on_register_report(ven_id,</span> <span class="pre">resource_id,</span> <span class="pre">measurement,</span> <span class="pre">unit,</span> <span class="pre">scale,</span> <span class="pre">min_sampling_interval,</span> <span class="pre">max_sampling_interval)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ven_lookup(ven_id)</span></code>: a function that returns a dict with the <cite>‘ven_name’</cite>, <code class="docutils literal notranslate"><span class="pre">'ven_id'</span></code>, <code class="docutils literal notranslate"><span class="pre">'fingerprint'</span></code> and <code class="docutils literal notranslate"><span class="pre">'registration_id'</span></code> for the given <code class="docutils literal notranslate"><span class="pre">ven_id</span></code> (see below.). This is used to automatically reject requests from VENs that the VTN does not know, and to authenticate the VENs message signatures.</p></li>
 </ul>
 <p>Optionally:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">on_poll(ven_id)</span></code>; only if you don’t want to use the internal message queue.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ven_lookup(ven_id)</span></code>: a function or coroutine that openleadr can use to check if we know a VEN. Signature:</p></li>
 </ul>
-</div>
-<div class="section" id="signing-messages">
+</section>
+<section id="signing-messages">
 <span id="server-signing-messages"></span><h2>Signing Messages<a class="headerlink" href="#signing-messages" title="Permalink to this headline">¶</a></h2>
 <p>The OpenLEADR can sign your messages and validate incoming messages. For some background, see the <a class="reference internal" href="message_signing.html#message-signing"><span class="std std-ref">Message Signing</span></a>.</p>
 <p>Example implementation:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">openleadr</span> <span class="kn">import</span> <span class="n">OpenADRServr</span>
 
-<span class="k">def</span> <span class="nf">fingerprint_lookup</span><span class="p">(</span><span class="n">ven_id</span><span class="p">):</span>
-    <span class="c1"># Look up the certificate fingerprint that is associated with this VEN.</span>
-    <span class="n">fingerprint</span> <span class="o">=</span> <span class="n">database</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="s1">&#39;certificate_fingerprint&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">ven_id</span><span class="o">=</span><span class="n">ven_id</span><span class="p">)</span> <span class="c1"># Pseudo code</span>
-    <span class="k">return</span> <span class="n">fingerprint</span>
+<span class="k">def</span> <span class="nf">ven_lookup</span><span class="p">(</span><span class="n">ven_id</span><span class="p">):</span>
+    <span class="c1"># Look up the information about this VEN.</span>
+    <span class="n">ven_info</span> <span class="o">=</span> <span class="n">database</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="s1">&#39;vens&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">ven_id</span><span class="o">=</span><span class="n">ven_id</span><span class="p">)</span> <span class="c1"># Pseudo code</span>
+    <span class="k">if</span> <span class="n">ven_info</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;ven_id&#39;</span><span class="p">:</span> <span class="n">ven_info</span><span class="p">[</span><span class="s1">&#39;ven_id&#39;</span><span class="p">],</span>
+                <span class="s1">&#39;ven_name&#39;</span><span class="p">:</span> <span class="n">ven_info</span><span class="p">[</span><span class="s1">&#39;ven_name&#39;</span><span class="p">],</span>
+                <span class="s1">&#39;fingerprint&#39;</span><span class="p">:</span> <span class="n">ven_info</span><span class="p">[</span><span class="s1">&#39;fingerprint&#39;</span><span class="p">],</span>
+                <span class="s1">&#39;registration_id&#39;</span><span class="p">:</span> <span class="n">ven_info</span><span class="p">[</span><span class="s1">&#39;registration_id&#39;</span><span class="p">]}</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{}</span>
 
 <span class="n">server</span> <span class="o">=</span> <span class="n">OpenADRServer</span><span class="p">(</span><span class="n">vtn_id</span><span class="o">=</span><span class="s1">&#39;MyVTN&#39;</span><span class="p">,</span>
                        <span class="n">cert</span><span class="o">=</span><span class="s1">&#39;/path/to/cert.pem&#39;</span><span class="p">,</span>
@@ -174,10 +298,12 @@
 </pre></div>
 </div>
 <p>The VEN’s fingerprint should be obtained from the VEN outside of OpenADR.</p>
-</div>
-<div class="section" id="message-handlers">
+</section>
+<section id="message-handlers">
 <span id="server-message-handlers"></span><h2>Message Handlers<a class="headerlink" href="#message-handlers" title="Permalink to this headline">¶</a></h2>
 <p>Your server has to deal with the different OpenADR messages. The way this works is that OpenLEADR will expose certain modules at the appropriate endpoints (like /oadrPoll and /EiRegister), and figure out what type of message is being sent. It will then call your handler with the contents of the message that are relevant for you to handle. This section provides an overview with examples for the different kinds of messages that you can expect and what should be returned.</p>
+<section id="on-register-report">
+<span id="server-on-register-report"></span><h3>on_register_report<a class="headerlink" href="#on-register-report" title="Permalink to this headline">¶</a></h3>
 <p>The VEN informs you which reports it has available. If you want to periodically receive any of these reports, you should return a list of the r_ids that you want to receive.</p>
 <p>Signature:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span> <span class="nf">on_register_report</span><span class="p">(</span><span class="n">ven_id</span><span class="p">,</span> <span class="n">resource_id</span><span class="p">,</span> <span class="n">measurement</span><span class="p">,</span> <span class="n">unit</span><span class="p">,</span> <span class="n">scale</span><span class="p">,</span>
@@ -188,7 +314,13 @@
     <span class="k">return</span> <span class="kc">None</span>
 </pre></div>
 </div>
+</section>
+<section id="on-query-registration">
+<span id="server-on-query-registration"></span><h3>on_query_registration<a class="headerlink" href="#on-query-registration" title="Permalink to this headline">¶</a></h3>
 <p>A prospective VEN is requesting information about your VTN, like the versions and transports you support. You should not implement this handler and let OpenLEADR handle this response.</p>
+</section>
+<section id="on-create-party-registration">
+<span id="server-on-create-party-registration"></span><h3>on_create_party_registration<a class="headerlink" href="#on-create-party-registration" title="Permalink to this headline">¶</a></h3>
 <p>The VEN tries to register with you. You will receive a registration_info dict that contains, among other things, a field <cite>ven_name</cite> which is how the VEN identifies itself. If the VEN is accepted, you return a <code class="docutils literal notranslate"><span class="pre">ven_id,</span> <span class="pre">registration_id</span></code> tuple. If not, return <code class="docutils literal notranslate"><span class="pre">False</span></code>:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span> <span class="nf">on_create_party_registration</span><span class="p">(</span><span class="n">registration_info</span><span class="p">):</span>
     <span class="n">ven_name</span> <span class="o">=</span> <span class="n">registration_info</span><span class="p">[</span><span class="s1">&#39;ven_name&#39;</span><span class="p">]</span>
@@ -200,9 +332,15 @@
 </pre></div>
 </div>
 <p>During this step, the VEN probably does not have a <code class="docutils literal notranslate"><span class="pre">venID</span></code> yet. If they connected using a secure TLS connection, the <code class="docutils literal notranslate"><span class="pre">registration_info</span></code> dict will contain the fingerprint of the public key that was used for this connection (<code class="docutils literal notranslate"><span class="pre">registration_info['fingerprint']</span></code>). Your <code class="docutils literal notranslate"><span class="pre">on_create_party_registration</span></code> handler should check this fingerprint value against a value that you received offline, to be sure that the ven with this venName is the correct VEN.</p>
+</section>
+<section id="on-cancel-party-registration">
+<span id="server-on-cancel-party-registration"></span><h3>on_cancel_party_registration<a class="headerlink" href="#on-cancel-party-registration" title="Permalink to this headline">¶</a></h3>
 <p>The VEN informs you that they are cancelling their registration and no longer wish to be contacted by you.</p>
 <p>You should deregister the VEN internally, and return <cite>None</cite>.</p>
 <p>Return: <code class="docutils literal notranslate"><span class="pre">None</span></code></p>
+</section>
+<section id="on-poll">
+<span id="server-on-poll"></span><h3>on_poll<a class="headerlink" href="#on-poll" title="Permalink to this headline">¶</a></h3>
 <p>You only need to implement this if you don’t want to use the automatic internal message queue. If you add this handler to the server, the internal message queue will be automatically disabled.</p>
 <p>The VEN is requesting the next message that you have for it. You should return a tuple of message_type and message_payload as a dict. If there is no message for the VEN, you should return <cite>None</cite>.</p>
 <p>Signature:</p>
@@ -212,6 +350,9 @@
 </pre></div>
 </div>
 <p>If you implement your own on_poll handler, you should also include your own <code class="docutils literal notranslate"><span class="pre">on_created_event</span></code> handler that retrieves the opt status for a distributed event.</p>
+</section>
+<section id="on-created-event">
+<span id="server-on-created-event"></span><h3>on_created_event<a class="headerlink" href="#on-created-event" title="Permalink to this headline">¶</a></h3>
 <p>You only need to implement this if you don’t want to use the automatic internal message queue. Otherwise, you supply a per-event callback function when you add the event to the internal queue.</p>
 <p>Signature:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span> <span class="nf">on_created_event</span><span class="p">(</span><span class="n">ven_id</span><span class="p">,</span> <span class="n">event_id</span><span class="p">,</span> <span class="n">opt_status</span><span class="p">):</span>
@@ -219,8 +360,9 @@
     <span class="c1"># return None</span>
 </pre></div>
 </div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
 
           </div>
@@ -229,13 +371,22 @@
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-            <p class="logo"><a href="index.html">
-              <img class="logo" src="_static/logo-tall.png" alt="Logo"/>
-            </a></p>
-<h1 class="logo"><a href="index.html">OpenLEADR</a></h1>
+<p class="logo">
+  <a href="index.html">
+    <img class="logo" src="_static/logo-tall.png" alt="Logo"/>
+    
+  </a>
+</p>
 
 
 
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=openleadr&repo=openleadr-python&type=star&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
 
 
 
@@ -246,6 +397,7 @@
 <li class="toctree-l1"><a class="reference internal" href="features.html">Feature Tour</a></li>
 <li class="toctree-l1"><a class="reference internal" href="client.html">Client</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Server</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#minute-vtn-example">1-minute VTN example</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#registration">Registration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#events">Events</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#reports">Reports</a></li>
@@ -275,7 +427,7 @@
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -297,7 +449,7 @@
       &copy;2020, OpenLEADR Contributors.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.2.1</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.3.0</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

@@ -4,16 +4,15 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Reporting &#8212; OpenLEADR 0.5.11 documentation</title>
-    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="_static/css/custom.css" />
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Reporting &#8212; OpenLEADR 0.5.26 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
-    <script src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Logging" href="logging.html" />
@@ -34,10 +33,10 @@
 
           <div class="body" role="main">
             
-  <div class="section" id="reporting">
+  <section id="reporting">
 <span id="id1"></span><h1>Reporting<a class="headerlink" href="#reporting" title="Permalink to this headline">¶</a></h1>
 <p>Your VEN can provide periodic reports to the VTN. These reports usually contain metering data or status information.</p>
-<div class="section" id="a-brief-overview-of-reports-in-openadr">
+<section id="a-brief-overview-of-reports-in-openadr">
 <h2>A brief overview of reports in OpenADR<a class="headerlink" href="#a-brief-overview-of-reports-in-openadr" title="Permalink to this headline">¶</a></h2>
 <p>Reports can describe many measurable things. A report description contains:</p>
 <ul class="simple">
@@ -59,10 +58,10 @@
 <li><p>A Resource ID, which indicates which of the resources this report applies to. It’s probably one of your controllable devices.</p></li>
 </ul>
 <p>You configure which reports you can deliver, and the VEN offers these to the VTN. The VTN makes a selection and requests reports from the VEN to be sent at regular intervals. The VEN then starts collecting data and sending reports.</p>
-</div>
-<div class="section" id="offering-reports-ven-to-vtn">
+</section>
+<section id="offering-reports-ven-to-vtn">
 <h2>Offering reports (VEN to VTN)<a class="headerlink" href="#offering-reports-ven-to-vtn" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="basic-telemetry-reports">
+<section id="basic-telemetry-reports">
 <h3>Basic telemetry reports<a class="headerlink" href="#basic-telemetry-reports" title="Permalink to this headline">¶</a></h3>
 <p>Say you have two devices, ‘Device001’ and ‘Device002’, which can each offer measurments of Voltage and Current at a samplerate of 10 seconds. You would register these reports as follows:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">openleadr</span>
@@ -132,9 +131,9 @@
                       <span class="n">sampling_rate</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">10</span><span class="p">),</span>
                       <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;A&#39;</span><span class="p">)</span>
 
-<span class="k">async</span> <span class="k">def</span> <span class="nf">load_data</span><span class="p">(</span><span class="n">date_from</span><span class="p">,</span> <span class="n">date_to</span><span class="p">,</span> <span class="n">sampling_rate</span><span class="p">):</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">load_data</span><span class="p">(</span><span class="n">date_from</span><span class="p">,</span> <span class="n">date_to</span><span class="p">,</span> <span class="n">sampling_interval</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Function that loads data between date_from and date_to, sampled at sampling_rate.</span>
+<span class="sd">    Function that loads data between date_from and date_to, sampled at sampling_interval.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Load data from a backend system</span>
     <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">database</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;SELECT time_bucket(&#39;15 minutes&#39;, datetime) as dt, AVG(value)</span>
@@ -153,8 +152,8 @@
     <span class="k">return</span> <span class="n">data</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="historic-data-reports">
+</section>
+<section id="historic-data-reports">
 <h3>Historic data reports<a class="headerlink" href="#historic-data-reports" title="Permalink to this headline">¶</a></h3>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -180,12 +179,12 @@
 </pre></div>
 </div>
 <p>Note that you have to override the default <code class="docutils literal notranslate"><span class="pre">report_name</span></code> compared to the previous examples.</p>
-</div>
-</div>
-<div class="section" id="requesting-reports-vtn-to-ven">
+</section>
+</section>
+<section id="requesting-reports-vtn-to-ven">
 <h2>Requesting Reports (VTN to VEN)<a class="headerlink" href="#requesting-reports-vtn-to-ven" title="Permalink to this headline">¶</a></h2>
 <p>The VTN will receive an <code class="docutils literal notranslate"><span class="pre">oadrRegisterReport</span></code> message. Your handler <code class="docutils literal notranslate"><span class="pre">on_register_report</span></code> will be called for each report that is offered. You inspect the report description and decide which elements from the report you wish to receive.</p>
-<div class="section" id="using-the-compact-format">
+<section id="using-the-compact-format">
 <h3>Using the compact format<a class="headerlink" href="#using-the-compact-format" title="Permalink to this headline">¶</a></h3>
 <p>The compact format provides an abstraction over the actual encapsulation of reports. If your <code class="docutils literal notranslate"><span class="pre">on_register_report</span></code> handler has the following signature, if will be called using the simple format:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span> <span class="nf">on_register_report</span><span class="p">(</span><span class="n">ven_id</span><span class="p">,</span> <span class="n">resource_id</span><span class="p">,</span> <span class="n">measurement</span><span class="p">,</span> <span class="n">unit</span><span class="p">,</span> <span class="n">scale</span><span class="p">,</span>
@@ -201,8 +200,8 @@ The <code class="docutils literal notranslate"><span class="pre">sampling_interv
 The <code class="docutils literal notranslate"><span class="pre">report_interval</span></code> is optional, and contains a <code class="docutils literal notranslate"><span class="pre">timedelta</span></code> object that indicates how often you want to receive a report. If you don’t specify a <code class="docutils literal notranslate"><span class="pre">report_interval</span></code>, you will receive each report immediately after it is sampled.</p>
 <p>This mechanism allows you to specify, for instance, that you want to receive 15-minute sampled values every 24 hours.</p>
 <p>For more information on the design of your callback function, see the <span class="xref std std-ref">receiving_reports</span> section below.</p>
-</div>
-<div class="section" id="using-the-full-format">
+</section>
+<section id="using-the-full-format">
 <h3>Using the full format<a class="headerlink" href="#using-the-full-format" title="Permalink to this headline">¶</a></h3>
 <p>If you want full control over the reporting specification, you implement an <code class="docutils literal notranslate"><span class="pre">on_register_report</span></code> handler with the following signature:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span> <span class="nf">on_register_report</span><span class="p">(</span><span class="n">report</span><span class="p">):</span>
@@ -285,16 +284,16 @@ The <code class="docutils literal notranslate"><span class="pre">report_interval
 <li><p>Receive the entire oadrReport dict that contains the values as we receive it.</p></li>
 <li><p>Receive only the r_id and an iterable of <code class="docutils literal notranslate"><span class="pre">(datetime.datetime,</span> <span class="pre">value)</span></code> tuples for you to deal with.</p></li>
 </ol>
-</div>
-</div>
-<div class="section" id="delivering-reports-ven-to-vtn">
+</section>
+</section>
+<section id="delivering-reports-ven-to-vtn">
 <h2>Delivering Reports (VEN to VTN)<a class="headerlink" href="#delivering-reports-ven-to-vtn" title="Permalink to this headline">¶</a></h2>
 <p>Report values will be automatically collected by running your provided callbacks. They are automatically packed up and sent to the VTN at the requested interval.</p>
 <p>Your callbacks should return either a single value, representing the most up-to-date reading,
 or a list of <code class="docutils literal notranslate"><span class="pre">(datetime.datetime,</span> <span class="pre">value)</span></code> tuples. This last type is useful when providing historic reports.</p>
 <p>This was already described in the previous section on this page.</p>
-</div>
-<div class="section" id="receiving-reports-vtn">
+</section>
+<section id="receiving-reports-vtn">
 <h2>Receiving Reports (VTN)<a class="headerlink" href="#receiving-reports-vtn" title="Permalink to this headline">¶</a></h2>
 <p>When the VEN delivers a report that you asked for, your handlers will be called to deal with it.</p>
 <p>Instead of giving you the full Report object, your handler will receive the iterable of <code class="docutils literal notranslate"><span class="pre">(datetime.datetime,</span> <span class="pre">value)</span></code> tuples.</p>
@@ -313,8 +312,8 @@ or a list of <code class="docutils literal notranslate"><span class="pre">(datet
 </pre></div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">partial</span></code> function creates a version of your callback with default parameters filled in.</p>
-</div>
-<div class="section" id="identifying-a-data-stream">
+</section>
+<section id="identifying-a-data-stream">
 <h2>Identifying a data stream<a class="headerlink" href="#identifying-a-data-stream" title="Permalink to this headline">¶</a></h2>
 <p>Reports in OpenADR carry with them the following identifiers:</p>
 <ul class="simple">
@@ -324,8 +323,8 @@ or a list of <code class="docutils literal notranslate"><span class="pre">(datet
 <li><p><code class="docutils literal notranslate"><span class="pre">reportID</span></code>: the id that the VEN assigns to a single copy of a report</p></li>
 </ul>
 <p>The <code class="docutils literal notranslate"><span class="pre">rID</span></code> is the most specific identifier of a data stream. The <code class="docutils literal notranslate"><span class="pre">rID</span></code> is part of the <code class="docutils literal notranslate"><span class="pre">oadrReportDescription</span></code>, along with information like the measurement type, unit, and the <code class="docutils literal notranslate"><span class="pre">resourceID</span></code>.</p>
-</div>
-</div>
+</section>
+</section>
 
 
           </div>
@@ -334,13 +333,22 @@ or a list of <code class="docutils literal notranslate"><span class="pre">(datet
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-            <p class="logo"><a href="index.html">
-              <img class="logo" src="_static/logo-tall.png" alt="Logo"/>
-            </a></p>
-<h1 class="logo"><a href="index.html">OpenLEADR</a></h1>
+<p class="logo">
+  <a href="index.html">
+    <img class="logo" src="_static/logo-tall.png" alt="Logo"/>
+    
+  </a>
+</p>
 
 
 
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=openleadr&repo=openleadr-python&type=star&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
 
 
 
@@ -380,7 +388,7 @@ or a list of <code class="docutils literal notranslate"><span class="pre">(datet
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -402,7 +410,7 @@ or a list of <code class="docutils literal notranslate"><span class="pre">(datet
       &copy;2020, OpenLEADR Contributors.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.2.1</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.3.0</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

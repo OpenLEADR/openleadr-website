@@ -4,16 +4,15 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Payload Representations &#8212; OpenLEADR 0.5.11 documentation</title>
-    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="_static/css/custom.css" />
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Payload Representations &#8212; OpenLEADR 0.5.26 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
-    <script src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="prev" title="openleadr package" href="api/openleadr.html" />
@@ -33,7 +32,7 @@
 
           <div class="body" role="main">
             
-  <div class="section" id="payload-representations">
+  <section id="payload-representations">
 <span id="representations"></span><h1>Payload Representations<a class="headerlink" href="#payload-representations" title="Permalink to this headline">¶</a></h1>
 <p>In OpenLEADR, the complex hierarchies of the OpenADR XML-payloads are represented as Python dictionaries. These have been simplified as much as possible, allowing for a more natural and more readable experience.</p>
 <p>This means that you don’t have to instantiate objects and sub-objects and sub-sub-objects, but that you can define the entire object in a single, declarative statement. This kan keep a simple implementation very compact. The downside is that there is little help from your IDE and there is little discoverability for what contents can be provided in the messages. This page can be used as a reference for that information.</p>
@@ -62,7 +61,7 @@
 <li><p>The messages are usually used as a <code class="docutils literal notranslate"><span class="pre">message_name,</span> <span class="pre">message_payload</span></code> tuple. The message name is kept, for instance, <code class="docutils literal notranslate"><span class="pre">oadrCanceledOpt</span></code>, and the payload is given as a dict.</p></li>
 </ul>
 <p>Below is an alphabetized overview of all payloads with their XML and Python representations.</p>
-<div class="section" id="oadrcanceledopt">
+<section id="oadrcanceledopt">
 <span id="id1"></span><h2>oadrCanceledOpt<a class="headerlink" href="#oadrcanceledopt" title="Permalink to this headline">¶</a></h2>
 <p>OpenADR payload:</p>
 <div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;oadr:oadrPayload</span> <span class="na">xmlns:oadr=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07&quot;</span><span class="nt">&gt;</span>
@@ -86,8 +85,8 @@
               <span class="s1">&#39;response_description&#39;</span><span class="p">:</span> <span class="s1">&#39;OK&#39;</span><span class="p">}}</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="oadrcanceledpartyregistration">
+</section>
+<section id="oadrcanceledpartyregistration">
 <span id="id2"></span><h2>oadrCanceledPartyRegistration<a class="headerlink" href="#oadrcanceledpartyregistration" title="Permalink to this headline">¶</a></h2>
 <p>OpenADR payload:</p>
 <div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;oadr:oadrPayload</span> <span class="na">xmlns:oadr=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07&quot;</span><span class="nt">&gt;</span>
@@ -113,8 +112,8 @@
  <span class="s1">&#39;ven_id&#39;</span><span class="p">:</span> <span class="s1">&#39;123ABC&#39;</span><span class="p">}</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="oadrcanceledreport">
+</section>
+<section id="oadrcanceledreport">
 <span id="id3"></span><h2>oadrCanceledReport<a class="headerlink" href="#oadrcanceledreport" title="Permalink to this headline">¶</a></h2>
 <p>OpenADR payload:</p>
 <div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;oadr:oadrPayload</span> <span class="na">xmlns:oadr=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07&quot;</span><span class="nt">&gt;</span>
@@ -142,8 +141,8 @@
               <span class="s1">&#39;response_description&#39;</span><span class="p">:</span> <span class="s1">&#39;OK&#39;</span><span class="p">}}</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="id4">
+</section>
+<section id="id4">
 <span id="id5"></span><h2>oadrCanceledReport<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
 <p>OpenADR payload:</p>
 <div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;oadr:oadrPayload</span> <span class="na">xmlns:oadr=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07&quot;</span><span class="nt">&gt;</span>
@@ -173,8 +172,8 @@
  <span class="s1">&#39;ven_id&#39;</span><span class="p">:</span> <span class="s1">&#39;123ABC&#39;</span><span class="p">}</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="oadrcancelopt">
+</section>
+<section id="oadrcancelopt">
 <span id="id6"></span><h2>oadrCancelOpt<a class="headerlink" href="#oadrcancelopt" title="Permalink to this headline">¶</a></h2>
 <p>OpenADR payload:</p>
 <div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;oadr:oadrPayload</span> <span class="na">xmlns:oadr=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07&quot;</span><span class="nt">&gt;</span>
@@ -194,8 +193,8 @@
  <span class="s1">&#39;ven_id&#39;</span><span class="p">:</span> <span class="s1">&#39;123ABC&#39;</span><span class="p">}</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="oadrcancelpartyregistration">
+</section>
+<section id="oadrcancelpartyregistration">
 <span id="id7"></span><h2>oadrCancelPartyRegistration<a class="headerlink" href="#oadrcancelpartyregistration" title="Permalink to this headline">¶</a></h2>
 <p>OpenADR payload:</p>
 <div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;oadr:oadrPayload</span> <span class="na">xmlns:oadr=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07&quot;</span><span class="nt">&gt;</span>
@@ -215,8 +214,8 @@
  <span class="s1">&#39;ven_id&#39;</span><span class="p">:</span> <span class="s1">&#39;123ABC&#39;</span><span class="p">}</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="oadrcancelreport">
+</section>
+<section id="oadrcancelreport">
 <span id="id8"></span><h2>oadrCancelReport<a class="headerlink" href="#oadrcancelreport" title="Permalink to this headline">¶</a></h2>
 <p>OpenADR payload:</p>
 <div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;oadr:oadrPayload</span> <span class="na">xmlns:oadr=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07&quot;</span><span class="nt">&gt;</span>
@@ -238,8 +237,8 @@
  <span class="s1">&#39;ven_id&#39;</span><span class="p">:</span> <span class="s1">&#39;123ABC&#39;</span><span class="p">}</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="oadrcreatedevent">
+</section>
+<section id="oadrcreatedevent">
 <span id="id9"></span><h2>oadrCreatedEvent<a class="headerlink" href="#oadrcreatedevent" title="Permalink to this headline">¶</a></h2>
 <p>OpenADR payload:</p>
 <div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;oadr:oadrPayload</span> <span class="na">xmlns:oadr=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07&quot;</span><span class="nt">&gt;</span>
@@ -315,8 +314,8 @@
  <span class="s1">&#39;ven_id&#39;</span><span class="p">:</span> <span class="s1">&#39;123ABC&#39;</span><span class="p">}</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="oadrcreatedreport">
+</section>
+<section id="oadrcreatedreport">
 <span id="id10"></span><h2>oadrCreatedReport<a class="headerlink" href="#oadrcreatedreport" title="Permalink to this headline">¶</a></h2>
 <p>OpenADR payload:</p>
 <div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;oadr:oadrPayload</span> <span class="na">xmlns:oadr=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07&quot;</span><span class="nt">&gt;</span>
@@ -346,8 +345,8 @@
  <span class="s1">&#39;ven_id&#39;</span><span class="p">:</span> <span class="s1">&#39;123ABC&#39;</span><span class="p">}</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="id11">
+</section>
+<section id="id11">
 <span id="id12"></span><h2>oadrCreatedEvent<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h2>
 <p>OpenADR payload:</p>
 <div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;oadr:oadrPayload</span> <span class="na">xmlns:oadr=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07&quot;</span><span class="nt">&gt;</span>
@@ -407,8 +406,8 @@
  <span class="s1">&#39;ven_id&#39;</span><span class="p">:</span> <span class="s1">&#39;123ABC&#39;</span><span class="p">}</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="oadrcreatedpartyregistration">
+</section>
+<section id="oadrcreatedpartyregistration">
 <span id="id13"></span><h2>oadrCreatedPartyRegistration<a class="headerlink" href="#oadrcreatedpartyregistration" title="Permalink to this headline">¶</a></h2>
 <p>OpenADR payload:</p>
 <div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;oadr:oadrPayload</span> <span class="na">xmlns:oadr=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07&quot;</span><span class="nt">&gt;</span>
@@ -448,8 +447,8 @@
  <span class="s1">&#39;vtn_id&#39;</span><span class="p">:</span> <span class="s1">&#39;VTN123&#39;</span><span class="p">}</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="id14">
+</section>
+<section id="id14">
 <span id="id15"></span><h2>oadrCreatedReport<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h2>
 <p>OpenADR payload:</p>
 <div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;oadr:oadrPayload</span> <span class="na">xmlns:oadr=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07&quot;</span><span class="nt">&gt;</span>
@@ -477,8 +476,8 @@
               <span class="s1">&#39;response_description&#39;</span><span class="p">:</span> <span class="s1">&#39;OK&#39;</span><span class="p">}}</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="oadrcreateopt">
+</section>
+<section id="oadrcreateopt">
 <span id="id16"></span><h2>oadrCreateOpt<a class="headerlink" href="#oadrcreateopt" title="Permalink to this headline">¶</a></h2>
 <p>OpenADR payload:</p>
 <div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;oadr:oadrPayload</span> <span class="na">xmlns:oadr=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07&quot;</span><span class="nt">&gt;</span>
@@ -515,8 +514,8 @@
  <span class="s1">&#39;ven_id&#39;</span><span class="p">:</span> <span class="s1">&#39;VEN123&#39;</span><span class="p">}</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="oadrcreatepartyregistration">
+</section>
+<section id="oadrcreatepartyregistration">
 <span id="id17"></span><h2>oadrCreatePartyRegistration<a class="headerlink" href="#oadrcreatepartyregistration" title="Permalink to this headline">¶</a></h2>
 <p>OpenADR payload:</p>
 <div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;oadr:oadrPayload</span> <span class="na">xmlns:oadr=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07&quot;</span><span class="nt">&gt;</span>
@@ -548,8 +547,8 @@
  <span class="s1">&#39;xml_signature&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="oadrcreatereport">
+</section>
+<section id="oadrcreatereport">
 <span id="id18"></span><h2>oadrCreateReport<a class="headerlink" href="#oadrcreatereport" title="Permalink to this headline">¶</a></h2>
 <p>OpenADR payload:</p>
 <div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;oadr:oadrPayload</span> <span class="na">xmlns:oadr=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07&quot;</span><span class="nt">&gt;</span>
@@ -602,8 +601,8 @@
  <span class="s1">&#39;ven_id&#39;</span><span class="p">:</span> <span class="s1">&#39;123ABC&#39;</span><span class="p">}</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="oadrdistributeevent">
+</section>
+<section id="oadrdistributeevent">
 <span id="id19"></span><h2>oadrDistributeEvent<a class="headerlink" href="#oadrdistributeevent" title="Permalink to this headline">¶</a></h2>
 <p>OpenADR payload:</p>
 <div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;oadr:oadrPayload</span> <span class="na">xmlns:oadr=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07&quot;</span><span class="nt">&gt;</span>
@@ -847,8 +846,8 @@
  <span class="s1">&#39;vtn_id&#39;</span><span class="p">:</span> <span class="s1">&#39;VTN123&#39;</span><span class="p">}</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="oadrpoll">
+</section>
+<section id="oadrpoll">
 <span id="id20"></span><h2>oadrPoll<a class="headerlink" href="#oadrpoll" title="Permalink to this headline">¶</a></h2>
 <p>OpenADR payload:</p>
 <div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;oadr:oadrPayload</span> <span class="na">xmlns:oadr=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07&quot;</span><span class="nt">&gt;</span>
@@ -864,8 +863,8 @@
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;ven_id&#39;</span><span class="p">:</span> <span class="s1">&#39;123ABC&#39;</span><span class="p">}</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="oadrqueryregistration">
+</section>
+<section id="oadrqueryregistration">
 <span id="id21"></span><h2>oadrQueryRegistration<a class="headerlink" href="#oadrqueryregistration" title="Permalink to this headline">¶</a></h2>
 <p>OpenADR payload:</p>
 <div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;oadr:oadrPayload</span> <span class="na">xmlns:oadr=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07&quot;</span><span class="nt">&gt;</span>
@@ -881,8 +880,8 @@
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;request_id&#39;</span><span class="p">:</span> <span class="s1">&#39;455dd699-ab81-4df6-8f74-79100db81082&#39;</span><span class="p">}</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="oadrregisteredreport">
+</section>
+<section id="oadrregisteredreport">
 <span id="id22"></span><h2>oadrRegisteredReport<a class="headerlink" href="#oadrregisteredreport" title="Permalink to this headline">¶</a></h2>
 <p>OpenADR payload:</p>
 <div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;oadr:oadrPayload</span> <span class="na">xmlns:oadr=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07&quot;</span><span class="nt">&gt;</span>
@@ -976,8 +975,8 @@
  <span class="s1">&#39;ven_id&#39;</span><span class="p">:</span> <span class="s1">&#39;VEN123&#39;</span><span class="p">}</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="oadrrequestevent">
+</section>
+<section id="oadrrequestevent">
 <span id="id23"></span><h2>oadrRequestEvent<a class="headerlink" href="#oadrrequestevent" title="Permalink to this headline">¶</a></h2>
 <p>OpenADR payload:</p>
 <div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;oadr:oadrPayload</span> <span class="na">xmlns:oadr=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07&quot;</span><span class="nt">&gt;</span>
@@ -996,8 +995,8 @@
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;request_id&#39;</span><span class="p">:</span> <span class="s1">&#39;58b56698-20e3-43f1-bae2-aa95e2cea367&#39;</span><span class="p">,</span> <span class="s1">&#39;ven_id&#39;</span><span class="p">:</span> <span class="s1">&#39;123ABC&#39;</span><span class="p">}</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="oadrrequestreregistration">
+</section>
+<section id="oadrrequestreregistration">
 <span id="id24"></span><h2>oadrRequestReregistration<a class="headerlink" href="#oadrrequestreregistration" title="Permalink to this headline">¶</a></h2>
 <p>OpenADR payload:</p>
 <div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;oadr:oadrPayload</span> <span class="na">xmlns:oadr=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07&quot;</span><span class="nt">&gt;</span>
@@ -1013,8 +1012,8 @@
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;ven_id&#39;</span><span class="p">:</span> <span class="s1">&#39;123ABC&#39;</span><span class="p">}</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="oadrregisterreport">
+</section>
+<section id="oadrregisterreport">
 <span id="id25"></span><h2>oadrRegisterReport<a class="headerlink" href="#oadrregisterreport" title="Permalink to this headline">¶</a></h2>
 <p>OpenADR payload:</p>
 <div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;oadr:oadrPayload</span> <span class="na">xmlns:oadr=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07&quot;</span><span class="nt">&gt;</span>
@@ -1072,8 +1071,8 @@
  <span class="s1">&#39;ven_id&#39;</span><span class="p">:</span> <span class="s1">&#39;123ABC&#39;</span><span class="p">}</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="id26">
+</section>
+<section id="id26">
 <span id="id27"></span><h2>oadrRegisterReport<a class="headerlink" href="#id26" title="Permalink to this headline">¶</a></h2>
 <p>OpenADR payload:</p>
 <div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;oadr:oadrPayload</span> <span class="na">xmlns:oadr=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07&quot;</span><span class="nt">&gt;</span>
@@ -1301,8 +1300,8 @@
  <span class="s1">&#39;ven_id&#39;</span><span class="p">:</span> <span class="s1">&#39;s3cc244ee6&#39;</span><span class="p">}</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="oadrresponse">
+</section>
+<section id="oadrresponse">
 <span id="id28"></span><h2>oadrResponse<a class="headerlink" href="#oadrresponse" title="Permalink to this headline">¶</a></h2>
 <p>OpenADR payload:</p>
 <div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;oadr:oadrPayload</span> <span class="na">xmlns:oadr=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07&quot;</span><span class="nt">&gt;</span>
@@ -1326,8 +1325,8 @@
  <span class="s1">&#39;ven_id&#39;</span><span class="p">:</span> <span class="s1">&#39;123ABC&#39;</span><span class="p">}</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="id29">
+</section>
+<section id="id29">
 <span id="id30"></span><h2>oadrResponse<a class="headerlink" href="#id29" title="Permalink to this headline">¶</a></h2>
 <p>OpenADR payload:</p>
 <div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;oadr:oadrPayload</span> <span class="na">xmlns:oadr=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07&quot;</span><span class="nt">&gt;</span>
@@ -1351,8 +1350,8 @@
  <span class="s1">&#39;ven_id&#39;</span><span class="p">:</span> <span class="s1">&#39;123ABC&#39;</span><span class="p">}</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="oadrupdatedreport">
+</section>
+<section id="oadrupdatedreport">
 <span id="id31"></span><h2>oadrUpdatedReport<a class="headerlink" href="#oadrupdatedreport" title="Permalink to this headline">¶</a></h2>
 <p>OpenADR payload:</p>
 <div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;oadr:oadrPayload</span> <span class="na">xmlns:oadr=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07&quot;</span><span class="nt">&gt;</span>
@@ -1390,8 +1389,8 @@
  <span class="s1">&#39;ven_id&#39;</span><span class="p">:</span> <span class="s1">&#39;123ABC&#39;</span><span class="p">}</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="oadrupdatereport">
+</section>
+<section id="oadrupdatereport">
 <span id="id32"></span><h2>oadrUpdateReport<a class="headerlink" href="#oadrupdatereport" title="Permalink to this headline">¶</a></h2>
 <p>OpenADR payload:</p>
 <div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;oadr:oadrPayload</span> <span class="na">xmlns:oadr=</span><span class="s">&quot;http://openadr.org/oadr-2.0b/2012/07&quot;</span><span class="nt">&gt;</span>
@@ -1447,8 +1446,8 @@
  <span class="s1">&#39;ven_id&#39;</span><span class="p">:</span> <span class="s1">&#39;123ABC&#39;</span><span class="p">}</span>
 </pre></div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
           </div>
@@ -1457,13 +1456,22 @@
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-            <p class="logo"><a href="index.html">
-              <img class="logo" src="_static/logo-tall.png" alt="Logo"/>
-            </a></p>
-<h1 class="logo"><a href="index.html">OpenLEADR</a></h1>
+<p class="logo">
+  <a href="index.html">
+    <img class="logo" src="_static/logo-tall.png" alt="Logo"/>
+    
+  </a>
+</p>
 
 
 
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=openleadr&repo=openleadr-python&type=star&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
 
 
 
@@ -1523,7 +1531,7 @@
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -1545,7 +1553,7 @@
       &copy;2020, OpenLEADR Contributors.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.2.1</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.3.0</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
